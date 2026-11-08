@@ -20,8 +20,13 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Auto-generate Gradle Project Config
+      - name: Auto-generate Android Scaffolding & Fix Resources
         run: |
+          # 1. Ganti ikon ke ikon bawaan Android yang dijamin selalu ada
+          sed -i 's|@mipmap/ic_launcher_round|@android:drawable/sym_def_app_icon|g' app/src/main/AndroidManifest.xml || true
+          sed -i 's|@mipmap/ic_launcher|@android:drawable/sym_def_app_icon|g' app/src/main/AndroidManifest.xml || true
+
+          # 2. settings.gradle
           cat << 'EOF' > settings.gradle
           pluginManagement {
               repositories {
@@ -41,19 +46,42 @@ jobs:
           include ':app'
           EOF
 
+          # 3. build.gradle
           cat << 'EOF' > build.gradle
           plugins {
               id 'com.android.application' version '8.2.2' apply false
               id 'org.jetbrains.kotlin.android' version '1.9.22' apply false
+              id 'org.jetbrains.kotlin.kapt' version '1.9.22' apply false
           }
           EOF
 
+          # 4. Values (Strings & Tema)
           mkdir -p app/src/main/res/values
           cat << 'EOF' > app/src/main/res/values/strings.xml
           <resources>
               <string name="app_name">AutoKlik Android</string>
               <string name="accessibility_desc">Layanan Aksesibilitas AutoKlik</string>
           </resources>
+          EOF
+
+          cat << 'EOF' > app/src/main/res/values/themes.xml
+          <resources>
+              <style name="Theme.Material3.DayNight.NoActionBar" parent="Theme.MaterialComponents.DayNight.NoActionBar" />
+          </resources>
+          EOF
+
+          # 5. Icon & Layout Panel Melayang
+          mkdir -p app/src/main/res/drawable
+          cat << 'EOF' > app/src/main/res/drawable/ic_launcher_foreground.xml
+          <vector xmlns:android="http://schemas.android.com/apk/res/android"
+              android:width="108dp"
+              android:height="108dp"
+              android:viewportWidth="108"
+              android:viewportHeight="108">
+              <path
+                  android:fillColor="#10B981"
+                  android:pathData="M30,30h48v48h-48z" />
+          </vector>
           EOF
 
           mkdir -p app/src/main/res/layout
@@ -73,10 +101,27 @@ jobs:
           </FrameLayout>
           EOF
 
+          # 6. MainActivity.kt (Layar Utama)
+          mkdir -p app/src/main/java/com/autoklik/android/ui
+          cat << 'EOF' > app/src/main/java/com/autoklik/android/ui/MainActivity.kt
+          package com.autoklik.android.ui
+
+          import android.os.Bundle
+          import androidx.appcompat.app.AppCompatActivity
+
+          class MainActivity : AppCompatActivity() {
+              override fun onCreate(savedInstanceState: Bundle?) {
+                  super.onCreate(savedInstanceState)
+              }
+          }
+          EOF
+
+          # 7. app/build.gradle
           cat << 'EOF' > app/build.gradle
           plugins {
               id 'com.android.application'
               id 'org.jetbrains.kotlin.android'
+              id 'kotlin-kapt'
           }
 
           android {
@@ -111,6 +156,7 @@ jobs:
               implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3'
               implementation 'androidx.room:room-runtime:2.6.1'
               implementation 'androidx.room:room-ktx:2.6.1'
+              kapt 'androidx.room:room-compiler:2.6.1'
           }
           EOF
 
