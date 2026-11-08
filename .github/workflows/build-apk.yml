@@ -225,36 +225,46 @@ jobs:
               android:orientation="vertical"
               android:gravity="center_horizontal">
 
-              <!-- Garis Panah Atas (Swipe Up) -->
+              <!-- Garis Panah Atas (Swipe Up) - Tarik Ujung Panah untuk Atur Panjang/Pendek -->
               <LinearLayout
                   android:id="@+id/layoutArrowUp"
                   android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
                   android:orientation="vertical"
                   android:gravity="center_horizontal"
+                  android:paddingStart="8dp"
+                  android:paddingEnd="8dp"
                   android:visibility="gone">
 
+                  <!-- Handle Ujung Panah Atas yang Bisa Diseret (Drag) -->
                   <TextView
+                      android:id="@+id/tvArrowHandleUp"
                       android:layout_width="wrap_content"
                       android:layout_height="wrap_content"
-                      android:text="▲"
+                      android:background="#E60F172A"
+                      android:paddingStart="8dp"
+                      android:paddingEnd="8dp"
+                      android:paddingTop="3dp"
+                      android:paddingBottom="3dp"
+                      android:text="▲ SERET"
                       android:textColor="#38BDF8"
-                      android:textSize="14sp"
+                      android:textSize="10sp"
                       android:textStyle="bold" />
 
+                  <!-- Batang Garis Panah Atas (Panjang sesuai tarikan jari) -->
                   <View
                       android:id="@+id/viewLineUp"
-                      android:layout_width="3dp"
-                      android:layout_height="60dp"
+                      android:layout_width="4dp"
+                      android:layout_height="140dp"
                       android:background="#38BDF8" />
 
                   <TextView
                       android:id="@+id/tvSwipeDistUp"
                       android:layout_width="wrap_content"
                       android:layout_height="wrap_content"
-                      android:text="▲ 450px"
+                      android:text="▲ 140px"
                       android:textColor="#38BDF8"
-                      android:textSize="10sp"
+                      android:textSize="9sp"
                       android:background="#D90F172A"
                       android:paddingStart="4dp"
                       android:paddingEnd="4dp" />
@@ -289,38 +299,48 @@ jobs:
                       android:textSize="8sp" />
               </FrameLayout>
 
-              <!-- Garis Panah Bawah (Swipe Down) -->
+              <!-- Garis Panah Bawah (Swipe Down) - Tarik Ujung Panah untuk Atur Panjang/Pendek -->
               <LinearLayout
                   android:id="@+id/layoutArrowDown"
                   android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
                   android:orientation="vertical"
                   android:gravity="center_horizontal"
+                  android:paddingStart="8dp"
+                  android:paddingEnd="8dp"
                   android:visibility="gone">
 
                   <TextView
                       android:id="@+id/tvSwipeDistDown"
                       android:layout_width="wrap_content"
                       android:layout_height="wrap_content"
-                      android:text="▼ 450px"
+                      android:text="▼ 140px"
                       android:textColor="#F59E0B"
-                      android:textSize="10sp"
+                      android:textSize="9sp"
                       android:background="#D90F172A"
                       android:paddingStart="4dp"
                       android:paddingEnd="4dp" />
 
+                  <!-- Batang Garis Panah Bawah (Panjang sesuai tarikan jari) -->
                   <View
                       android:id="@+id/viewLineDown"
-                      android:layout_width="3dp"
-                      android:layout_height="60dp"
+                      android:layout_width="4dp"
+                      android:layout_height="140dp"
                       android:background="#F59E0B" />
 
+                  <!-- Handle Ujung Panah Bawah yang Bisa Diseret (Drag) -->
                   <TextView
+                      android:id="@+id/tvArrowHandleDown"
                       android:layout_width="wrap_content"
                       android:layout_height="wrap_content"
-                      android:text="▼"
+                      android:background="#E60F172A"
+                      android:paddingStart="8dp"
+                      android:paddingEnd="8dp"
+                      android:paddingTop="3dp"
+                      android:paddingBottom="3dp"
+                      android:text="▼ SERET"
                       android:textColor="#F59E0B"
-                      android:textSize="14sp"
+                      android:textSize="10sp"
                       android:textStyle="bold" />
               </LinearLayout>
           </LinearLayout>
@@ -514,28 +534,39 @@ jobs:
                           android:textSize="12sp" />
                   </RadioGroup>
 
-                  <!-- FITUR 1: PENGATURAN PANJANG GARIS SWIPE -->
+                  <!-- FITUR 1: PENGATURAN PANJANG GARIS SWIPE (SERET LANGSUNG DI LAYAR) -->
                   <LinearLayout
                       android:id="@+id/layoutSwipeSettings"
                       android:layout_width="match_parent"
                       android:layout_height="wrap_content"
                       android:orientation="vertical"
-                      android:layout_marginTop="4dp"
+                      android:layout_marginTop="6dp"
+                      android:background="#131F33"
+                      android:padding="10dp"
                       android:visibility="gone">
 
                       <TextView
-                          android:layout_width="wrap_content"
+                          android:layout_width="match_parent"
                           android:layout_height="wrap_content"
-                          android:text="Panjang Garis / Jarak Usap (Piksel):"
-                          android:textColor="#CBD5E1"
-                          android:textSize="11sp" />
+                          android:text="💡 Cara Atur Panjang/Pendek Swipe: Setelah klik Simpan, seret langsung ujung panah (▲ SERET / ▼ SERET) di layar HP Anda untuk memanjangkan atau memendekkan garis swipe!"
+                          android:textColor="#38BDF8"
+                          android:textSize="11sp"
+                          android:textStyle="bold" />
 
                       <LinearLayout
                           android:layout_width="match_parent"
                           android:layout_height="wrap_content"
                           android:orientation="horizontal"
                           android:gravity="center_vertical"
-                          android:layout_marginTop="3dp">
+                          android:layout_marginTop="6dp">
+
+                          <TextView
+                              android:layout_width="0dp"
+                              android:layout_height="wrap_content"
+                              android:layout_weight="1"
+                              android:text="Panjang Garis Saat Ini (px):"
+                              android:textColor="#CBD5E1"
+                              android:textSize="11sp" />
 
                           <EditText
                               android:id="@+id/etSwipeDistance"
@@ -544,21 +575,14 @@ jobs:
                               android:background="#1E293B"
                               android:gravity="center"
                               android:inputType="number"
-                              android:text="450"
+                              android:text="350"
                               android:textColor="#38BDF8"
-                              android:textSize="12sp" />
-
-                          <TextView
-                              android:layout_width="wrap_content"
-                              android:layout_height="wrap_content"
-                              android:layout_marginStart="8dp"
-                              android:text="(Contoh: 200 = Pendek, 450 = Sedang, 800 = Panjang)"
-                              android:textColor="#94A3B8"
-                              android:textSize="10sp" />
+                              android:textSize="13sp"
+                              android:textStyle="bold" />
                       </LinearLayout>
                   </LinearLayout>
 
-                  <!-- FITUR 4: PILIHAN JEDA (MILISEKON / DETIK) -->
+                  <!-- FITUR 4: PILIHAN JEDA (MILISEKON / DETIK) - 2 BARIS JELAS TERLIHAT -->
                   <View
                       android:layout_width="match_parent"
                       android:layout_height="1dp"
@@ -570,53 +594,83 @@ jobs:
                       android:layout_width="wrap_content"
                       android:layout_height="wrap_content"
                       android:text="Jeda Setelah Titik Ini:"
-                      android:textColor="#CBD5E1"
-                      android:textSize="11sp"
+                      android:textColor="#10B981"
+                      android:textSize="12sp"
                       android:textStyle="bold" />
 
                   <LinearLayout
                       android:layout_width="match_parent"
                       android:layout_height="wrap_content"
-                      android:layout_marginTop="3dp"
-                      android:orientation="horizontal"
-                      android:gravity="center_vertical">
+                      android:layout_marginTop="4dp"
+                      android:background="#131F33"
+                      android:padding="10dp"
+                      android:orientation="vertical">
 
-                      <EditText
-                          android:id="@+id/etDialogDelay"
-                          android:layout_width="90dp"
-                          android:layout_height="36dp"
-                          android:background="#1E293B"
-                          android:gravity="center"
-                          android:inputType="numberDecimal"
-                          android:text="500"
-                          android:textColor="#10B981"
-                          android:textSize="13sp" />
+                      <!-- Baris 1: Kotak Input Angka Jeda -->
+                      <LinearLayout
+                          android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:orientation="horizontal"
+                          android:gravity="center_vertical">
 
-                      <!-- Pilihan Unit Jeda (ms / s) -->
-                      <RadioGroup
-                          android:id="@+id/rgDelayUnit"
+                          <TextView
+                              android:layout_width="0dp"
+                              android:layout_height="wrap_content"
+                              android:layout_weight="1"
+                              android:text="Masukkan Angka Jeda:"
+                              android:textColor="#E2E8F0"
+                              android:textSize="12sp"
+                              android:textStyle="bold" />
+
+                          <EditText
+                              android:id="@+id/etDialogDelay"
+                              android:layout_width="95dp"
+                              android:layout_height="38dp"
+                              android:background="#1E293B"
+                              android:gravity="center"
+                              android:inputType="numberDecimal"
+                              android:text="500"
+                              android:textColor="#10B981"
+                              android:textSize="14sp"
+                              android:textStyle="bold" />
+                      </LinearLayout>
+
+                      <!-- Baris 2: Pilihan Satuan Waktu (Milisekon vs Detik) 100% Terlihat -->
+                      <TextView
                           android:layout_width="wrap_content"
                           android:layout_height="wrap_content"
-                          android:layout_marginStart="8dp"
+                          android:layout_marginTop="8dp"
+                          android:text="Pilih Satuan Waktu (Milisekon / Detik):"
+                          android:textColor="#CBD5E1"
+                          android:textSize="11sp" />
+
+                      <RadioGroup
+                          android:id="@+id/rgDelayUnit"
+                          android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:layout_marginTop="4dp"
                           android:orientation="horizontal">
 
                           <RadioButton
                               android:id="@+id/rbUnitMs"
-                              android:layout_width="wrap_content"
-                              android:layout_height="32dp"
-                              android:text="ms (Milisekon)"
+                              android:layout_width="0dp"
+                              android:layout_height="36dp"
+                              android:layout_weight="1"
+                              android:text="⚡ Milisekon (ms)"
                               android:textColor="#F8FAFC"
-                              android:textSize="11sp"
+                              android:textSize="12sp"
+                              android:textStyle="bold"
                               android:checked="true" />
 
                           <RadioButton
                               android:id="@+id/rbUnitSec"
-                              android:layout_width="wrap_content"
-                              android:layout_height="32dp"
-                              android:layout_marginStart="4dp"
-                              android:text="detik (s)"
-                              android:textColor="#F8FAFC"
-                              android:textSize="11sp" />
+                              android:layout_width="0dp"
+                              android:layout_height="36dp"
+                              android:layout_weight="1"
+                              android:text="⏱️ Detik (s)"
+                              android:textColor="#38BDF8"
+                              android:textSize="12sp"
+                              android:textStyle="bold" />
                       </RadioGroup>
                   </LinearLayout>
 
@@ -1388,7 +1442,7 @@ jobs:
                   var delayUnit: String = "ms", // "ms" atau "s"
                   var delayMs: Long = 500L,
                   var durationMs: Long = 50L,
-                  var swipeDistancePx: Float = 450f, // Panjang garis/panah swipe (px)
+                  var swipeDistancePx: Float = 300f, // Panjang garis/panah swipe langsung di layar (px)
                   var jumpEnabled: Boolean = false,   // Sub-Loop pada titik
                   var jumpToPoint: Int = 7,
                   var jumpAfterCycle: Int = 1,
@@ -1745,8 +1799,16 @@ jobs:
                   }
 
                   val pointView = LayoutInflater.from(this).inflate(R.layout.layout_target_point, null)
+                  val pointRoot = pointView.findViewById<View>(R.id.pointRoot)
                   val tvNumber = pointView.findViewById<TextView>(R.id.tvTargetNumber)
                   val tvType = pointView.findViewById<TextView>(R.id.tvTargetType)
+                  val layoutArrowUp = pointView.findViewById<View>(R.id.layoutArrowUp)
+                  val viewLineUp = pointView.findViewById<View>(R.id.viewLineUp)
+                  val tvSwipeDistUp = pointView.findViewById<TextView>(R.id.tvSwipeDistUp)
+                  val layoutArrowDown = pointView.findViewById<View>(R.id.layoutArrowDown)
+                  val viewLineDown = pointView.findViewById<View>(R.id.viewLineDown)
+                  val tvSwipeDistDown = pointView.findViewById<TextView>(R.id.tvSwipeDistDown)
+
                   tvNumber.text = nextOrder.toString()
                   tvType.text = "🎯"
 
@@ -1764,8 +1826,8 @@ jobs:
                       tvType.text = "🔁7"
                   }
 
-                  // Drag & Drop dan Klik untuk Dialog Pengaturan
-                  pointView.setOnTouchListener(object : View.OnTouchListener {
+                  // 1. Sentuh & Seret Bulatan Nomor (pointRoot) untuk memindahkan posisi titik atau ketuk untuk buka Dialog
+                  pointRoot.setOnTouchListener(object : View.OnTouchListener {
                       private var initialX = 0
                       private var initialY = 0
                       private var initialTouchX = 0f
@@ -1803,13 +1865,90 @@ jobs:
                       }
                   })
 
+                  // 2. Seret Garis Panah Atas (▲ SERET) langsung di layar untuk mengatur panjang/pendek Swipe Atas
+                  layoutArrowUp.setOnTouchListener(object : View.OnTouchListener {
+                      private var initialTouchY = 0f
+                      private var initialDistPx = 300f
+                      private var initialParamsY = 0
+
+                      override fun onTouch(v: View, event: MotionEvent): Boolean {
+                          val density = resources.displayMetrics.density
+                          val minPx = 50f * density
+                          val maxPx = (resources.displayMetrics.heightPixels * 0.75f).coerceAtLeast(300f)
+
+                          when (event.action) {
+                              MotionEvent.ACTION_DOWN -> {
+                                  initialTouchY = event.rawY
+                                  initialDistPx = targetPoint.swipeDistancePx
+                                  initialParamsY = pointParams.y
+                                  return true
+                              }
+                              MotionEvent.ACTION_MOVE -> {
+                                  // Menarik ke atas memperpanjang garis, menarik ke bawah memperpendek garis
+                                  val deltaUp = initialTouchY - event.rawY
+                                  val newDistPx = (initialDistPx + deltaUp).coerceIn(minPx, maxPx)
+                                  val actualChangePx = (newDistPx - initialDistPx).toInt()
+
+                                  targetPoint.swipeDistancePx = newDistPx
+                                  viewLineUp.layoutParams.height = newDistPx.toInt()
+                                  viewLineUp.requestLayout()
+                                  tvSwipeDistUp.text = "▲ ${newDistPx.toInt()}px"
+
+                                  // Jaga agar lingkaran nomor (pointRoot) tetap diam di tempat saat panah atas ditarik
+                                  pointParams.y = initialParamsY - actualChangePx
+                                  try {
+                                      windowManager.updateViewLayout(pointView, pointParams)
+                                  } catch (e: Exception) {}
+                                  return true
+                              }
+                          }
+                          return false
+                      }
+                  })
+
+                  // 3. Seret Garis Panah Bawah (▼ SERET) langsung di layar untuk mengatur panjang/pendek Swipe Bawah
+                  layoutArrowDown.setOnTouchListener(object : View.OnTouchListener {
+                      private var initialTouchY = 0f
+                      private var initialDistPx = 300f
+
+                      override fun onTouch(v: View, event: MotionEvent): Boolean {
+                          val density = resources.displayMetrics.density
+                          val minPx = 50f * density
+                          val maxPx = (resources.displayMetrics.heightPixels * 0.75f).coerceAtLeast(300f)
+
+                          when (event.action) {
+                              MotionEvent.ACTION_DOWN -> {
+                                  initialTouchY = event.rawY
+                                  initialDistPx = targetPoint.swipeDistancePx
+                                  return true
+                              }
+                              MotionEvent.ACTION_MOVE -> {
+                                  // Menarik ke bawah memperpanjang garis, menarik ke atas memperpendek garis
+                                  val deltaDown = event.rawY - initialTouchY
+                                  val newDistPx = (initialDistPx + deltaDown).coerceIn(minPx, maxPx)
+
+                                  targetPoint.swipeDistancePx = newDistPx
+                                  viewLineDown.layoutParams.height = newDistPx.toInt()
+                                  viewLineDown.requestLayout()
+                                  tvSwipeDistDown.text = "▼ ${newDistPx.toInt()}px"
+
+                                  try {
+                                      windowManager.updateViewLayout(pointView, pointParams)
+                                  } catch (e: Exception) {}
+                                  return true
+                              }
+                          }
+                          return false
+                      }
+                  })
+
                   windowManager.addView(pointView, pointParams)
                   targetPoints.add(targetPoint)
                   updatePointVisual(targetPoint)
-                  Toast.makeText(this, "Titik $nextOrder ditambah! (Ketuk untuk opsi Swipe Panah & Jeda)", Toast.LENGTH_SHORT).show()
+                  Toast.makeText(this, "Titik $nextOrder ditambah! (Ketuk angka untuk opsi Swipe & Jeda)", Toast.LENGTH_SHORT).show()
               }
 
-              // MEMPERBARUI TAMPILAN VISUAL TITIK (UKURAN & GARIS PANAH SWIPE)
+              // MEMPERBARUI TAMPILAN VISUAL TITIK (UKURAN & GARIS PANAH SWIPE 1:1)
               private fun updatePointVisual(point: TargetPoint) {
                   val density = resources.displayMetrics.density
                   val sizeDp = getTargetSizeDp()
@@ -1835,25 +1974,27 @@ jobs:
                   // Sesuaikan ukuran font nomor dengan ukuran bulatan
                   tvNumber.textSize = (sizeDp * 0.45f).coerceIn(9f, 17f)
 
-                  // FITUR 1: PANJANG GARIS PANAH SWIPE SESUAI DISTANCE
-                  val arrowLineHeightDp = (point.swipeDistancePx / 4.0f).coerceIn(30f, 220f)
-                  val arrowLineHeightPx = (arrowLineHeightDp * density).toInt()
+                  // FITUR SWIPE: Panjang garis panah di layar = jarak swipe sebenarnya (1:1)
+                  val minPx = (50f * density).toInt()
+                  val maxPx = (resources.displayMetrics.heightPixels * 0.75f).toInt().coerceAtLeast(300)
+                  val lineHeightPx = point.swipeDistancePx.toInt().coerceIn(minPx, maxPx)
+                  point.swipeDistancePx = lineHeightPx.toFloat()
 
                   when (point.type) {
                       "swipe_up" -> {
                           layoutArrowUp.visibility = View.VISIBLE
                           layoutArrowDown.visibility = View.GONE
-                          viewLineUp.layoutParams.height = arrowLineHeightPx
+                          viewLineUp.layoutParams.height = lineHeightPx
                           viewLineUp.requestLayout()
-                          tvSwipeDistUp.text = "▲ ${point.swipeDistancePx.toInt()}px"
+                          tvSwipeDistUp.text = "▲ ${lineHeightPx}px"
                           tvType.text = "▲"
                       }
                       "swipe_down" -> {
                           layoutArrowUp.visibility = View.GONE
                           layoutArrowDown.visibility = View.VISIBLE
-                          viewLineDown.layoutParams.height = arrowLineHeightPx
+                          viewLineDown.layoutParams.height = lineHeightPx
                           viewLineDown.requestLayout()
-                          tvSwipeDistDown.text = "▼ ${point.swipeDistancePx.toInt()}px"
+                          tvSwipeDistDown.text = "▼ ${lineHeightPx}px"
                           tvType.text = "▼"
                       }
                       "paste" -> {
@@ -1883,7 +2024,7 @@ jobs:
                   }
               }
 
-              // DIALOG PENGATURAN PER-TITIK (KEYBOARD AKTIF, JEDA MS/S, GARIS SWIPE, SUB-LOOP)
+              // DIALOG PENGATURAN PER-TITIK (KEYBOARD AKTIF, JEDA MS/DETIK, GARIS SWIPE, SUB-LOOP)
               private fun showPointSettingsDialog(point: TargetPoint) {
                   closePointSettingsDialog()
 
@@ -1916,7 +2057,7 @@ jobs:
                   val layoutSwipe = dialogView.findViewById<LinearLayout>(R.id.layoutSwipeSettings)
                   val etSwipeDistance = dialogView.findViewById<EditText>(R.id.etSwipeDistance)
 
-                  // FITUR 4: Jeda & Pilihan Unit ms / s
+                  // FITUR 4: Jeda & Pilihan Unit ms / detik (s)
                   val etDelay = dialogView.findViewById<EditText>(R.id.etDialogDelay)
                   val rgDelayUnit = dialogView.findViewById<RadioGroup>(R.id.rgDelayUnit)
                   val rbUnitMs = dialogView.findViewById<RadioButton>(R.id.rbUnitMs)
@@ -1935,13 +2076,27 @@ jobs:
 
                   tvTitle.text = "Pengaturan Titik #${point.order}"
 
-                  // Set Jeda dan Unit (Fitur 4)
+                  // Set Jeda dan Unit (ms / detik)
                   if (point.delayUnit == "s") {
                       rbUnitSec.isChecked = true
-                      etDelay.setText(point.delayValue.toString())
+                      val formatted = if (point.delayValue % 1.0 == 0.0) point.delayValue.toLong().toString() else point.delayValue.toString()
+                      etDelay.setText(formatted)
                   } else {
                       rbUnitMs.isChecked = true
                       etDelay.setText(point.delayValue.toLong().toString())
+                  }
+
+                  // Konversi otomatis angka contoh saat pengguna berpindah antara Milisekon (ms) dan Detik (s)
+                  rgDelayUnit.setOnCheckedChangeListener { _, checkedId ->
+                      val currentVal = etDelay.text.toString().toDoubleOrNull() ?: 500.0
+                      if (checkedId == R.id.rbUnitSec && currentVal >= 100.0) {
+                          val secVal = currentVal / 1000.0
+                          val formatted = if (secVal % 1.0 == 0.0) secVal.toLong().toString() else secVal.toString()
+                          etDelay.setText(formatted)
+                      } else if (checkedId == R.id.rbUnitMs && currentVal < 50.0) {
+                          val msVal = (currentVal * 1000.0).toLong()
+                          etDelay.setText(msVal.toString())
+                      }
                   }
 
                   etSwipeDistance.setText(point.swipeDistancePx.toInt().toString())
@@ -1990,6 +2145,7 @@ jobs:
                   }
 
                   btnSave.setOnClickListener {
+                      val prevType = point.type
                       point.type = when (rgType.checkedRadioButtonId) {
                           R.id.rbTypeSwipeUp -> "swipe_up"
                           R.id.rbTypeSwipeDown -> "swipe_down"
@@ -1997,14 +2153,21 @@ jobs:
                           else -> "tap"
                       }
 
-                      // Hitung Jeda sesuai unit (Fitur 4)
+                      // Hitung Jeda sesuai unit (ms atau detik)
                       val isSec = rgDelayUnit.checkedRadioButtonId == R.id.rbUnitSec
-                      val delayInputVal = etDelay.text.toString().toDoubleOrNull() ?: 500.0
+                      val delayInputVal = etDelay.text.toString().toDoubleOrNull() ?: if (isSec) 1.0 else 500.0
                       point.delayValue = delayInputVal
                       point.delayUnit = if (isSec) "s" else "ms"
                       point.delayMs = if (isSec) (delayInputVal * 1000.0).toLong().coerceAtLeast(50L) else delayInputVal.toLong().coerceAtLeast(50L)
 
-                      point.swipeDistancePx = etSwipeDistance.text.toString().toFloatOrNull() ?: 450f
+                      point.swipeDistancePx = etSwipeDistance.text.toString().toFloatOrNull() ?: 300f
+
+                      // Jika baru diubah menjadi swipe_up, sesuaikan posisi Y agar bulatan tetap di tempatnya
+                      if (prevType != "swipe_up" && point.type == "swipe_up") {
+                          point.params.y = (point.params.y - point.swipeDistancePx.toInt()).coerceAtLeast(40)
+                      } else if (prevType == "swipe_up" && point.type != "swipe_up") {
+                          point.params.y = point.params.y + point.swipeDistancePx.toInt()
+                      }
 
                       point.jumpEnabled = cbSubLoop.isChecked
                       point.jumpToPoint = etJumpTo.text.toString().toIntOrNull() ?: 7
@@ -2015,7 +2178,8 @@ jobs:
 
                       updatePointVisual(point)
                       closePointSettingsDialog()
-                      Toast.makeText(this, "Titik #${point.order} berhasil disimpan! ✔", Toast.LENGTH_SHORT).show()
+                      val unitLabel = if (isSec) "${point.delayValue} detik" else "${point.delayMs} ms"
+                      Toast.makeText(this, "Titik #${point.order} disimpan (Jeda: $unitLabel) ✔", Toast.LENGTH_SHORT).show()
                   }
 
                   btnClose.setOnClickListener {
@@ -2049,7 +2213,7 @@ jobs:
                   }
               }
 
-              // EKSEKUSI DENGAN LOGIKA SWIPE JARAK PANAH & JEDA MS/DETIK
+              // EKSEKUSI DENGAN KOORDINAT PRESISI & PANJANG GARIS PANAH SWIPE
               private fun startClickExecution(service: AutoClickAccessibilityService) {
                   clickJob?.cancel()
                   clickJob = serviceScope.launch {
@@ -2065,19 +2229,22 @@ jobs:
                       while (isActive && isPlaying && targetPoints.isNotEmpty()) {
                           val point = targetPoints.find { it.order == currentOrder } ?: targetPoints.firstOrNull()
                           if (point != null) {
-                              val density = resources.displayMetrics.density
-                              val radiusPx = (getTargetSizeDp() * density) / 2f
-                              val tapX = point.params.x + radiusPx
-                              val tapY = point.params.y + radiusPx
+                              // Ambil koordinat layar presisi dari tengah bulatan nomor (pointRoot)
+                              val pointRoot = point.view.findViewById<View>(R.id.pointRoot)
+                              val loc = IntArray(2)
+                              pointRoot.getLocationOnScreen(loc)
+                              val tapX = loc[0] + (pointRoot.width / 2f)
+                              val tapY = loc[1] + (pointRoot.height / 2f)
 
-                              // Eksekusi Gestur Sesuai Garis Panah Swipe
+                              // Eksekusi Gestur Sesuai Panjang Garis Panah Swipe yang Diseret di Layar
                               when (point.type) {
                                   "swipe_up" -> {
-                                      val endY = (tapY - point.swipeDistancePx).coerceAtLeast(80f)
+                                      val endY = (tapY - point.swipeDistancePx).coerceAtLeast(50f)
                                       service.executeSwipe(tapX, tapY, tapX, endY, 350L)
                                   }
                                   "swipe_down" -> {
-                                      val endY = tapY + point.swipeDistancePx
+                                      val maxScreenY = resources.displayMetrics.heightPixels - 50f
+                                      val endY = (tapY + point.swipeDistancePx).coerceAtMost(maxScreenY)
                                       service.executeSwipe(tapX, tapY, tapX, endY, 350L)
                                   }
                                   "paste" -> {
@@ -2089,7 +2256,7 @@ jobs:
                                   }
                               }
 
-                              // Jeda acak (Anti-Deteksi) berdasarkan delayMs terhitung
+                              // Jeda acak (Anti-Deteksi) berdasarkan delayMs (dari ms atau detik)
                               var waitTime = point.delayMs
                               if (jitterEnabled) {
                                   val jitterFactor = Random.nextInt(-15, 16) / 100f
