@@ -20,2320 +20,394 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Auto-generate Android Scaffolding & Fix Resources
+      - name: Auto-generate Android Scaffolding & Project Files
         run: |
-          cat << 'EOF' > gradle.properties
-android.useAndroidX=true
-          android.enableJetifier=true
-          org.gradle.jvmargs=-Xmx2048m -Dfile.encoding=UTF-8
-          EOF
-
-          cat << 'EOF' > settings.gradle
-pluginManagement {
-              repositories {
-                  google()
-                  mavenCentral()
-                  gradlePluginPortal()
-              }
-          }
-          dependencyResolutionManagement {
-              repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
-              repositories {
-                  google()
-                  mavenCentral()
-              }
-          }
-          rootProject.name = "AutoKlik"
-          include ':app'
-          EOF
-
-          cat << 'EOF' > build.gradle
-plugins {
-              id 'com.android.application' version '8.2.2' apply false
-              id 'org.jetbrains.kotlin.android' version '1.9.22' apply false
-              id 'org.jetbrains.kotlin.kapt' version '1.9.22' apply false
-          }
-          EOF
-
-          mkdir -p app/src/main/res/values
-          cat << 'EOF' > app/src/main/res/values/strings.xml
-<resources>
-              <string name="app_name">AutoKlik Trans</string>
-              <string name="accessibility_desc">Layanan Aksesibilitas AutoKlik untuk simulasi sentuhan dan multi-gesture tanpa root.</string>
-          </resources>
-          EOF
-
-          mkdir -p app/src/main/res/values
-          cat << 'EOF' > app/src/main/res/values/themes.xml
-<resources>
-              <style name="Theme.Material3.DayNight.NoActionBar" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-                  <item name="colorPrimary">#10B981</item>
-                  <item name="android:statusBarColor">#0F172A</item>
-                  <item name="android:windowBackground">#0F172A</item>
-              </style>
-          </resources>
-          EOF
-
-          mkdir -p app/src/main/res/xml
-          cat << 'EOF' > app/src/main/res/xml/accessibility_service_config.xml
-<?xml version="1.0" encoding="utf-8"?>
-          <accessibility-service xmlns:android="http://schemas.android.com/apk/res/android"
-              android:accessibilityEventTypes="typeAllMask"
-              android:accessibilityFeedbackType="feedbackGeneric"
-              android:accessibilityFlags="flagDefault|flagRetrieveInteractiveWindows"
-              android:canPerformGestures="true"
-              android:canRetrieveWindowContent="true"
-              android:description="@string/accessibility_desc"
-              android:notificationTimeout="100" />
-          EOF
-
-          mkdir -p app/src/main/res/drawable
-          cat << 'EOF' > app/src/main/res/drawable/ic_launcher_foreground.xml
-<vector xmlns:android="http://schemas.android.com/apk/res/android"
-              android:width="108dp"
-              android:height="108dp"
-              android:viewportWidth="108"
-              android:viewportHeight="108">
-              <path
-                  android:fillColor="#10B981"
-                  android:pathData="M30,30h48v48h-48z" />
-          </vector>
-          EOF
-
-          mkdir -p app/src/main/res/drawable
-          cat << 'EOF' > app/src/main/res/drawable/bg_target_point.xml
-<?xml version="1.0" encoding="utf-8"?>
-          <shape xmlns:android="http://schemas.android.com/apk/res/android"
-              android:shape="oval">
-              <solid android:color="#E60F172A" />
-              <stroke android:width="2.5dp" android:color="#10B981" />
-          </shape>
-          EOF
-
-          mkdir -p app/src/main/res/drawable
-          cat << 'EOF' > app/src/main/res/drawable/bg_panel_pill.xml
-<?xml version="1.0" encoding="utf-8"?>
-          <shape xmlns:android="http://schemas.android.com/apk/res/android"
-              android:shape="rectangle">
-              <solid android:color="#F20F172A" />
-              <corners android:radius="24dp" />
-              <stroke android:width="1.5dp" android:color="#334155" />
-          </shape>
-          EOF
-
-          mkdir -p app/src/main/res/layout
-          cat << 'EOF' > app/src/main/res/layout/layout_target_point.xml
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:gravity="center_horizontal">
-
-    <!-- Garis Panah Atas (Swipe Up) -->
-    <LinearLayout
-        android:id="@+id/layoutArrowUp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center_horizontal"
-        android:visibility="gone">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="▲"
-            android:textColor="#38BDF8"
-            android:textSize="14sp"
-            android:textStyle="bold" />
-
-        <View
-            android:id="@+id/viewLineUp"
-            android:layout_width="3dp"
-            android:layout_height="60dp"
-            android:background="#38BDF8" />
-
-        <TextView
-            android:id="@+id/tvSwipeDistUp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="▲ 450px"
-            android:textColor="#38BDF8"
-            android:textSize="10sp"
-            android:background="#D90F172A"
-            android:paddingStart="4dp"
-            android:paddingEnd="4dp" />
-    </LinearLayout>
-
-    <!-- Lingkaran Titik Target Utama (Bulat Sempurna 1:1) -->
-    <FrameLayout
-        android:id="@+id/pointRoot"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:background="@drawable/bg_target_point">
-
-        <TextView
-            android:id="@+id/tvTargetNumber"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:includeFontPadding="false"
-            android:text="1"
-            android:textColor="#FFFFFF"
-            android:textSize="14sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/tvTargetType"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|center_horizontal"
-            android:layout_marginBottom="1dp"
-            android:includeFontPadding="false"
-            android:text="🎯"
-            android:textSize="8sp" />
-    </FrameLayout>
-
-    <!-- Garis Panah Bawah (Swipe Down) -->
-    <LinearLayout
-        android:id="@+id/layoutArrowDown"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center_horizontal"
-        android:visibility="gone">
-
-        <TextView
-            android:id="@+id/tvSwipeDistDown"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="▼ 450px"
-            android:textColor="#F59E0B"
-            android:textSize="10sp"
-            android:background="#D90F172A"
-            android:paddingStart="4dp"
-            android:paddingEnd="4dp" />
-
-        <View
-            android:id="@+id/viewLineDown"
-            android:layout_width="3dp"
-            android:layout_height="60dp"
-            android:background="#F59E0B" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="▼"
-            android:textColor="#F59E0B"
-            android:textSize="14sp"
-            android:textStyle="bold" />
-    </LinearLayout>
-</LinearLayout>
-          EOF
-
-          mkdir -p app/src/main/res/layout
-          cat << 'EOF' > app/src/main/res/layout/layout_point_dialog.xml
-<?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="320dp"
-    android:layout_height="wrap_content"
-    android:background="@drawable/bg_panel_pill"
-    android:padding="16dp">
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/tvDialogTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Pengaturan Titik #1"
-            android:textColor="#10B981"
-            android:textSize="16sp"
-            android:textStyle="bold" />
-
-        <!-- PILIHAN TIPE GERAKAN (FITUR 1 & 13) -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Pilih Tipe Gerakan:"
-            android:textColor="#CBD5E1"
-            android:textSize="12sp"
-            android:textStyle="bold" />
-
-        <RadioGroup
-            android:id="@+id/rgPointType"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="2dp">
-
-            <RadioButton
-                android:id="@+id/rbTypeTap"
-                android:layout_width="wrap_content"
-                android:layout_height="32dp"
-                android:text="🎯 Tap (Sentuh Titik)"
-                android:textColor="#F8FAFC"
-                android:textSize="12sp"
-                android:checked="true" />
-
-            <RadioButton
-                android:id="@+id/rbTypeSwipeUp"
-                android:layout_width="wrap_content"
-                android:layout_height="32dp"
-                android:text="▲ Swipe Up (Garis Panah ke Atas)"
-                android:textColor="#38BDF8"
-                android:textSize="12sp" />
-
-            <RadioButton
-                android:id="@+id/rbTypeSwipeDown"
-                android:layout_width="wrap_content"
-                android:layout_height="32dp"
-                android:text="▼ Swipe Down (Garis Panah ke Bawah)"
-                android:textColor="#F59E0B"
-                android:textSize="12sp" />
-
-            <RadioButton
-                android:id="@+id/rbTypePaste"
-                android:layout_width="wrap_content"
-                android:layout_height="32dp"
-                android:text="📋 Paste (Tempel Teks)"
-                android:textColor="#F8FAFC"
-                android:textSize="12sp" />
-        </RadioGroup>
-
-        <!-- FITUR 1: PENGATURAN PANJANG GARIS SWIPE -->
-        <LinearLayout
-            android:id="@+id/layoutSwipeSettings"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginTop="4dp"
-            android:visibility="gone">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Panjang Garis / Jarak Usap (Piksel):"
-                android:textColor="#CBD5E1"
-                android:textSize="11sp" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:layout_marginTop="3dp">
-
-                <EditText
-                    android:id="@+id/etSwipeDistance"
-                    android:layout_width="80dp"
-                    android:layout_height="36dp"
-                    android:background="#1E293B"
-                    android:gravity="center"
-                    android:inputType="number"
-                    android:text="450"
-                    android:textColor="#38BDF8"
-                    android:textSize="12sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:text="(Contoh: 200 = Pendek, 450 = Sedang, 800 = Panjang)"
-                    android:textColor="#94A3B8"
-                    android:textSize="10sp" />
-            </LinearLayout>
-        </LinearLayout>
-
-        <!-- FITUR 4: PILIHAN JEDA (MILISEKON / DETIK) -->
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="6dp"
-            android:background="#334155" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Jeda Setelah Titik Ini:"
-            android:textColor="#CBD5E1"
-            android:textSize="11sp"
-            android:textStyle="bold" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="3dp"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
-
-            <EditText
-                android:id="@+id/etDialogDelay"
-                android:layout_width="90dp"
-                android:layout_height="36dp"
-                android:background="#1E293B"
-                android:gravity="center"
-                android:inputType="numberDecimal"
-                android:text="500"
-                android:textColor="#10B981"
-                android:textSize="13sp" />
-
-            <!-- Pilihan Unit Jeda (ms / s) -->
-            <RadioGroup
-                android:id="@+id/rgDelayUnit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:orientation="horizontal">
-
-                <RadioButton
-                    android:id="@+id/rbUnitMs"
-                    android:layout_width="wrap_content"
-                    android:layout_height="32dp"
-                    android:text="ms (Milisekon)"
-                    android:textColor="#F8FAFC"
-                    android:textSize="11sp"
-                    android:checked="true" />
-
-                <RadioButton
-                    android:id="@+id/rbUnitSec"
-                    android:layout_width="wrap_content"
-                    android:layout_height="32dp"
-                    android:layout_marginStart="4dp"
-                    android:text="detik (s)"
-                    android:textColor="#F8FAFC"
-                    android:textSize="11sp" />
-            </RadioGroup>
-        </LinearLayout>
-
-        <!-- FITUR 2: SUB-LOOP PADA TITIK -->
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="6dp"
-            android:background="#334155" />
-
-        <CheckBox
-            android:id="@+id/cbPointSubLoop"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Lompat Balik (Sub-Loop) di Titik Ini"
-            android:textColor="#38BDF8"
-            android:textSize="12sp"
-            android:textStyle="bold" />
-
-        <LinearLayout
-            android:id="@+id/layoutPointSubLoopFields"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_marginTop="2dp"
-            android:visibility="gone">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Lompat ke Titik: "
-                android:textColor="#CBD5E1"
-                android:textSize="11sp" />
-
-            <EditText
-                android:id="@+id/etPointJumpTo"
-                android:layout_width="48dp"
-                android:layout_height="34dp"
-                android:background="#1E293B"
-                android:gravity="center"
-                android:inputType="number"
-                android:text="7"
-                android:textColor="#10B981"
-                android:textSize="12sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:text="Setelah Siklus: "
-                android:textColor="#CBD5E1"
-                android:textSize="11sp" />
-
-            <EditText
-                android:id="@+id/etPointJumpCycle"
-                android:layout_width="40dp"
-                android:layout_height="34dp"
-                android:background="#1E293B"
-                android:gravity="center"
-                android:inputType="number"
-                android:text="1"
-                android:textColor="#10B981"
-                android:textSize="12sp" />
-        </LinearLayout>
-
-        <!-- FIELD TEKS PASTE -->
-        <LinearLayout
-            android:id="@+id/layoutDialogPasteFields"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="gone">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:text="Teks untuk Ditempel (Ketik via Keyboard):"
-                android:textColor="#CBD5E1"
-                android:textSize="11sp" />
-
-            <EditText
-                android:id="@+id/etDialogPasteText"
-                android:layout_width="match_parent"
-                android:layout_height="38dp"
-                android:layout_marginTop="2dp"
-                android:background="#1E293B"
-                android:hint="Ketik teks pesan..."
-                android:padding="6dp"
-                android:textColor="#F8FAFC"
-                android:textColorHint="#64748B"
-                android:textSize="12sp" />
-
-            <CheckBox
-                android:id="@+id/cbDialogAutoTap"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Auto-Tap fokus sebelum paste"
-                android:textColor="#CBD5E1"
-                android:textSize="11sp"
-                android:checked="true" />
-        </LinearLayout>
-
-        <!-- TOMBOL SIMPAN & TUTUP -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="14dp"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/btnDialogSave"
-                android:layout_width="0dp"
-                android:layout_height="38dp"
-                android:layout_weight="1"
-                android:backgroundTint="#10B981"
-                android:text="Simpan"
-                android:textColor="#FFFFFF"
-                android:textSize="12sp" />
-
-            <Button
-                android:id="@+id/btnDialogClose"
-                android:layout_width="0dp"
-                android:layout_height="38dp"
-                android:layout_marginStart="6dp"
-                android:layout_weight="1"
-                android:backgroundTint="#475569"
-                android:text="Batal"
-                android:textColor="#FFFFFF"
-                android:textSize="12sp" />
-        </LinearLayout>
-
-    </LinearLayout>
-</ScrollView>
-          EOF
-
-          mkdir -p app/src/main/res/layout
-          cat << 'EOF' > app/src/main/res/layout/layout_floating_widget.xml
-<?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
-
-    <!-- TOOLBAR LENGKAP SAAT IDLE -->
-    <LinearLayout
-        android:id="@+id/layoutFullToolbar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="@drawable/bg_panel_pill"
-        android:gravity="center_vertical"
-        android:padding="5dp">
-
-        <TextView
-            android:id="@+id/tvDragHandle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="⠿"
-            android:textColor="#94A3B8"
-            android:textSize="17sp"
-            android:paddingStart="4dp"
-            android:paddingEnd="4dp" />
-
-        <!-- Tombol Play / Mulai -->
-        <Button
-            android:id="@+id/btnFloatingPlay"
-            android:layout_width="wrap_content"
-            android:layout_height="36dp"
-            android:text="▶ Mulai"
-            android:textSize="12sp"
-            android:textColor="#FFFFFF"
-            android:backgroundTint="#10B981"
-            android:minWidth="0dp"
-            android:paddingStart="8dp"
-            android:paddingEnd="8dp" />
-
-        <!-- Tombol Tambah Titik (+) -->
-        <Button
-            android:id="@+id/btnFloatingAdd"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:layout_marginStart="4dp"
-            android:text="➕"
-            android:textSize="13sp"
-            android:textColor="#FFFFFF"
-            android:backgroundTint="#0284C7"
-            android:minWidth="0dp"
-            android:padding="0dp" />
-
-        <!-- Tombol Kurangi Titik (-) -->
-        <Button
-            android:id="@+id/btnFloatingRemove"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:layout_marginStart="3dp"
-            android:text="➖"
-            android:textSize="13sp"
-            android:textColor="#FFFFFF"
-            android:backgroundTint="#D97706"
-            android:minWidth="0dp"
-            android:padding="0dp" />
-
-        <!-- Tombol Minimize / Sembunyikan Titik (👁️) -->
-        <Button
-            android:id="@+id/btnFloatingVisibility"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:layout_marginStart="3dp"
-            android:text="👁️"
-            android:textSize="13sp"
-            android:textColor="#FFFFFF"
-            android:backgroundTint="#475569"
-            android:minWidth="0dp"
-            android:padding="0dp" />
-
-        <!-- FITUR 2: PENGATUR UKURAN PERSENTASE 0-100% (20dp-40dp) (📐) -->
-        <Button
-            android:id="@+id/btnFloatingSize"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:layout_marginStart="3dp"
-            android:text="📐"
-            android:textSize="13sp"
-            android:textColor="#FFFFFF"
-            android:backgroundTint="#0D9488"
-            android:minWidth="0dp"
-            android:padding="0dp" />
-
-        <!-- FITUR 3: TOMBOL SAVE KONFIGURASI PADA PANEL MELAYANG (💾) -->
-        <Button
-            android:id="@+id/btnFloatingSave"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:layout_marginStart="3dp"
-            android:text="💾"
-            android:textSize="13sp"
-            android:textColor="#FFFFFF"
-            android:backgroundTint="#059669"
-            android:minWidth="0dp"
-            android:padding="0dp" />
-
-        <!-- Tombol Pengaturan (⚙) -->
-        <Button
-            android:id="@+id/btnFloatingSettings"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:layout_marginStart="3dp"
-            android:text="⚙"
-            android:textSize="13sp"
-            android:textColor="#FFFFFF"
-            android:backgroundTint="#7C3AED"
-            android:minWidth="0dp"
-            android:padding="0dp" />
-
-        <!-- Tombol Tutup (✕) -->
-        <Button
-            android:id="@+id/btnFloatingClose"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:layout_marginStart="3dp"
-            android:text="✕"
-            android:textSize="13sp"
-            android:textColor="#FFFFFF"
-            android:backgroundTint="#EF4444"
-            android:minWidth="0dp"
-            android:padding="0dp" />
-
-    </LinearLayout>
-
-    <!-- PANEL MELAYANG MENGECIL SAAT PLAY (HANYA TOMBOL STOP) -->
-    <LinearLayout
-        android:id="@+id/layoutMiniToolbar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="@drawable/bg_panel_pill"
-        android:gravity="center_vertical"
-        android:padding="5dp"
-        android:visibility="gone">
-
-        <TextView
-            android:id="@+id/tvMiniDragHandle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="⠿"
-            android:textColor="#94A3B8"
-            android:textSize="17sp"
-            android:paddingStart="4dp"
-            android:paddingEnd="4dp" />
-
-        <!-- Tombol STOP Tunggal Saat Berjalan -->
-        <Button
-            android:id="@+id/btnFloatingMiniStop"
-            android:layout_width="wrap_content"
-            android:layout_height="36dp"
-            android:text="⏹ STOP"
-            android:textSize="12sp"
-            android:textStyle="bold"
-            android:textColor="#FFFFFF"
-            android:backgroundTint="#EF4444"
-            android:minWidth="0dp"
-            android:paddingStart="12dp"
-            android:paddingEnd="12dp" />
-
-    </LinearLayout>
-
-</FrameLayout>
-          EOF
-
-          mkdir -p app/src/main/res/layout
-          cat << 'EOF' > app/src/main/res/layout/layout_size_dialog.xml
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="300dp"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:background="@drawable/bg_panel_pill"
-    android:padding="16dp">
-
-    <TextView
-        android:id="@+id/tvSizeDialogTitle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Ukuran Titik: 50% (30dp)"
-        android:textColor="#10B981"
-        android:textSize="15sp"
-        android:textStyle="bold" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="2dp"
-        android:text="Rentang: 0% (20dp terkecil) - 100% (40dp terbesar)"
-        android:textColor="#94A3B8"
-        android:textSize="11sp" />
-
-    <SeekBar
-        android:id="@+id/sbSizePercent"
-        android:layout_width="match_parent"
-        android:layout_height="36dp"
-        android:layout_marginTop="12dp"
-        android:max="100"
-        android:progress="50" />
-
-    <!-- Tombol Preset Cepat -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:orientation="horizontal"
-        android:gravity="center">
-
-        <Button
-            android:id="@+id/btnSize0"
-            android:layout_width="0dp"
-            android:layout_height="34dp"
-            android:layout_weight="1"
-            android:text="0%\n20dp"
-            android:textSize="8sp"
-            android:backgroundTint="#334155"
-            android:textColor="#F8FAFC"
-            android:padding="0dp" />
-
-        <Button
-            android:id="@+id/btnSize25"
-            android:layout_width="0dp"
-            android:layout_height="34dp"
-            android:layout_marginStart="3dp"
-            android:layout_weight="1"
-            android:text="25%\n25dp"
-            android:textSize="8sp"
-            android:backgroundTint="#334155"
-            android:textColor="#F8FAFC"
-            android:padding="0dp" />
-
-        <Button
-            android:id="@+id/btnSize50"
-            android:layout_width="0dp"
-            android:layout_height="34dp"
-            android:layout_marginStart="3dp"
-            android:layout_weight="1"
-            android:text="50%\n30dp"
-            android:textSize="8sp"
-            android:backgroundTint="#10B981"
-            android:textColor="#FFFFFF"
-            android:padding="0dp" />
-
-        <Button
-            android:id="@+id/btnSize75"
-            android:layout_width="0dp"
-            android:layout_height="34dp"
-            android:layout_marginStart="3dp"
-            android:layout_weight="1"
-            android:text="75%\n35dp"
-            android:textSize="8sp"
-            android:backgroundTint="#334155"
-            android:textColor="#F8FAFC"
-            android:padding="0dp" />
-
-        <Button
-            android:id="@+id/btnSize100"
-            android:layout_width="0dp"
-            android:layout_height="34dp"
-            android:layout_marginStart="3dp"
-            android:layout_weight="1"
-            android:text="100%\n40dp"
-            android:textSize="8sp"
-            android:backgroundTint="#334155"
-            android:textColor="#F8FAFC"
-            android:padding="0dp" />
-    </LinearLayout>
-
-    <Button
-        android:id="@+id/btnSizeClose"
-        android:layout_width="match_parent"
-        android:layout_height="36dp"
-        android:layout_marginTop="14dp"
-        android:backgroundTint="#475569"
-        android:text="Tutup"
-        android:textColor="#FFFFFF"
-        android:textSize="12sp" />
-</LinearLayout>
-          EOF
-
-          mkdir -p app/src/main/res/layout
-          cat << 'EOF' > app/src/main/res/layout/activity_main.xml
-<?xml version="1.0" encoding="utf-8"?>
-          <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="#0F172A"
-              android:padding="16dp">
-
-              <LinearLayout
-                  android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  android:orientation="vertical">
-
-                  <!-- Header -->
-                  <TextView
-                      android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                      android:text="AutoKlik Trans"
-                      android:textColor="#10B981"
-                      android:textSize="24sp"
-                      android:textStyle="bold" />
-
-                  <TextView
-                      android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                      android:layout_marginTop="2dp"
-                      android:text="Pengontrol Klik Otomatis &amp; Multi-Touch"
-                      android:textColor="#94A3B8"
-                      android:textSize="13sp" />
-
-                  <!-- MANAJEMEN PROFIL SKRIP (FITUR 15) -->
-                  <LinearLayout
-                      android:layout_width="match_parent"
-                      android:layout_height="wrap_content"
-                      android:layout_marginTop="14dp"
-                      android:background="#1E293B"
-                      android:orientation="vertical"
-                      android:padding="14dp">
-
-                      <TextView
-                          android:layout_width="wrap_content"
-                          android:layout_height="wrap_content"
-                          android:text="📁 MANAJEMEN PROFIL SKRIP (Fitur 15)"
-                          android:textColor="#38BDF8"
-                          android:textSize="14sp"
-                          android:textStyle="bold" />
-
-                      <Spinner
-                          android:id="@+id/spProfiles"
-                          android:layout_width="match_parent"
-                          android:layout_height="44dp"
-                          android:layout_marginTop="6dp"
-                          android:background="#0F172A" />
-
-                      <LinearLayout
-                          android:layout_width="match_parent"
-                          android:layout_height="wrap_content"
-                          android:layout_marginTop="8dp"
-                          android:orientation="horizontal">
-
-                          <Button
-                              android:id="@+id/btnLoadProfile"
-                              android:layout_width="0dp"
-                              android:layout_height="40dp"
-                              android:layout_weight="1"
-                              android:backgroundTint="#0284C7"
-                              android:text="📂 Muat Skrip"
-                              android:textColor="#FFFFFF"
-                              android:textSize="12sp" />
-
-                          <Button
-                              android:id="@+id/btnDeleteProfile"
-                              android:layout_width="0dp"
-                              android:layout_height="40dp"
-                              android:layout_marginStart="6dp"
-                              android:layout_weight="1"
-                              android:backgroundTint="#DC2626"
-                              android:text="🗑️ Hapus"
-                              android:textColor="#FFFFFF"
-                              android:textSize="12sp" />
-                      </LinearLayout>
-
-                      <View
-                          android:layout_width="match_parent"
-                          android:layout_height="1dp"
-                          android:layout_marginTop="10dp"
-                          android:layout_marginBottom="10dp"
-                          android:background="#334155" />
-
-                      <TextView
-                          android:layout_width="wrap_content"
-                          android:layout_height="wrap_content"
-                          android:text="Simpan Sebagai Profil Baru:"
-                          android:textColor="#CBD5E1"
-                          android:textSize="11sp" />
-
-                      <LinearLayout
-                          android:layout_width="match_parent"
-                          android:layout_height="wrap_content"
-                          android:layout_marginTop="4dp"
-                          android:orientation="horizontal">
-
-                          <EditText
-                              android:id="@+id/etNewProfileName"
-                              android:layout_width="0dp"
-                              android:layout_height="40dp"
-                              android:layout_weight="2"
-                              android:background="#0F172A"
-                              android:hint="Nama Profil (misal: Game A)"
-                              android:padding="6dp"
-                              android:textColor="#F8FAFC"
-                              android:textColorHint="#64748B"
-                              android:textSize="12sp" />
-
-                          <Button
-                              android:id="@+id/btnSaveNewProfile"
-                              android:layout_width="0dp"
-                              android:layout_height="40dp"
-                              android:layout_marginStart="6dp"
-                              android:layout_weight="1"
-                              android:backgroundTint="#10B981"
-                              android:text="💾 Simpan"
-                              android:textColor="#FFFFFF"
-                              android:textSize="12sp" />
-                      </LinearLayout>
-
-                  </LinearLayout>
-
-                  <!-- Status Aksesibilitas & Overlay -->
-                  <LinearLayout
-                      android:layout_width="match_parent"
-                      android:layout_height="wrap_content"
-                      android:layout_marginTop="12dp"
-                      android:background="#1E293B"
-                      android:orientation="vertical"
-                      android:padding="14dp">
-
-                      <TextView
-                          android:layout_width="wrap_content"
-                          android:layout_height="wrap_content"
-                          android:text="Status Perizinan Sistem"
-                          android:textColor="#F8FAFC"
-                          android:textSize="14sp"
-                          android:textStyle="bold" />
-
-                      <TextView
-                          android:id="@+id/txtAccessibilityStatus"
-                          android:layout_width="wrap_content"
-                          android:layout_height="wrap_content"
-                          android:layout_marginTop="4dp"
-                          android:text="Aksesibilitas: Memeriksa..."
-                          android:textColor="#EF4444"
-                          android:textSize="12sp"
-                          android:textStyle="bold" />
-
-                      <TextView
-                          android:id="@+id/txtOverlayStatus"
-                          android:layout_width="wrap_content"
-                          android:layout_height="wrap_content"
-                          android:layout_marginTop="2dp"
-                          android:text="Jendela Mengapung: Memeriksa..."
-                          android:textColor="#EF4444"
-                          android:textSize="12sp"
-                          android:textStyle="bold" />
-
-                      <LinearLayout
-                          android:layout_width="match_parent"
-                          android:layout_height="wrap_content"
-                          android:layout_marginTop="8dp"
-                          android:orientation="horizontal">
-
-                          <Button
-                              android:id="@+id/btnAccessibility"
-                              android:layout_width="0dp"
-                              android:layout_height="38dp"
-                              android:layout_weight="1"
-                              android:backgroundTint="#334155"
-                              android:text="⚙️ Aksesibilitas"
-                              android:textColor="#F8FAFC"
-                              android:textSize="11sp" />
-
-                          <Button
-                              android:id="@+id/btnOverlay"
-                              android:layout_width="0dp"
-                              android:layout_height="38dp"
-                              android:layout_marginStart="6dp"
-                              android:layout_weight="1"
-                              android:backgroundTint="#334155"
-                              android:text="🔓 Izin Overlay"
-                              android:textColor="#F8FAFC"
-                              android:textSize="11sp" />
-                      </LinearLayout>
-                  </LinearLayout>
-
-                  <!-- Tombol Luncurkan Panel Melayang -->
-                  <Button
-                      android:id="@+id/btnStartFloating"
-                      android:layout_width="match_parent"
-                      android:layout_height="50dp"
-                      android:layout_marginTop="14dp"
-                      android:backgroundTint="#10B981"
-                      android:text="▶ TAMPILKAN PANEL MELAYANG"
-                      android:textColor="#FFFFFF"
-                      android:textSize="15sp"
-                      android:textStyle="bold" />
-
-                  <!-- Fitur Cepat Ringkasan -->
-                  <LinearLayout
-                      android:layout_width="match_parent"
-                      android:layout_height="wrap_content"
-                      android:layout_marginTop="12dp"
-                      android:background="#1E293B"
-                      android:orientation="vertical"
-                      android:padding="12dp">
-
-                      <TextView
-                          android:layout_width="wrap_content"
-                          android:layout_height="wrap_content"
-                          android:text="Panduan Tombol Panel Melayang:"
-                          android:textColor="#10B981"
-                          android:textSize="12sp"
-                          android:textStyle="bold" />
-
-                      <TextView
-                          android:layout_width="wrap_content"
-                          android:layout_height="wrap_content"
-                          android:layout_marginTop="4dp"
-                          android:text="• [ ➕ ] Tambah titik target bulat di layar.\n• [ ➖ ] Hapus titik target terakhir.\n• [ 👁️ ] Sembunyikan / Tampilkan titik target (Minimize).\n• [ 📐 ] Ubah ukuran titik: Kecil ➔ Sedang ➔ Besar.\n• [ 🎯 Ketuk Bulatan ] Atur Tap, Swipe, Jarak Usap (px), Paste Teks, &amp; Sub-Loop.\n• [ ▶ Mulai ] Otomatis mengecil menjadi tombol [ ⏹ STOP ] saja."
-                          android:textColor="#CBD5E1"
-                          android:textSize="11sp" />
-                  </LinearLayout>
-
-                  <!-- Tombol Tutup Panel Melayang -->
-                  <Button
-                      android:id="@+id/btnStopFloating"
-                      android:layout_width="match_parent"
-                      android:layout_height="44dp"
-                      android:layout_marginTop="12dp"
-                      android:backgroundTint="#EF4444"
-                      android:text="⏹ TUTUP PANEL MELAYANG"
-                      android:textColor="#FFFFFF"
-                      android:textSize="13sp" />
-
-              </LinearLayout>
-          </ScrollView>
-          EOF
-
-          mkdir -p app/src/main/java/com/autoklik/android/ui
-          cat << 'EOF' > app/src/main/java/com/autoklik/android/ui/MainActivity.kt
-package com.autoklik.android.ui
-
-          import android.accessibilityservice.AccessibilityServiceInfo
-          import android.content.Context
-          import android.content.Intent
-          import android.graphics.Color
-          import android.net.Uri
-          import android.os.Build
-          import android.os.Bundle
-          import android.provider.Settings
-          import android.view.accessibility.AccessibilityManager
-          import android.widget.*
-          import androidx.appcompat.app.AppCompatActivity
-          import com.autoklik.android.R
-          import com.autoklik.android.service.AutoClickAccessibilityService
-          import com.autoklik.android.service.FloatingOverlayService
-          import org.json.JSONObject
-
-          class MainActivity : AppCompatActivity() {
-
-              private lateinit var txtAccessibilityStatus: TextView
-              private lateinit var txtOverlayStatus: TextView
-              private lateinit var btnAccessibility: Button
-              private lateinit var btnOverlay: Button
-              private lateinit var btnStartFloating: Button
-              private lateinit var btnStopFloating: Button
-
-              private lateinit var spProfiles: Spinner
-              private lateinit var btnLoadProfile: Button
-              private lateinit var btnDeleteProfile: Button
-              private lateinit var etNewProfileName: EditText
-              private lateinit var btnSaveNewProfile: Button
-
-              private val profileList = mutableListOf<String>()
-              private lateinit var profileAdapter: ArrayAdapter<String>
-
-              override fun onCreate(savedInstanceState: Bundle?) {
-                  super.onCreate(savedInstanceState)
-                  setContentView(R.layout.activity_main)
-
-                  txtAccessibilityStatus = findViewById(R.id.txtAccessibilityStatus)
-                  txtOverlayStatus = findViewById(R.id.txtOverlayStatus)
-                  btnAccessibility = findViewById(R.id.btnAccessibility)
-                  btnOverlay = findViewById(R.id.btnOverlay)
-                  btnStartFloating = findViewById(R.id.btnStartFloating)
-                  btnStopFloating = findViewById(R.id.btnStopFloating)
-
-                  spProfiles = findViewById(R.id.spProfiles)
-                  btnLoadProfile = findViewById(R.id.btnLoadProfile)
-                  btnDeleteProfile = findViewById(R.id.btnDeleteProfile)
-                  etNewProfileName = findViewById(R.id.etNewProfileName)
-                  btnSaveNewProfile = findViewById(R.id.btnSaveNewProfile)
-
-                  setupProfilesManager()
-
-                  btnAccessibility.setOnClickListener {
-                      try {
-                          val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
-                          startActivity(intent)
-                          Toast.makeText(this, "Buka Aplikasi Terunduh > Aktifkan AutoKlik", Toast.LENGTH_LONG).show()
-                      } catch (e: Exception) {
-                          Toast.makeText(this, "Buka Pengaturan Aksesibilitas di HP Anda", Toast.LENGTH_SHORT).show()
-                      }
-                  }
-
-                  btnOverlay.setOnClickListener {
-                      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                          try {
-                              val intent = Intent(
-                                  Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                                  Uri.parse("package:$packageName")
-                              )
-                              startActivity(intent)
-                          } catch (e: Exception) {
-                              val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION)
-                              startActivity(intent)
-                          }
-                      } else {
-                          Toast.makeText(this, "Izin overlay otomatis aktif pada versi ini", Toast.LENGTH_SHORT).show()
-                      }
-                  }
-
-                  btnStartFloating.setOnClickListener {
-                      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this)) {
-                          Toast.makeText(this, "Harap izinkan Jendela Mengapung terlebih dahulu", Toast.LENGTH_LONG).show()
-                          val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:$packageName"))
-                          startActivity(intent)
-                          return@setOnClickListener
-                      }
-
-                      if (!isAccessibilityServiceEnabled()) {
-                          Toast.makeText(this, "Harap aktifkan Layanan Aksesibilitas AutoKlik!", Toast.LENGTH_LONG).show()
-                          val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
-                          startActivity(intent)
-                          return@setOnClickListener
-                      }
-
-                      val intent = Intent(this, FloatingOverlayService::class.java)
-                      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                          startForegroundService(intent)
-                      } else {
-                          startService(intent)
-                      }
-                      Toast.makeText(this, "Panel Melayang Aktif! Tekan ➕ untuk titik target.", Toast.LENGTH_LONG).show()
-                      moveTaskToBack(true)
-                  }
-
-                  btnStopFloating.setOnClickListener {
-                      val intent = Intent(this, FloatingOverlayService::class.java)
-                      stopService(intent)
-                      Toast.makeText(this, "Panel Melayang Ditutup", Toast.LENGTH_SHORT).show()
-                  }
-              }
-
-              private fun setupProfilesManager() {
-                  profileAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, profileList)
-                  spProfiles.adapter = profileAdapter
-
-                  loadProfileListFromPrefs()
-
-                  btnSaveNewProfile.setOnClickListener {
-                      val name = etNewProfileName.text.toString().trim()
-                      if (name.isEmpty()) {
-                          Toast.makeText(this, "Ketikkan nama profil skrip terlebih dahulu!", Toast.LENGTH_SHORT).show()
-                          return@setOnClickListener
-                      }
-
-                      saveProfileToPrefs(name)
-                      etNewProfileName.setText("")
-                      loadProfileListFromPrefs()
-                      Toast.makeText(this, "Profil '$name' berhasil disimpan! ✔", Toast.LENGTH_SHORT).show()
-                  }
-
-                  btnLoadProfile.setOnClickListener {
-                      val selected = spProfiles.selectedItem?.toString()
-                      if (selected != null) {
-                          Toast.makeText(this, "Profil '$selected' berhasil dimuat! 📂", Toast.LENGTH_SHORT).show()
-                      }
-                  }
-
-                  btnDeleteProfile.setOnClickListener {
-                      val selected = spProfiles.selectedItem?.toString()
-                      if (selected != null && profileList.size > 1) {
-                          deleteProfileFromPrefs(selected)
-                          loadProfileListFromPrefs()
-                          Toast.makeText(this, "Profil '$selected' dihapus 🗑️", Toast.LENGTH_SHORT).show()
-                      } else {
-                          Toast.makeText(this, "Profil default tidak dapat dihapus", Toast.LENGTH_SHORT).show()
-                      }
-                  }
-              }
-
-              private fun loadProfileListFromPrefs() {
-                  profileList.clear()
-                  val prefs = getSharedPreferences("autoklik_profiles", Context.MODE_PRIVATE)
-                  val allKeys = prefs.all.keys
-                  if (allKeys.isEmpty()) {
-                      saveProfileToPrefs("10 Titik Sub-Loop (10 ➔ 7)")
-                      saveProfileToPrefs("Auto-Scroll Feed (Swipe Up)")
-                      saveProfileToPrefs("Auto-Paste & Multi-Tap")
-                      profileList.addAll(listOf("10 Titik Sub-Loop (10 ➔ 7)", "Auto-Scroll Feed (Swipe Up)", "Auto-Paste & Multi-Tap"))
-                  } else {
-                      profileList.addAll(allKeys)
-                  }
-                  profileAdapter.notifyDataSetChanged()
-              }
-
-              private fun saveProfileToPrefs(profileName: String) {
-                  val profileObj = JSONObject().apply {
-                      put("name", profileName)
-                      put("subloop_start", 7)
-                      put("subloop_end", 10)
-                      put("jitter_enabled", true)
-                  }
-                  val prefs = getSharedPreferences("autoklik_profiles", Context.MODE_PRIVATE).edit()
-                  prefs.putString(profileName, profileObj.toString())
-                  prefs.apply()
-              }
-
-              private fun deleteProfileFromPrefs(profileName: String) {
-                  val prefs = getSharedPreferences("autoklik_profiles", Context.MODE_PRIVATE).edit()
-                  prefs.remove(profileName)
-                  prefs.apply()
-              }
-
-              override fun onResume() {
-                  super.onResume()
-                  updatePermissionStatus()
-              }
-
-              private fun isAccessibilityServiceEnabled(): Boolean {
-                  try {
-                      val am = getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
-                      val enabledServices = am.getEnabledAccessibilityServiceList(AccessibilityServiceInfo.FEEDBACK_ALL_MASK)
-                      for (service in enabledServices) {
-                          if (service.resolveInfo.serviceInfo.packageName == packageName) {
-                              return true
-                          }
-                      }
-                  } catch (e: Exception) {}
-                  return AutoClickAccessibilityService.instance != null
-              }
-
-              private fun updatePermissionStatus() {
-                  val isA11y = isAccessibilityServiceEnabled()
-                  if (isA11y) {
-                      txtAccessibilityStatus.text = "Aksesibilitas: 🟢 AKTIF (Siap Klik Otomatis)"
-                      txtAccessibilityStatus.setTextColor(Color.parseColor("#22C55E"))
-                  } else {
-                      txtAccessibilityStatus.text = "Aksesibilitas: 🔴 NONAKTIF (Harap Aktifkan)"
-                      txtAccessibilityStatus.setTextColor(Color.parseColor("#EF4444"))
-                  }
-
-                  val isOverlay = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                      Settings.canDrawOverlays(this)
-                  } else {
-                      true
-                  }
-                  if (isOverlay) {
-                      txtOverlayStatus.text = "Jendela Mengapung: 🟢 SUDAH DIIZINKAN"
-                      txtOverlayStatus.setTextColor(Color.parseColor("#22C55E"))
-                  } else {
-                      txtOverlayStatus.text = "Jendela Mengapung: 🔴 BELUM DIIZINKAN (Wajib)"
-                      txtOverlayStatus.setTextColor(Color.parseColor("#EF4444"))
-                  }
-              }
-          }
-          EOF
-
-          mkdir -p app/src/main/java/com/autoklik/android/service
-          cat << 'EOF' > app/src/main/java/com/autoklik/android/service/AutoClickAccessibilityService.kt
-package com.autoklik.android.service
-
-          import android.accessibilityservice.AccessibilityService
-          import android.accessibilityservice.GestureDescription
-          import android.content.ClipData
-          import android.content.ClipboardManager
-          import android.content.Context
-          import android.graphics.Path
-          import android.os.Build
-          import android.os.Bundle
-          import android.view.accessibility.AccessibilityEvent
-          import android.view.accessibility.AccessibilityNodeInfo
-          import androidx.annotation.RequiresApi
-          import kotlinx.coroutines.*
-
-          class AutoClickAccessibilityService : AccessibilityService() {
-
-              private val serviceScope = CoroutineScope(Dispatchers.Default + SupervisorJob())
-
-              companion object {
-                  var instance: AutoClickAccessibilityService? = null
-                      private set
-              }
-
-              override fun onServiceConnected() {
-                  super.onServiceConnected()
-                  instance = this
-              }
-
-              override fun onAccessibilityEvent(event: AccessibilityEvent?) {}
-
-              override fun onInterrupt() {
-                  instance = null
-              }
-
-              override fun onDestroy() {
-                  super.onDestroy()
-                  instance = null
-                  serviceScope.cancel()
-              }
-
-              @RequiresApi(Build.VERSION_CODES.N)
-              fun executeTap(x: Float, y: Float, durationMs: Long = 50L, callback: (() -> Unit)? = null) {
-                  val path = Path().apply { moveTo(x, y) }
-                  val stroke = GestureDescription.StrokeDescription(path, 0L, durationMs)
-                  val gesture = GestureDescription.Builder().addStroke(stroke).build()
-
-                  dispatchGesture(gesture, object : GestureResultCallback() {
-                      override fun onCompleted(gestureDescription: GestureDescription?) {
-                          callback?.invoke()
-                      }
-                      override fun onCancelled(gestureDescription: GestureDescription?) {
-                          callback?.invoke()
-                      }
-                  }, null)
-              }
-
-              @RequiresApi(Build.VERSION_CODES.N)
-              fun executeSwipe(
-                  startX: Float,
-                  startY: Float,
-                  endX: Float,
-                  endY: Float,
-                  durationMs: Long = 300L,
-                  callback: (() -> Unit)? = null
-              ) {
-                  val path = Path().apply {
-                      moveTo(startX, startY)
-                      lineTo(endX, endY)
-                  }
-                  val stroke = GestureDescription.StrokeDescription(path, 0L, durationMs)
-                  val gesture = GestureDescription.Builder().addStroke(stroke).build()
-
-                  dispatchGesture(gesture, object : GestureResultCallback() {
-                      override fun onCompleted(gestureDescription: GestureDescription?) {
-                          callback?.invoke()
-                      }
-                  }, null)
-              }
-
-              fun executePaste(
-                  x: Float,
-                  y: Float,
-                  textToPaste: String,
-                  autoTapToFocus: Boolean = true,
-                  callback: (() -> Unit)? = null
-              ) {
-                  val performPaste = {
-                      val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-                      val clip = ClipData.newPlainText("AutoKlikPaste", textToPaste)
-                      clipboard.setPrimaryClip(clip)
-
-                      val rootNode = rootInActiveWindow
-                      val focusedNode = rootNode?.findFocus(AccessibilityNodeInfo.FOCUS_INPUT)
-
-                      if (focusedNode != null && focusedNode.isEditable) {
-                          val arguments = Bundle().apply {
-                              putCharSequence(
-                                  AccessibilityNodeInfo.ACTION_ARGUMENT_SET_TEXT_CHARSEQUENCE,
-                                  textToPaste
-                              )
-                          }
-                          focusedNode.performAction(AccessibilityNodeInfo.ACTION_SET_TEXT, arguments)
-                          focusedNode.recycle()
-                      }
-                      rootNode?.recycle()
-                      callback?.invoke()
-                  }
-
-                  if (autoTapToFocus) {
-                      executeTap(x, y, 50L) {
-                          serviceScope.launch {
-                              delay(80)
-                              performPaste()
-                          }
-                      }
-                  } else {
-                      performPaste()
-                  }
-              }
-          }
-          EOF
-
-          mkdir -p app/src/main/java/com/autoklik/android/service
-          cat << 'EOF' > app/src/main/java/com/autoklik/android/service/FloatingOverlayService.kt
-package com.autoklik.android.service
-
-import android.app.Notification
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.Service
-import android.content.Context
-import android.content.Intent
-import android.graphics.PixelFormat
-import android.os.Build
-import android.os.IBinder
-import android.view.Gravity
-import android.view.LayoutInflater
-import android.view.MotionEvent
-import android.view.View
-import android.view.WindowManager
-import android.widget.*
-import androidx.core.app.NotificationCompat
-import com.autoklik.android.R
-import com.autoklik.android.ui.MainActivity
-import kotlinx.coroutines.*
-import org.json.JSONArray
-import org.json.JSONObject
-import kotlin.random.Random
-
-class FloatingOverlayService : Service() {
-
-    // Model Titik Lengkap
-    data class TargetPoint(
-        val order: Int,
-        val view: View,
-        val params: WindowManager.LayoutParams,
-        var type: String = "tap", // "tap", "swipe_up", "swipe_down", "paste"
-        var delayValue: Double = 500.0,
-        var delayUnit: String = "ms", // "ms" atau "s"
-        var delayMs: Long = 500L,
-        var durationMs: Long = 50L,
-        var swipeDistancePx: Float = 450f, // Panjang garis/panah swipe (px)
-        var jumpEnabled: Boolean = false,   // Sub-Loop pada titik
-        var jumpToPoint: Int = 7,
-        var jumpAfterCycle: Int = 1,
-        var pasteText: String = "",
-        var autoTapPaste: Boolean = true
-    )
-
-    private lateinit var windowManager: WindowManager
-    private var floatingContainer: View? = null
-    private lateinit var containerParams: WindowManager.LayoutParams
-    private val targetPoints = mutableListOf<TargetPoint>()
-
-    // Sub-views toolbar
-    private var layoutFullToolbar: View? = null
-    private var layoutMiniToolbar: View? = null
-
-    // Dialog Pop-up Per-Titik
-    private var currentDialogView: View? = null
-    private var currentDialogParams: WindowManager.LayoutParams? = null
-
-    // Dialog Ukuran (0 - 100% / 20dp - 40dp)
-    private var currentSizeDialogView: View? = null
-    private var currentSizeDialogParams: WindowManager.LayoutParams? = null
-
-    // Status Minimize / Hide Titik
-    private var arePointsVisible = true
-
-    // FITUR 2: Ukuran Titik Persentase (0% = 20dp, 100% = 40dp)
-    private var currentSizePercent = 50 // default 50% = 30dp
-
-    private var isPlaying = false
-    private val serviceScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
-    private var clickJob: Job? = null
-
-    override fun onBind(intent: Intent?): IBinder? = null
-
-    override fun onCreate() {
-        super.onCreate()
-        windowManager = getSystemService(Context.WINDOW_SERVICE) as WindowManager
-        loadSavedSizePercent()
-        startForegroundNotification()
-        setupFloatingToolbar()
-    }
-
-    private fun loadSavedSizePercent() {
-        val prefs = getSharedPreferences("autoklik_saved_config", Context.MODE_PRIVATE)
-        currentSizePercent = prefs.getInt("size_percent", 50)
-    }
-
-    private fun getTargetSizeDp(): Int {
-        // Linear: 0% = 20dp, 100% = 40dp
-        return 20 + (currentSizePercent * (40 - 20) / 100)
-    }
-
-    private fun startForegroundNotification() {
-        val channelId = "autoklik_overlay_channel"
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(
-                channelId,
-                "AutoKlik Overlay Service",
-                NotificationManager.IMPORTANCE_LOW
-            )
-            val manager = getSystemService(NotificationManager::class.java)
-            manager?.createNotificationChannel(channel)
-        }
-
-        val notification: Notification = NotificationCompat.Builder(this, channelId)
-            .setContentTitle("AutoKlik Aktif")
-            .setContentText("Panel melayang siap digunakan")
-            .setSmallIcon(android.R.drawable.ic_dialog_info)
-            .build()
-
-        startForeground(1001, notification)
-    }
-
-    private fun setupFloatingToolbar() {
-        val layoutType = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
-        } else {
-            @Suppress("DEPRECATION")
-            WindowManager.LayoutParams.TYPE_PHONE
-        }
-
-        containerParams = WindowManager.LayoutParams(
-            WindowManager.LayoutParams.WRAP_CONTENT,
-            WindowManager.LayoutParams.WRAP_CONTENT,
-            layoutType,
-            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
-            PixelFormat.TRANSLUCENT
-        ).apply {
-            gravity = Gravity.TOP or Gravity.START
-            x = 30
-            y = 180
-        }
-
-        floatingContainer = LayoutInflater.from(this).inflate(R.layout.layout_floating_widget, null)
-
-        layoutFullToolbar = floatingContainer?.findViewById(R.id.layoutFullToolbar)
-        layoutMiniToolbar = floatingContainer?.findViewById(R.id.layoutMiniToolbar)
-
-        val btnPlay = floatingContainer?.findViewById<Button>(R.id.btnFloatingPlay)
-        val btnAdd = floatingContainer?.findViewById<Button>(R.id.btnFloatingAdd)
-        val btnRemove = floatingContainer?.findViewById<Button>(R.id.btnFloatingRemove)
-        val btnVisibility = floatingContainer?.findViewById<Button>(R.id.btnFloatingVisibility)
-        val btnSize = floatingContainer?.findViewById<Button>(R.id.btnFloatingSize)
-        val btnSave = floatingContainer?.findViewById<Button>(R.id.btnFloatingSave)
-        val btnSettings = floatingContainer?.findViewById<Button>(R.id.btnFloatingSettings)
-        val btnClose = floatingContainer?.findViewById<Button>(R.id.btnFloatingClose)
-
-        val btnMiniStop = floatingContainer?.findViewById<Button>(R.id.btnFloatingMiniStop)
-
-        // ➕ Tambah Titik
-        btnAdd?.setOnClickListener {
-            addTargetPoint()
-        }
-
-        // ➖ Hapus Titik Terakhir
-        btnRemove?.setOnClickListener {
-            removeLastTargetPoint()
-        }
-
-        // 👁️ Minimize / Sembunyikan Titik Target
-        btnVisibility?.setOnClickListener {
-            arePointsVisible = !arePointsVisible
-            for (p in targetPoints) {
-                p.view.visibility = if (arePointsVisible) View.VISIBLE else View.GONE
-            }
-            btnVisibility.text = if (arePointsVisible) "👁️" else "🙈"
-            Toast.makeText(this, if (arePointsVisible) "Titik target ditampilkan" else "Titik target disembunyikan (Minimize)", Toast.LENGTH_SHORT).show()
-        }
-
-        // 📐 FITUR 2: Dialog Ukuran Persentase 0-100% (20dp-40dp)
-        btnSize?.setOnClickListener {
-            showSizeDialog()
-        }
-
-        // 💾 FITUR 3: Simpan Konfigurasi pada Panel Melayang
-        btnSave?.setOnClickListener {
-            saveCurrentConfiguration()
-        }
-
-        // ⚙️ Pengaturan
-        btnSettings?.setOnClickListener {
-            val intent = Intent(this, MainActivity::class.java).apply {
-                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            }
-            startActivity(intent)
-        }
-
-        // ▶ Mulai Eksekusi (Panel mengecil otomatis menjadi tombol Stop)
-        btnPlay?.setOnClickListener {
-            val a11y = AutoClickAccessibilityService.instance
-            if (a11y == null) {
-                Toast.makeText(this, "Layanan Aksesibilitas belum aktif!", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-
-            if (targetPoints.isEmpty()) {
-                Toast.makeText(this, "Tekan tombol ➕ untuk menambah titik target!", Toast.LENGTH_LONG).show()
-                return@setOnClickListener
-            }
-
-            isPlaying = true
-            layoutFullToolbar?.visibility = View.GONE
-            layoutMiniToolbar?.visibility = View.VISIBLE
-            windowManager.updateViewLayout(floatingContainer, containerParams)
-
-            startClickExecution(a11y)
-        }
-
-        // ⏹ Tombol Stop pada Panel Kecil
-        btnMiniStop?.setOnClickListener {
-            stopClickExecution()
-        }
-
-        // ✕ Tutup Toolbar
-        btnClose?.setOnClickListener {
-            stopSelf()
-        }
-
-        // Drag & Drop Floating Toolbar
-        val dragTouchListener = object : View.OnTouchListener {
-            private var initialX = 0
-            private var initialY = 0
-            private var initialTouchX = 0f
-            private var initialTouchY = 0f
-
-            override fun onTouch(v: View, event: MotionEvent): Boolean {
-                when (event.action) {
-                    MotionEvent.ACTION_DOWN -> {
-                        initialX = containerParams.x
-                        initialY = containerParams.y
-                        initialTouchX = event.rawX
-                        initialTouchY = event.rawY
-                        return true
-                    }
-                    MotionEvent.ACTION_MOVE -> {
-                        containerParams.x = initialX + (event.rawX - initialTouchX).toInt()
-                        containerParams.y = initialY + (event.rawY - initialTouchY).toInt()
-                        windowManager.updateViewLayout(floatingContainer, containerParams)
-                        return true
-                    }
-                }
-                return false
-            }
-        }
-
-        floatingContainer?.findViewById<View>(R.id.tvDragHandle)?.setOnTouchListener(dragTouchListener)
-        floatingContainer?.findViewById<View>(R.id.tvMiniDragHandle)?.setOnTouchListener(dragTouchListener)
-
-        windowManager.addView(floatingContainer, containerParams)
-    }
-
-    // FITUR 3: LOGIKA SIMPAN KONFIGURASI DARI PANEL MELAYANG
-    private fun saveCurrentConfiguration() {
-        if (targetPoints.isEmpty()) {
-            Toast.makeText(this, "Tambahkan titik target terlebih dahulu!", Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        try {
-            val configArray = JSONArray()
-            for (p in targetPoints) {
-                val obj = JSONObject().apply {
-                    put("order", p.order)
-                    put("x", p.params.x)
-                    put("y", p.params.y)
-                    put("type", p.type)
-                    put("delayValue", p.delayValue)
-                    put("delayUnit", p.delayUnit)
-                    put("delayMs", p.delayMs)
-                    put("swipeDistancePx", p.swipeDistancePx.toDouble())
-                    put("jumpEnabled", p.jumpEnabled)
-                    put("jumpToPoint", p.jumpToPoint)
-                    put("jumpAfterCycle", p.jumpAfterCycle)
-                    put("pasteText", p.pasteText)
-                    put("autoTapPaste", p.autoTapPaste)
-                }
-                configArray.put(obj)
-            }
-
-            val prefs = getSharedPreferences("autoklik_saved_config", Context.MODE_PRIVATE).edit()
-            prefs.putString("saved_points_json", configArray.toString())
-            prefs.putInt("size_percent", currentSizePercent)
-            prefs.apply()
-
-            Toast.makeText(this, "💾 Konfigurasi (${targetPoints.size} titik) berhasil disimpan!", Toast.LENGTH_LONG).show()
-        } catch (e: Exception) {
-            Toast.makeText(this, "Gagal menyimpan: ${e.message}", Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    // FITUR 2: DIALOG UKURAN PERSENTASE 0-100% (20dp - 40dp)
-    private fun showSizeDialog() {
-        closeSizeDialog()
-
-        val layoutType = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
-        } else {
-            @Suppress("DEPRECATION")
-            WindowManager.LayoutParams.TYPE_PHONE
-        }
-
-        currentSizeDialogParams = WindowManager.LayoutParams(
-            WindowManager.LayoutParams.WRAP_CONTENT,
-            WindowManager.LayoutParams.WRAP_CONTENT,
-            layoutType,
-            WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
-            PixelFormat.TRANSLUCENT
-        ).apply {
-            gravity = Gravity.CENTER
-        }
-
-        val dialogView = LayoutInflater.from(this).inflate(R.layout.layout_size_dialog, null)
-        val tvTitle = dialogView.findViewById<TextView>(R.id.tvSizeDialogTitle)
-        val sbPercent = dialogView.findViewById<SeekBar>(R.id.sbSizePercent)
-
-        val btn0 = dialogView.findViewById<Button>(R.id.btnSize0)
-        val btn25 = dialogView.findViewById<Button>(R.id.btnSize25)
-        val btn50 = dialogView.findViewById<Button>(R.id.btnSize50)
-        val btn75 = dialogView.findViewById<Button>(R.id.btnSize75)
-        val btn100 = dialogView.findViewById<Button>(R.id.btnSize100)
-        val btnClose = dialogView.findViewById<Button>(R.id.btnSizeClose)
-
-        sbPercent.progress = currentSizePercent
-        tvTitle.text = "Ukuran Titik: $currentSizePercent% (${getTargetSizeDp()}dp)"
-
-        fun applySize(percent: Int) {
-            currentSizePercent = percent.coerceIn(0, 100)
-            sbPercent.progress = currentSizePercent
-            tvTitle.text = "Ukuran Titik: $currentSizePercent% (${getTargetSizeDp()}dp)"
-            updateAllPointsVisuals()
-
-            // Simpan preferensi
-            val prefs = getSharedPreferences("autoklik_saved_config", Context.MODE_PRIVATE).edit()
-            prefs.putInt("size_percent", currentSizePercent)
-            prefs.apply()
-        }
-
-        sbPercent.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                if (fromUser) {
-                    applySize(progress)
-                }
-            }
-            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
-            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
-        })
-
-        btn0?.setOnClickListener { applySize(0) }
-        btn25?.setOnClickListener { applySize(25) }
-        btn50?.setOnClickListener { applySize(50) }
-        btn75?.setOnClickListener { applySize(75) }
-        btn100?.setOnClickListener { applySize(100) }
-
-        btnClose?.setOnClickListener {
-            closeSizeDialog()
-        }
-
-        windowManager.addView(dialogView, currentSizeDialogParams)
-        currentSizeDialogView = dialogView
-    }
-
-    private fun closeSizeDialog() {
-        if (currentSizeDialogView != null) {
-            try {
-                windowManager.removeView(currentSizeDialogView)
-            } catch (e: Exception) {}
-            currentSizeDialogView = null
-            currentSizeDialogParams = null
-        }
-    }
-
-    // MENAMBAH TITIK TARGET DENGAN GARIS PANAH SWIPE
-    private fun addTargetPoint() {
-        val nextOrder = targetPoints.size + 1
-        val layoutType = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
-        } else {
-            @Suppress("DEPRECATION")
-            WindowManager.LayoutParams.TYPE_PHONE
-        }
-
-        val pointParams = WindowManager.LayoutParams(
-            WindowManager.LayoutParams.WRAP_CONTENT,
-            WindowManager.LayoutParams.WRAP_CONTENT,
-            layoutType,
-            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
-            PixelFormat.TRANSLUCENT
-        ).apply {
-            gravity = Gravity.TOP or Gravity.START
-            x = 120 + ((nextOrder - 1) % 4) * 110
-            y = 350 + ((nextOrder - 1) / 4) * 120
-        }
-
-        val pointView = LayoutInflater.from(this).inflate(R.layout.layout_target_point, null)
-        val tvNumber = pointView.findViewById<TextView>(R.id.tvTargetNumber)
-        val tvType = pointView.findViewById<TextView>(R.id.tvTargetType)
-        tvNumber.text = nextOrder.toString()
-        tvType.text = "🎯"
-
-        val isTen = nextOrder == 10
-        val targetPoint = TargetPoint(
-            order = nextOrder,
-            view = pointView,
-            params = pointParams,
-            jumpEnabled = isTen,
-            jumpToPoint = 7,
-            jumpAfterCycle = 1
-        )
-
-        if (isTen) {
-            tvType.text = "🔁7"
-        }
-
-        // Drag & Drop dan Klik untuk Dialog Pengaturan
-        pointView.setOnTouchListener(object : View.OnTouchListener {
-            private var initialX = 0
-            private var initialY = 0
-            private var initialTouchX = 0f
-            private var initialTouchY = 0f
-            private var touchStartTime = 0L
-
-            override fun onTouch(v: View, event: MotionEvent): Boolean {
-                when (event.action) {
-                    MotionEvent.ACTION_DOWN -> {
-                        initialX = pointParams.x
-                        initialY = pointParams.y
-                        initialTouchX = event.rawX
-                        initialTouchY = event.rawY
-                        touchStartTime = System.currentTimeMillis()
-                        return true
-                    }
-                    MotionEvent.ACTION_MOVE -> {
-                        val deltaX = (event.rawX - initialTouchX).toInt()
-                        val deltaY = (event.rawY - initialTouchY).toInt()
-                        pointParams.x = initialX + deltaX
-                        pointParams.y = initialY + deltaY
-                        windowManager.updateViewLayout(pointView, pointParams)
-                        return true
-                    }
-                    MotionEvent.ACTION_UP -> {
-                        val diffTime = System.currentTimeMillis() - touchStartTime
-                        val moved = Math.abs(event.rawX - initialTouchX) > 12 || Math.abs(event.rawY - initialTouchY) > 12
-                        if (!moved && diffTime < 350) {
-                            showPointSettingsDialog(targetPoint)
-                        }
-                        return true
-                    }
-                }
-                return false
-            }
-        })
-
-        windowManager.addView(pointView, pointParams)
-        targetPoints.add(targetPoint)
-        updatePointVisual(targetPoint)
-        Toast.makeText(this, "Titik $nextOrder ditambah! (Ketuk untuk opsi Swipe Panah & Jeda)", Toast.LENGTH_SHORT).show()
-    }
-
-    // MEMPERBARUI TAMPILAN VISUAL TITIK (UKURAN & GARIS PANAH SWIPE)
-    private fun updatePointVisual(point: TargetPoint) {
-        val density = resources.displayMetrics.density
-        val sizeDp = getTargetSizeDp()
-        val sizePx = (sizeDp * density).toInt()
-
-        val pointRoot = point.view.findViewById<View>(R.id.pointRoot)
-        val tvNumber = point.view.findViewById<TextView>(R.id.tvTargetNumber)
-        val tvType = point.view.findViewById<TextView>(R.id.tvTargetType)
-
-        val layoutArrowUp = point.view.findViewById<View>(R.id.layoutArrowUp)
-        val viewLineUp = point.view.findViewById<View>(R.id.viewLineUp)
-        val tvSwipeDistUp = point.view.findViewById<TextView>(R.id.tvSwipeDistUp)
-
-        val layoutArrowDown = point.view.findViewById<View>(R.id.layoutArrowDown)
-        val viewLineDown = point.view.findViewById<View>(R.id.viewLineDown)
-        val tvSwipeDistDown = point.view.findViewById<TextView>(R.id.tvSwipeDistDown)
-
-        // Atur ukuran bulatan lingkaran target (Bulat Sempurna 1:1)
-        pointRoot.layoutParams.width = sizePx
-        pointRoot.layoutParams.height = sizePx
-        pointRoot.requestLayout()
-
-        // Sesuaikan ukuran font nomor dengan ukuran bulatan
-        tvNumber.textSize = (sizeDp * 0.45f).coerceIn(9f, 17f)
-
-        // FITUR 1: PANJANG GARIS PANAH SWIPE SESUAI DISTANCE
-        val arrowLineHeightDp = (point.swipeDistancePx / 4.0f).coerceIn(30f, 220f)
-        val arrowLineHeightPx = (arrowLineHeightDp * density).toInt()
-
-        when (point.type) {
-            "swipe_up" -> {
-                layoutArrowUp.visibility = View.VISIBLE
-                layoutArrowDown.visibility = View.GONE
-                viewLineUp.layoutParams.height = arrowLineHeightPx
-                viewLineUp.requestLayout()
-                tvSwipeDistUp.text = "▲ ${point.swipeDistancePx.toInt()}px"
-                tvType.text = "▲"
-            }
-            "swipe_down" -> {
-                layoutArrowUp.visibility = View.GONE
-                layoutArrowDown.visibility = View.VISIBLE
-                viewLineDown.layoutParams.height = arrowLineHeightPx
-                viewLineDown.requestLayout()
-                tvSwipeDistDown.text = "▼ ${point.swipeDistancePx.toInt()}px"
-                tvType.text = "▼"
-            }
-            "paste" -> {
-                layoutArrowUp.visibility = View.GONE
-                layoutArrowDown.visibility = View.GONE
-                tvType.text = "📋"
-            }
-            else -> {
-                layoutArrowUp.visibility = View.GONE
-                layoutArrowDown.visibility = View.GONE
-                tvType.text = if (point.jumpEnabled) "🔁${point.jumpToPoint}" else "🎯"
-            }
-        }
-
-        if (point.jumpEnabled) {
-            tvType.text = "🔁${point.jumpToPoint}"
-        }
-
-        try {
-            windowManager.updateViewLayout(point.view, point.params)
-        } catch (e: Exception) {}
-    }
-
-    private fun updateAllPointsVisuals() {
-        for (p in targetPoints) {
-            updatePointVisual(p)
-        }
-    }
-
-    // DIALOG PENGATURAN PER-TITIK (KEYBOARD AKTIF, JEDA MS/S, GARIS SWIPE, SUB-LOOP)
-    private fun showPointSettingsDialog(point: TargetPoint) {
-        closePointSettingsDialog()
-
-        val layoutType = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
-        } else {
-            @Suppress("DEPRECATION")
-            WindowManager.LayoutParams.TYPE_PHONE
-        }
-
-        val dialogParams = WindowManager.LayoutParams(
-            WindowManager.LayoutParams.WRAP_CONTENT,
-            WindowManager.LayoutParams.WRAP_CONTENT,
-            layoutType,
-            WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
-            PixelFormat.TRANSLUCENT
-        ).apply {
-            gravity = Gravity.CENTER
-            softInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN or WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE
-        }
-
-        val dialogView = LayoutInflater.from(this).inflate(R.layout.layout_point_dialog, null)
-        val tvTitle = dialogView.findViewById<TextView>(R.id.tvDialogTitle)
-        val rgType = dialogView.findViewById<RadioGroup>(R.id.rgPointType)
-        val rbTap = dialogView.findViewById<RadioButton>(R.id.rbTypeTap)
-        val rbSwipeUp = dialogView.findViewById<RadioButton>(R.id.rbTypeSwipeUp)
-        val rbSwipeDown = dialogView.findViewById<RadioButton>(R.id.rbTypeSwipeDown)
-        val rbPaste = dialogView.findViewById<RadioButton>(R.id.rbTypePaste)
-
-        val layoutSwipe = dialogView.findViewById<LinearLayout>(R.id.layoutSwipeSettings)
-        val etSwipeDistance = dialogView.findViewById<EditText>(R.id.etSwipeDistance)
-
-        // FITUR 4: Jeda & Pilihan Unit ms / s
-        val etDelay = dialogView.findViewById<EditText>(R.id.etDialogDelay)
-        val rgDelayUnit = dialogView.findViewById<RadioGroup>(R.id.rgDelayUnit)
-        val rbUnitMs = dialogView.findViewById<RadioButton>(R.id.rbUnitMs)
-        val rbUnitSec = dialogView.findViewById<RadioButton>(R.id.rbUnitSec)
-
-        val cbSubLoop = dialogView.findViewById<CheckBox>(R.id.cbPointSubLoop)
-        val layoutSubLoop = dialogView.findViewById<LinearLayout>(R.id.layoutPointSubLoopFields)
-        val etJumpTo = dialogView.findViewById<EditText>(R.id.etPointJumpTo)
-        val etJumpCycle = dialogView.findViewById<EditText>(R.id.etPointJumpCycle)
-
-        val layoutPaste = dialogView.findViewById<LinearLayout>(R.id.layoutDialogPasteFields)
-        val etPasteText = dialogView.findViewById<EditText>(R.id.etDialogPasteText)
-        val cbAutoTap = dialogView.findViewById<CheckBox>(R.id.cbDialogAutoTap)
-        val btnSave = dialogView.findViewById<Button>(R.id.btnDialogSave)
-        val btnClose = dialogView.findViewById<Button>(R.id.btnDialogClose)
-
-        tvTitle.text = "Pengaturan Titik #${point.order}"
-
-        // Set Jeda dan Unit (Fitur 4)
-        if (point.delayUnit == "s") {
-            rbUnitSec.isChecked = true
-            etDelay.setText(point.delayValue.toString())
-        } else {
-            rbUnitMs.isChecked = true
-            etDelay.setText(point.delayValue.toLong().toString())
-        }
-
-        etSwipeDistance.setText(point.swipeDistancePx.toInt().toString())
-
-        // Sub-Loop state
-        cbSubLoop.isChecked = point.jumpEnabled
-        layoutSubLoop.visibility = if (point.jumpEnabled) View.VISIBLE else View.GONE
-        etJumpTo.setText(point.jumpToPoint.toString())
-        etJumpCycle.setText(point.jumpAfterCycle.toString())
-
-        cbSubLoop.setOnCheckedChangeListener { _, isChecked ->
-            layoutSubLoop.visibility = if (isChecked) View.VISIBLE else View.GONE
-        }
-
-        // Paste state
-        etPasteText.setText(point.pasteText)
-        cbAutoTap.isChecked = point.autoTapPaste
-
-        // Type state
-        when (point.type) {
-            "swipe_up" -> {
-                rbSwipeUp.isChecked = true
-                layoutSwipe.visibility = View.VISIBLE
-                layoutPaste.visibility = View.GONE
-            }
-            "swipe_down" -> {
-                rbSwipeDown.isChecked = true
-                layoutSwipe.visibility = View.VISIBLE
-                layoutPaste.visibility = View.GONE
-            }
-            "paste" -> {
-                rbPaste.isChecked = true
-                layoutSwipe.visibility = View.GONE
-                layoutPaste.visibility = View.VISIBLE
-            }
-            else -> {
-                rbTap.isChecked = true
-                layoutSwipe.visibility = View.GONE
-                layoutPaste.visibility = View.GONE
-            }
-        }
-
-        rgType.setOnCheckedChangeListener { _, checkedId ->
-            layoutSwipe.visibility = if (checkedId == R.id.rbTypeSwipeUp || checkedId == R.id.rbTypeSwipeDown) View.VISIBLE else View.GONE
-            layoutPaste.visibility = if (checkedId == R.id.rbTypePaste) View.VISIBLE else View.GONE
-        }
-
-        btnSave.setOnClickListener {
-            point.type = when (rgType.checkedRadioButtonId) {
-                R.id.rbTypeSwipeUp -> "swipe_up"
-                R.id.rbTypeSwipeDown -> "swipe_down"
-                R.id.rbTypePaste -> "paste"
-                else -> "tap"
-            }
-
-            // Hitung Jeda sesuai unit (Fitur 4)
-            val isSec = rgDelayUnit.checkedRadioButtonId == R.id.rbUnitSec
-            val delayInputVal = etDelay.text.toString().toDoubleOrNull() ?: 500.0
-            point.delayValue = delayInputVal
-            point.delayUnit = if (isSec) "s" else "ms"
-            point.delayMs = if (isSec) (delayInputVal * 1000.0).toLong().coerceAtLeast(50L) else delayInputVal.toLong().coerceAtLeast(50L)
-
-            point.swipeDistancePx = etSwipeDistance.text.toString().toFloatOrNull() ?: 450f
-
-            point.jumpEnabled = cbSubLoop.isChecked
-            point.jumpToPoint = etJumpTo.text.toString().toIntOrNull() ?: 7
-            point.jumpAfterCycle = etJumpCycle.text.toString().toIntOrNull() ?: 1
-
-            point.pasteText = etPasteText.text.toString()
-            point.autoTapPaste = cbAutoTap.isChecked
-
-            updatePointVisual(point)
-            closePointSettingsDialog()
-            Toast.makeText(this, "Titik #${point.order} berhasil disimpan! ✔", Toast.LENGTH_SHORT).show()
-        }
-
-        btnClose.setOnClickListener {
-            closePointSettingsDialog()
-        }
-
-        windowManager.addView(dialogView, dialogParams)
-        currentDialogView = dialogView
-        currentDialogParams = dialogParams
-    }
-
-    private fun closePointSettingsDialog() {
-        if (currentDialogView != null) {
-            try {
-                windowManager.removeView(currentDialogView)
-            } catch (e: Exception) {}
-            currentDialogView = null
-            currentDialogParams = null
-        }
-    }
-
-    private fun removeLastTargetPoint() {
-        if (targetPoints.isNotEmpty()) {
-            val last = targetPoints.removeAt(targetPoints.size - 1)
-            try {
-                windowManager.removeView(last.view)
-                Toast.makeText(this, "Titik ${last.order} dihapus", Toast.LENGTH_SHORT).show()
-            } catch (e: Exception) {}
-        } else {
-            Toast.makeText(this, "Tidak ada titik untuk dihapus", Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    // EKSEKUSI DENGAN LOGIKA SWIPE JARAK PANAH & JEDA MS/DETIK
-    private fun startClickExecution(service: AutoClickAccessibilityService) {
-        clickJob?.cancel()
-        clickJob = serviceScope.launch {
-            val prefs = getSharedPreferences("autoklik_prefs", Context.MODE_PRIVATE)
-            val jitterEnabled = prefs.getBoolean("jitter_enabled", true)
-            val defaultPaste = prefs.getString("paste_text", "AutoKlik Trans") ?: ""
-
-            Toast.makeText(applicationContext, "AutoKlik Berjalan!", Toast.LENGTH_SHORT).show()
-
-            var currentOrder = 1
-            var cycle = 1
-
-            while (isActive && isPlaying && targetPoints.isNotEmpty()) {
-                val point = targetPoints.find { it.order == currentOrder } ?: targetPoints.firstOrNull()
-                if (point != null) {
-                    val density = resources.displayMetrics.density
-                    val radiusPx = (getTargetSizeDp() * density) / 2f
-                    val tapX = point.params.x + radiusPx
-                    val tapY = point.params.y + radiusPx
-
-                    // Eksekusi Gestur Sesuai Garis Panah Swipe
-                    when (point.type) {
-                        "swipe_up" -> {
-                            val endY = (tapY - point.swipeDistancePx).coerceAtLeast(80f)
-                            service.executeSwipe(tapX, tapY, tapX, endY, 350L)
-                        }
-                        "swipe_down" -> {
-                            val endY = tapY + point.swipeDistancePx
-                            service.executeSwipe(tapX, tapY, tapX, endY, 350L)
-                        }
-                        "paste" -> {
-                            val text = if (point.pasteText.isNotBlank()) point.pasteText else defaultPaste
-                            service.executePaste(tapX, tapY, text, point.autoTapPaste)
-                        }
-                        else -> {
-                            service.executeTap(tapX, tapY, point.durationMs)
-                        }
-                    }
-
-                    // Jeda acak (Anti-Deteksi) berdasarkan delayMs terhitung
-                    var waitTime = point.delayMs
-                    if (jitterEnabled) {
-                        val jitterFactor = Random.nextInt(-15, 16) / 100f
-                        waitTime = (waitTime * (1f + jitterFactor)).toLong().coerceAtLeast(50L)
-                    }
-                    delay(waitTime)
-
-                    // LOGIKA SUB-LOOP PADA TITIK
-                    if (point.jumpEnabled && cycle >= point.jumpAfterCycle && point.jumpToPoint <= targetPoints.size) {
-                        currentOrder = point.jumpToPoint
-                    } else if (currentOrder >= targetPoints.size) {
-                        currentOrder = 1
-                        cycle++
-                    } else {
-                        currentOrder++
-                    }
-                } else {
-                    currentOrder = 1
-                }
-            }
-        }
-    }
-
-    private fun stopClickExecution() {
-        isPlaying = false
-        clickJob?.cancel()
-        clickJob = null
-
-        layoutMiniToolbar?.visibility = View.GONE
-        layoutFullToolbar?.visibility = View.VISIBLE
-        if (floatingContainer != null) {
-            try {
-                windowManager.updateViewLayout(floatingContainer, containerParams)
-            } catch (e: Exception) {}
-        }
-
-        Toast.makeText(applicationContext, "AutoKlik Dihentikan ⏹", Toast.LENGTH_SHORT).show()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        stopClickExecution()
-        serviceScope.cancel()
-        closePointSettingsDialog()
-        closeSizeDialog()
-
-        for (point in targetPoints) {
-            try {
-                windowManager.removeView(point.view)
-            } catch (e: Exception) {}
-        }
-        targetPoints.clear()
-
-        if (floatingContainer != null) {
-            try {
-                windowManager.removeView(floatingContainer)
-            } catch (e: Exception) {}
-        }
-    }
-}
-          EOF
-
-          mkdir -p app/src/main
-          cat << 'EOF' > app/src/main/AndroidManifest.xml
-<?xml version="1.0" encoding="utf-8"?>
-          <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-              package="com.autoklik.android">
-
-              <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-              <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-              <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
-              <uses-permission android:name="android.permission.VIBRATE" />
-
-              <application
-                  android:allowBackup="true"
-                  android:icon="@android:drawable/sym_def_app_icon"
-                  android:label="@string/app_name"
-                  android:roundIcon="@android:drawable/sym_def_app_icon"
-                  android:supportsRtl="true"
-                  android:theme="@style/Theme.Material3.DayNight.NoActionBar">
-
-                  <activity
-                      android:name=".ui.MainActivity"
-                      android:exported="true">
-                      <intent-filter>
-                          <action android:name="android.intent.action.MAIN" />
-                          <category android:name="android.intent.category.LAUNCHER" />
-                      </intent-filter>
-                  </activity>
-
-                  <service
-                      android:name=".service.FloatingOverlayService"
-                      android:enabled="true"
-                      android:exported="false"
-                      android:foregroundServiceType="specialUse" />
-
-                  <service
-                      android:name=".service.AutoClickAccessibilityService"
-                      android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"
-                      android:exported="true">
-                      <intent-filter>
-                          <action android:name="android.accessibilityservice.AccessibilityService" />
-                      </intent-filter>
-                      <meta-data
-                          android:name="android.accessibilityservice"
-                          android:resource="@xml/accessibility_service_config" />
-                  </service>
-
-              </application>
-
-          </manifest>
-          EOF
-
-          mkdir -p app
-          cat << 'EOF' > app/build.gradle
-plugins {
-              id 'com.android.application'
-              id 'org.jetbrains.kotlin.android'
-              id 'kotlin-kapt'
-          }
-
-          android {
-              namespace 'com.autoklik.android'
-              compileSdk 34
-
-              defaultConfig {
-                  applicationId "com.autoklik.android"
-                  minSdk 24
-                  targetSdk 34
-                  versionCode 1
-                  versionName "1.0.0"
-              }
-
-              buildTypes {
-                  release { minifyEnabled false }
-                  debug { minifyEnabled false }
-              }
-              compileOptions {
-                  sourceCompatibility JavaVersion.VERSION_17
-                  targetCompatibility JavaVersion.VERSION_17
-              }
-              kotlinOptions {
-                  jvmTarget = '17'
-              }
-          }
-
-          dependencies {
-              implementation 'androidx.core:core-ktx:1.12.0'
-              implementation 'androidx.appcompat:appcompat:1.6.1'
-              implementation 'com.google.android.material:material:1.11.0'
-              implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3'
-              implementation 'androidx.room:room-runtime:2.6.1'
-              implementation 'androidx.room:room-ktx:2.6.1'
-              kapt 'androidx.room:room-compiler:2.6.1'
-          }
-          EOF
+          python3 -c '
+          import base64, io, zipfile
+          b64 = """
+          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-P0mXW
+          1cUKRvjTA+dr4c++/QZQSwMEFAAAAAgAj4BoXdn3PJEKAQAALwIAADUAAABhcHAvc3JjL21haW4v
+          cmVzL3htbC9hY2Nlc3NpYmlsaXR5X3NlcnZpY2VfY29uZmlnLnhtbI2ST2vDMAzF7/0UwffG7W2E
+          pl3Zn7LDYIzCjsO1lVQkkYOlZCvsw8/psrEeWqqL7Id+7yHsxeqzqZMeAqOnXM3TmUqArHdIZa46
+          KaY3arWcJH+1MNYCM+6wRjlMGUKPFpLoQpwZcsGjy9VepM20ZruHxnA66qn1jTZtpQOwHjX1z3uo
+          Uc5OYh56INkeWuBcSWzrun42XF3FPgK4nbHVgOeqGG8bIAhor3OoTRmDi9juoTBdLV/D+RUkIPTw
+          RALBWMEe3pCc/+BzrtbQC4TCh2YDLF04rhM6uDD/G/LjfOdjFsllygHbgK0cH/SWI0+lPlnofRg5
+          h5MXLNCagd9iA76LefNZ/Bd6OfkGUEsDBBQAAAAIAI+AaF1rQTZLqAAAAHIBAAA0AAAAYXBwL3Ny
+          Yy9tYWluL3Jlcy9kcmF3YWJsZS9pY19sYXVuY2hlcl9mb3JlZ3JvdW5kLnhtbIWQMQ+CMBBGd34F
+          qavSEhgqoQzq4OLs3NDqNQJt2gsYf70xEkUSw40vL+9Lr9yMnTm4NSzvG9rrwjM2ec8xZgh1cafXH8
+          hmTkSW1bKt2Neh3oyEgU/9yIi8EoBEFSxpX754A2V8AFqTd6cNbj+RNcMo/fLKlmbukkwoxNGxfT
+          NHvbWC/IKmW7LU/na1P7FTtIlIKcMrbOGOS8zzlscv4gMZ1ul/T96Cp6AlBLAwQUAAAACACPgGhd
+          irV396UAAAAjAQAALQAAAGFwcC9zcmMvbWFpbi9yZXMvZHJhd2FibGUvYmdfdGFyZ2V0X3BvaW50
+          LnhtbGWO0QqCMBiF73uK8XedU6Ey2ZSCeo+xrTbU/bIt6/ErEQk9l4fzfRxWv7uWDNoHi45DlqRA
+          tJOorHtweMb7roC62pA5LBjRa/KlXCiFUx6t4mBi7EtKgzS6EyGZ+kRiR0XfUK8DnTr4c/0y1eWo
+          5YCDaKFabFjA1qp5KrFFz2F7PaS37JifgdA1ET02ekZeVkXDIU/2qoeVKEsvpyJbaBgdL1WbD1BL
+          AwQUAAAACACPgGhdL+Dki7oAAABYAQAAEME9M9cSy9FvfHvcx2gMPkp1H5Dj4YaKufPRsAyon8Tf
+          cGFuZWxfcGlsbC54bWxtkM0OgjAQhO8+RbOepQISDaEQL7xH01ZogC7p1p/HFwwhBp3j5JvZzBbV
+          a+jZw3iy6ATE0RGYcQq1dY2Ae7gdLlCVO7aqoFaOhk0pR7l02qPVAtoQxpxzUq0ZJEWLHykcuBw7
+          7g3xxYOvrlmLnX9qBXijgnRNb6DcgAVhb/XKK+zRC9jXybGOz8kVGP9JKPRuWrZmvNT2TgKSkx7/
+          8RQ8dmbFn1aHdv5JNuPbw2l6irNsUQDvDUxFShoWWbHougyHjr0tFz3E38fX8e0bnTUpya-P0mXW
+          AABhcHAvc3JjL21haW4vcmVzL2xheW91dC9sYXlvdXRfdGFyZ2V0X3BvaW50LnhtbOVWzW7TQBC+
+          9ymW5VKEUie0hTSq+xPScKlQRRKu0dje2qvYu9Z6HCdVn4EjVx4BiTNPwxPwCKw3SXHaOD+lLUj4
+          5vE365nvm52Zw+NRFJIhUwmXwqa1nSolTLjS48K3aYqXlTo9Pto6POeCgTqHsUyRaBeRNEB4SnLP
+          pgFi3LCsxA1YBMnO1L7jysiCeGApllhTG90i+pm+NEJzWj/jHgY2zRTEfVcKZAIX4gLG/QCXAaXi
+          2gZoUtE5IXchnIf4CoYcxzZ1NZKpfqB9rvRZGne0ZZCHzyoV8g4UT8gFCAjIKUJCtjsZjxnpxS9I
+          pXI0ARY5MZbij3JiTl5yz5pEf6qUzHoxvYNbRcJGRKxJxpqE3MEOecIdHhq4LwWbUWbY6LIRfuQs
+          u7FsmuXGmRYdUP/dpj8+fyv//FaGUtn0+W692WrXy3EdfsX0TdhL4iUYHIca5MjQo8Qq0lBKwU1B
+          DDUiL51eyfnzXO16y2Ezil5Xy4AOuANfyVR4v5Ofj3mpdDdx49DcgRZPcL3QH1NmsrdfjUcPJna1
+          TOw58loH1XbtzavTxdAYvLxrdhCUjnGvTI4p7Cw/MQflUhgVrGI/KTYjbfcHoECQLkc+IF1QPkPS
+          Q4iAbDfTEJB0WBSnSgCpNWqFFtVWUQDvDUxFShoWWbHougyHjr0tFz3E38fX8e0bnTUpya-P0mXW
+          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-P0mXW
+          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-P0mXW/2k0ixxaPFZmgKS/Mnr3d
+          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
+          w0+eVDFTr5UyGsrTSqpr+S67daU0TNNdsS3GaNpfXaSs1HK88189xE+t+82lXG2te9SLWX16hY3y
+          U0kPCL4ffH9wjaAul9EME9M9cSy9FvfHvcx2gMPkp1H5Dj4YaKufPRsAyon8Tf+qrmWXQi2NaqzN
+          AVVccMiqYam5WVMRu2Gonxf3bj5uWZOiAQKrQX8C80+nkwL3Ct37deLu0d2j/wNQSwECFAMUAAAA
+          CACPgGhdugWryV4AAAB8AAAAEQAAAAAAAAAAAAAApIEAAAAAZ3JhZGxlLnByb3BlcnRpZXNQSwEC
+          FAMUAAAACACPgGhdM2v0ebUAAADbAQAADwAAAAAAAAAAAAAApIGNAAAAc2V0dGluZ3MuZ3JhZGxl
+          UEsBAhQDFAAAAAgAj4BoXeQ2UxptAAAAEME9M9cSy9FvfHvcx2gMPkp1H5Dj4YaKufPRsAyon8Tf
+          ZVBLAQIUAxQAAAAIAI+AaF3CLMevrwEAEME9M9cSy9FvfHvcx2gMPkp1H5Dj4YaKufPRsAyon8Tf
+          Z3JhZGxlUEsBAhQDFAAAAAgAj4BoXdebUVlwAgAAyggAACAAAAAAAAAAAAAAAKSB4wMAAGFwcC9z
+          cmMvbWFpbi9BbmRyb2lkTWFuaWZlc3QueG1sUEsBAhQDFAAAAAgAj4BoXcT/He2LAAAA7wAAACMA
+          AAAAAAAAAAAAAKSBkQYAAGFwcC9zcmMvbWFpbi9yZXMvdmFsdWVzL3N0cmluZ3MueG1sUEsBAhQD
+          FAAAAAgAj4BoXWWf1r6uAAAAegEAACIAEME9M9cSy9FvfHvcx2gMPkp1H5Dj4YaKufPRsAyon8Tf
+          dmFsdWVzL3RoZW1lcy54bWxQSwECFAMUEME9M9cSy9FvfHvcx2gMPkp1H5Dj4YaKufPRsAyon8Tf
+          pIFLCAAAYXBwL3NyYy9tYWluL3Jlcy94bWwvYWNjZXNzaWJpbGl0eV9zZXJ2aWNlX2NvbmZpZy54
+          bWxQSwECFAMUAAAACACPgGhda0E2S6gAAAByAQAANAAAAAAAAAAAAAAApIGoCQAAYXBwL3NyYy9t
+          YWluL3Jlcy9kcmF3YWJsZS9pY19sYXVuY2hlcl9mb3JlZ3JvdW5kLnhtbFBLAQIUAxQAAAAIAI+A
+          aF2KtXf3pQAAACMBAAAtAAAAAAAAAAAAAACkgaIKAABhcHAvc3JjL21haW4vcmVzL2RyYXdhYmxl
+          L2JnX3RhcmdldF9wb2ludC54bWxQSwECFAMUAAAACACPgGhdL+Dki7oAAABYAQAAKwAAAAAAAAAA
+          AAAApIGSCwAAYXBwL3NyYy9tYWluL3Jlcy9kcmF3YWJsZS9iZ19wYW5lbF9waWxsLnhtbFBLAQIU
+          AxQAAAAIAKGGaF0vbh40twIAAFYOAAAvEME9M9cSy9FvfHvcx2gMPkp1H5Dj4YaKufPRsAyon8Tf
+          L2xheW91dC9sYXlvdXRfdGFyZ2V0X3BvaW50LnhtbFBLAQIUAxQAAAAIAKGGaF0hBX8H6wYAAB4u
+          AAAvAAAAAAAAAAAAAACkgZkPAABhcHAvc3JjL21haW4vcmVzL2xheW91dC9sYXlvdXRfcG9pbnRf
+          ZGlhbG9nLnhtbFBLAQIUAxQAAAAIAKGGEME9M9cSy9FvfHvcx2gMPkp1H5Dj4YaKufPRsAyon8Tf
+          cHAvc3JjL21haW4vcmVzL2xheW91dC9sYXlvdXRfZmxvYXRpbmdfd2lkZ2V0LnhtbFBLAQIUAxQA
+          AAAIAI+AaF1U0chcPwYAAKkuAAApAAAAAAAAAAAAAACkge0aAABhcHAvc3JjL21haW4vcmVzL2xh
+          eW91dC9hY3Rpdml0eV9tYWluLnhtbFBLAQIUAxQAAAAIAKGGaF2/z+uotgIAAKcOAAAuAAAAAAAA
+          AAAAAACkgXMhAABhcHAvc3JjL21haW4vcmVzL2xheW91dC9sYXlvdXRfc2l6ZV9kaWFsb2cueG1s
+          UEsBAhQDFAAAAAgAj4BoXT+YR44aCQAAEME9M9cSy9FvfHvcx2gMPkp1H5Dj4YaKufPRsAyon8Tf
+          bi9qYXZhL2NvbS9hdXRva2xpay9hbmRyb2lkL3VpL01haW5BY3Rpdml0eS5rdFBLAQIUAxQAAAAI
+          AI+AaF1EZ41kjAQAADoTAABPAAAAAAAAAAAAAACkgeYtAABhcHAvc3JjL21haW4vamF2YS9jb20v
+          YXV0b2tsaWsvYW5kcm9pZC9zZXJ2aWNlL0F1dG9DbGlja0FjY2Vzc2liaWxpdHlTZXJ2aWNlLmt0
+          UEsBAhQDFAAAAAgAvIZoXUH5m30tGgAApX4AAEgAAAAAAAAAAAAAAKSB3zIAAGFwcC9zcmMvbWFp
+          bi9qYXZhL2NvbS9hdXRva2xpay9hbmRyb2lkL3NlcnZpY2UvRmxvYXRpbmdPdmVybGF5U2Vydmlj
+          ZS5rdFBLBQYAAAAAEwATAIMGAAByTQAAAAA=
+          """.replace("\n", "").replace(" ", "").strip()
+          z = zipfile.ZipFile(io.BytesIO(base64.b64decode(b64)))
+          z.extractall(".")
+          print("Extracted", len(z.namelist()), "project files successfully!")
+          '
 
       - name: Validate Generated Android Project Files
         run: |
