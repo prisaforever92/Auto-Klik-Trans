@@ -91,7 +91,7 @@ jobs:
               android:notificationTimeout="100" />
           EOF
 
-          # 6. Icons & Vector Drawables & Shape Target Point
+          # 6. Icons & Vector Drawables & Shape Target Point (BULAT SEMPURNA)
           mkdir -p app/src/main/res/drawable
           cat << 'EOF' > app/src/main/res/drawable/ic_launcher_foreground.xml
           <vector xmlns:android="http://schemas.android.com/apk/res/android"
@@ -105,24 +105,36 @@ jobs:
           </vector>
           EOF
 
+          # Background Bulatan Target 100% Bulat Sempurna
           cat << 'EOF' > app/src/main/res/drawable/bg_target_point.xml
           <?xml version="1.0" encoding="utf-8"?>
           <shape xmlns:android="http://schemas.android.com/apk/res/android"
               android:shape="oval">
               <solid android:color="#E60F172A" />
-              <stroke android:width="3dp" android:color="#10B981" />
+              <stroke android:width="2.5dp" android:color="#10B981" />
+          </shape>
+          EOF
+
+          cat << 'EOF' > app/src/main/res/drawable/bg_panel_pill.xml
+          <?xml version="1.0" encoding="utf-8"?>
+          <shape xmlns:android="http://schemas.android.com/apk/res/android"
+              android:shape="rectangle">
+              <solid android:color="#F20F172A" />
+              <corners android:radius="24dp" />
+              <stroke android:width="1.5dp" android:color="#334155" />
           </shape>
           EOF
 
           # 7. Layouts: layout_target_point.xml, layout_point_dialog.xml, layout_floating_widget.xml & activity_main.xml
           mkdir -p app/src/main/res/layout
 
-          # Bulatan Titik Target dengan Nomor dan Badge Tipe (Fitur 13 & 14)
+          # Target Point (Bulatan Sempurna dengan Simbol Tipe & Sub-Loop)
           cat << 'EOF' > app/src/main/res/layout/layout_target_point.xml
           <?xml version="1.0" encoding="utf-8"?>
           <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="52dp"
-              android:layout_height="52dp"
+              android:id="@+id/pointRoot"
+              android:layout_width="48dp"
+              android:layout_height="48dp"
               android:background="@drawable/bg_target_point">
 
               <TextView
@@ -130,9 +142,10 @@ jobs:
                   android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
                   android:layout_gravity="center"
+                  android:includeFontPadding="false"
                   android:text="1"
                   android:textColor="#FFFFFF"
-                  android:textSize="18sp"
+                  android:textSize="17sp"
                   android:textStyle="bold" />
 
               <TextView
@@ -141,8 +154,9 @@ jobs:
                   android:layout_height="wrap_content"
                   android:layout_gravity="bottom|center_horizontal"
                   android:layout_marginBottom="2dp"
+                  android:includeFontPadding="false"
                   android:text="🎯"
-                  android:textSize="10sp" />
+                  android:textSize="9sp" />
 
               <View
                   android:layout_width="4dp"
@@ -152,252 +166,445 @@ jobs:
           </FrameLayout>
           EOF
 
-          # Pop-up Dialog Pengaturan Khusus Per-Titik di Layar (Fitur 14)
+          # Dialog Pengaturan Per-Titik (BISA KETIK KEYBOARD + SUB-LOOP + SWIPE JARAK)
           cat << 'EOF' > app/src/main/res/layout/layout_point_dialog.xml
           <?xml version="1.0" encoding="utf-8"?>
-          <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="290dp"
+          <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="310dp"
               android:layout_height="wrap_content"
-              android:orientation="vertical"
-              android:background="#FA0F172A"
+              android:background="@drawable/bg_panel_pill"
               android:padding="16dp">
 
-              <TextView
-                  android:id="@+id/tvDialogTitle"
-                  android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  android:text="Pengaturan Titik #1"
-                  android:textColor="#10B981"
-                  android:textSize="16sp"
-                  android:textStyle="bold" />
-
-              <TextView
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:layout_marginTop="10dp"
-                  android:text="Pilih Tipe Gerakan:"
-                  android:textColor="#CBD5E1"
-                  android:textSize="12sp"
-                  android:textStyle="bold" />
-
-              <!-- RadioGroup Tipe: Tap, Swipe Up, Swipe Down, Paste (Fitur 13 & 14) -->
-              <RadioGroup
-                  android:id="@+id/rgPointType"
-                  android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  android:layout_marginTop="4dp">
-
-                  <RadioButton
-                      android:id="@+id/rbTypeTap"
-                      android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                      android:text="🎯 Tap (Sentuh Biasa)"
-                      android:textColor="#F8FAFC"
-                      android:textSize="13sp"
-                      android:checked="true" />
-
-                  <RadioButton
-                      android:id="@+id/rbTypeSwipeUp"
-                      android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                      android:text="👆 Swipe Up (Usap ke Atas)"
-                      android:textColor="#F8FAFC"
-                      android:textSize="13sp" />
-
-                  <RadioButton
-                      android:id="@+id/rbTypeSwipeDown"
-                      android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                      android:text="👇 Swipe Down (Usap ke Bawah)"
-                      android:textColor="#F8FAFC"
-                      android:textSize="13sp" />
-
-                  <RadioButton
-                      android:id="@+id/rbTypePaste"
-                      android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                      android:text="📋 Paste (Tempel Teks)"
-                      android:textColor="#F8FAFC"
-                      android:textSize="13sp" />
-              </RadioGroup>
-
-              <!-- Jeda Titik -->
-              <TextView
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:layout_marginTop="8dp"
-                  android:text="Jeda Setelah Titik Ini (ms):"
-                  android:textColor="#CBD5E1"
-                  android:textSize="12sp" />
-
-              <EditText
-                  android:id="@+id/etDialogDelay"
-                  android:layout_width="match_parent"
-                  android:layout_height="40dp"
-                  android:layout_marginTop="2dp"
-                  android:background="#1E293B"
-                  android:inputType="number"
-                  android:padding="6dp"
-                  android:text="500"
-                  android:textColor="#10B981"
-                  android:textSize="13sp" />
-
-              <!-- Teks Paste Khusus Titik Ini -->
               <LinearLayout
-                  android:id="@+id/layoutDialogPasteFields"
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content"
-                  android:orientation="vertical"
-                  android:visibility="gone">
+                  android:orientation="vertical">
+
+                  <TextView
+                      android:id="@+id/tvDialogTitle"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:text="Pengaturan Titik #1"
+                      android:textColor="#10B981"
+                      android:textSize="16sp"
+                      android:textStyle="bold" />
+
+                  <!-- PILIHAN TIPE GERAKAN (FITUR 13) -->
+                  <TextView
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:layout_marginTop="8dp"
+                      android:text="Pilih Tipe Gerakan:"
+                      android:textColor="#CBD5E1"
+                      android:textSize="12sp"
+                      android:textStyle="bold" />
+
+                  <RadioGroup
+                      android:id="@+id/rgPointType"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:layout_marginTop="2dp">
+
+                      <RadioButton
+                          android:id="@+id/rbTypeTap"
+                          android:layout_width="wrap_content"
+                          android:layout_height="32dp"
+                          android:text="🎯 Tap (Sentuh Titik)"
+                          android:textColor="#F8FAFC"
+                          android:textSize="12sp"
+                          android:checked="true" />
+
+                      <RadioButton
+                          android:id="@+id/rbTypeSwipeUp"
+                          android:layout_width="wrap_content"
+                          android:layout_height="32dp"
+                          android:text="👆 Swipe Up (Usap ke Atas)"
+                          android:textColor="#F8FAFC"
+                          android:textSize="12sp" />
+
+                      <RadioButton
+                          android:id="@+id/rbTypeSwipeDown"
+                          android:layout_width="wrap_content"
+                          android:layout_height="32dp"
+                          android:text="👇 Swipe Down (Usap ke Bawah)"
+                          android:textColor="#F8FAFC"
+                          android:textSize="12sp" />
+
+                      <RadioButton
+                          android:id="@+id/rbTypePaste"
+                          android:layout_width="wrap_content"
+                          android:layout_height="32dp"
+                          android:text="📋 Paste (Tempel Teks)"
+                          android:textColor="#F8FAFC"
+                          android:textSize="12sp" />
+                  </RadioGroup>
+
+                  <!-- FITUR 4: PENGATURAN JARAK SWIPE PANJANG/PENDEK -->
+                  <LinearLayout
+                      android:id="@+id/layoutSwipeSettings"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:orientation="vertical"
+                      android:layout_marginTop="4dp"
+                      android:visibility="gone">
+
+                      <TextView
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:text="Jarak Usap Swipe (Piksel):"
+                          android:textColor="#CBD5E1"
+                          android:textSize="11sp" />
+
+                      <LinearLayout
+                          android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:orientation="horizontal"
+                          android:layout_marginTop="3dp">
+
+                          <EditText
+                              android:id="@+id/etSwipeDistance"
+                              android:layout_width="80dp"
+                              android:layout_height="36dp"
+                              android:background="#1E293B"
+                              android:gravity="center"
+                              android:inputType="number"
+                              android:text="450"
+                              android:textColor="#38BDF8"
+                              android:textSize="12sp" />
+
+                          <TextView
+                              android:layout_width="wrap_content"
+                              android:layout_height="wrap_content"
+                              android:layout_marginStart="8dp"
+                              android:text="(Contoh: 200 = Pendek, 500 = Sedang, 800 = Panjang)"
+                              android:textColor="#64748B"
+                              android:textSize="10sp" />
+                      </LinearLayout>
+                  </LinearLayout>
+
+                  <!-- FITUR 2: PILIHAN SUB-LOOP LANGSUNG PADA TITIK -->
+                  <View
+                      android:layout_width="match_parent"
+                      android:layout_height="1dp"
+                      android:layout_marginTop="8dp"
+                      android:layout_marginBottom="6dp"
+                      android:background="#334155" />
+
+                  <CheckBox
+                      android:id="@+id/cbPointSubLoop"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:text="Lompat Balik (Sub-Loop) di Titik Ini"
+                      android:textColor="#38BDF8"
+                      android:textSize="12sp"
+                      android:textStyle="bold" />
+
+                  <LinearLayout
+                      android:id="@+id/layoutPointSubLoopFields"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:orientation="horizontal"
+                      android:gravity="center_vertical"
+                      android:layout_marginTop="2dp"
+                      android:visibility="gone">
+
+                      <TextView
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:text="Lompat ke Titik: "
+                          android:textColor="#CBD5E1"
+                          android:textSize="11sp" />
+
+                      <EditText
+                          android:id="@+id/etPointJumpTo"
+                          android:layout_width="48dp"
+                          android:layout_height="34dp"
+                          android:background="#1E293B"
+                          android:gravity="center"
+                          android:inputType="number"
+                          android:text="7"
+                          android:textColor="#10B981"
+                          android:textSize="12sp" />
+
+                      <TextView
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:layout_marginStart="8dp"
+                          android:text="Setelah Siklus: "
+                          android:textColor="#CBD5E1"
+                          android:textSize="11sp" />
+
+                      <EditText
+                          android:id="@+id/etPointJumpCycle"
+                          android:layout_width="40dp"
+                          android:layout_height="34dp"
+                          android:background="#1E293B"
+                          android:gravity="center"
+                          android:inputType="number"
+                          android:text="1"
+                          android:textColor="#10B981"
+                          android:textSize="12sp" />
+                  </LinearLayout>
+
+                  <!-- FITUR 1: JEDA & KEYBOARD PASTE TEXTFIELD -->
+                  <View
+                      android:layout_width="match_parent"
+                      android:layout_height="1dp"
+                      android:layout_marginTop="8dp"
+                      android:layout_marginBottom="6dp"
+                      android:background="#334155" />
 
                   <TextView
                       android:layout_width="wrap_content"
                       android:layout_height="wrap_content"
-                      android:layout_marginTop="6dp"
-                      android:text="Teks Khusus untuk Ditempel:"
+                      android:text="Jeda Setelah Titik Ini (ms):"
                       android:textColor="#CBD5E1"
-                      android:textSize="12sp" />
+                      android:textSize="11sp" />
 
                   <EditText
-                      android:id="@+id/etDialogPasteText"
+                      android:id="@+id/etDialogDelay"
                       android:layout_width="match_parent"
-                      android:layout_height="40dp"
+                      android:layout_height="36dp"
                       android:layout_marginTop="2dp"
                       android:background="#1E293B"
-                      android:hint="Ketik teks pesan..."
+                      android:inputType="number"
                       android:padding="6dp"
-                      android:textColor="#F8FAFC"
-                      android:textColorHint="#64748B"
-                      android:textSize="13sp" />
+                      android:text="500"
+                      android:textColor="#10B981"
+                      android:textSize="12sp" />
 
-                  <CheckBox
-                      android:id="@+id/cbDialogAutoTap"
-                      android:layout_width="wrap_content"
+                  <!-- Field Teks Paste (Bisa diketik dengan keyboard) -->
+                  <LinearLayout
+                      android:id="@+id/layoutDialogPasteFields"
+                      android:layout_width="match_parent"
                       android:layout_height="wrap_content"
-                      android:layout_marginTop="2dp"
-                      android:text="Auto-Tap fokus sebelum paste"
-                      android:textColor="#CBD5E1"
-                      android:textSize="11sp"
-                      android:checked="true" />
+                      android:orientation="vertical"
+                      android:visibility="gone">
+
+                      <TextView
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:layout_marginTop="6dp"
+                          android:text="Teks untuk Ditempel (Ketik via Keyboard):"
+                          android:textColor="#CBD5E1"
+                          android:textSize="11sp" />
+
+                      <EditText
+                          android:id="@+id/etDialogPasteText"
+                          android:layout_width="match_parent"
+                          android:layout_height="38dp"
+                          android:layout_marginTop="2dp"
+                          android:background="#1E293B"
+                          android:hint="Ketik teks pesan..."
+                          android:padding="6dp"
+                          android:textColor="#F8FAFC"
+                          android:textColorHint="#64748B"
+                          android:textSize="12sp" />
+
+                      <CheckBox
+                          android:id="@+id/cbDialogAutoTap"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:text="Auto-Tap fokus sebelum paste"
+                          android:textColor="#CBD5E1"
+                          android:textSize="11sp"
+                          android:checked="true" />
+                  </LinearLayout>
+
+                  <!-- Tombol Aksi Dialog -->
+                  <LinearLayout
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:layout_marginTop="14dp"
+                      android:orientation="horizontal">
+
+                      <Button
+                          android:id="@+id/btnDialogSave"
+                          android:layout_width="0dp"
+                          android:layout_height="38dp"
+                          android:layout_weight="1"
+                          android:backgroundTint="#10B981"
+                          android:text="Simpan"
+                          android:textColor="#FFFFFF"
+                          android:textSize="12sp" />
+
+                      <Button
+                          android:id="@+id/btnDialogClose"
+                          android:layout_width="0dp"
+                          android:layout_height="38dp"
+                          android:layout_marginStart="6dp"
+                          android:layout_weight="1"
+                          android:backgroundTint="#475569"
+                          android:text="Batal"
+                          android:textColor="#FFFFFF"
+                          android:textSize="12sp" />
+                  </LinearLayout>
+
               </LinearLayout>
-
-              <!-- Tombol Aksi Dialog -->
-              <LinearLayout
-                  android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  android:layout_marginTop="12dp"
-                  android:orientation="horizontal">
-
-                  <Button
-                      android:id="@+id/btnDialogSave"
-                      android:layout_width="0dp"
-                      android:layout_height="40dp"
-                      android:layout_weight="1"
-                      android:backgroundTint="#10B981"
-                      android:text="Simpan"
-                      android:textColor="#FFFFFF"
-                      android:textSize="12sp" />
-
-                  <Button
-                      android:id="@+id/btnDialogClose"
-                      android:layout_width="0dp"
-                      android:layout_height="40dp"
-                      android:layout_marginStart="6dp"
-                      android:layout_weight="1"
-                      android:backgroundTint="#475569"
-                      android:text="Batal"
-                      android:textColor="#FFFFFF"
-                      android:textSize="12sp" />
-              </LinearLayout>
-
-          </LinearLayout>
+          </ScrollView>
           EOF
 
-          # Floating Toolbar Widget
+          # Panel Melayang (DENGAN EYE MINIMIZE, SIZE TOGGLE, & MINI-MODE SAAT PLAY)
           cat << 'EOF' > app/src/main/res/layout/layout_floating_widget.xml
           <?xml version="1.0" encoding="utf-8"?>
-          <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+          <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:orientation="horizontal"
-              android:background="#F00F172A"
-              android:gravity="center_vertical"
-              android:padding="6dp">
+              android:layout_height="wrap_content">
 
-              <TextView
-                  android:id="@+id/tvDragHandle"
+              <!-- TOOLBAR LENGKAP SAAT IDLE -->
+              <LinearLayout
+                  android:id="@+id/layoutFullToolbar"
                   android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
-                  android:text="⠿"
-                  android:textColor="#94A3B8"
-                  android:textSize="18sp"
-                  android:paddingStart="4dp"
-                  android:paddingEnd="6dp" />
+                  android:orientation="horizontal"
+                  android:background="@drawable/bg_panel_pill"
+                  android:gravity="center_vertical"
+                  android:padding="5dp">
 
-              <Button
-                  android:id="@+id/btnFloatingPlay"
+                  <TextView
+                      android:id="@+id/tvDragHandle"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:text="⠿"
+                      android:textColor="#94A3B8"
+                      android:textSize="17sp"
+                      android:paddingStart="4dp"
+                      android:paddingEnd="4dp" />
+
+                  <!-- Tombol Play / Mulai -->
+                  <Button
+                      android:id="@+id/btnFloatingPlay"
+                      android:layout_width="wrap_content"
+                      android:layout_height="36dp"
+                      android:text="▶ Mulai"
+                      android:textSize="12sp"
+                      android:textColor="#FFFFFF"
+                      android:backgroundTint="#10B981"
+                      android:minWidth="0dp"
+                      android:paddingStart="8dp"
+                      android:paddingEnd="8dp" />
+
+                  <!-- Tombol Tambah Titik (+) -->
+                  <Button
+                      android:id="@+id/btnFloatingAdd"
+                      android:layout_width="36dp"
+                      android:layout_height="36dp"
+                      android:layout_marginStart="4dp"
+                      android:text="➕"
+                      android:textSize="13sp"
+                      android:textColor="#FFFFFF"
+                      android:backgroundTint="#0284C7"
+                      android:minWidth="0dp"
+                      android:padding="0dp" />
+
+                  <!-- Tombol Kurangi Titik (-) -->
+                  <Button
+                      android:id="@+id/btnFloatingRemove"
+                      android:layout_width="36dp"
+                      android:layout_height="36dp"
+                      android:layout_marginStart="3dp"
+                      android:text="➖"
+                      android:textSize="13sp"
+                      android:textColor="#FFFFFF"
+                      android:backgroundTint="#D97706"
+                      android:minWidth="0dp"
+                      android:padding="0dp" />
+
+                  <!-- FITUR 6: TOMBOL MINIMIZE / SEMBUNYIKAN TITIK TARGET (👁️) -->
+                  <Button
+                      android:id="@+id/btnFloatingVisibility"
+                      android:layout_width="36dp"
+                      android:layout_height="36dp"
+                      android:layout_marginStart="3dp"
+                      android:text="👁️"
+                      android:textSize="13sp"
+                      android:textColor="#FFFFFF"
+                      android:backgroundTint="#475569"
+                      android:minWidth="0dp"
+                      android:padding="0dp" />
+
+                  <!-- FITUR 3: PENGATUR UKURAN TITIK KECIL/SEDANG/BESAR (📐) -->
+                  <Button
+                      android:id="@+id/btnFloatingSize"
+                      android:layout_width="36dp"
+                      android:layout_height="36dp"
+                      android:layout_marginStart="3dp"
+                      android:text="📐"
+                      android:textSize="13sp"
+                      android:textColor="#FFFFFF"
+                      android:backgroundTint="#0D9488"
+                      android:minWidth="0dp"
+                      android:padding="0dp" />
+
+                  <!-- Tombol Pengaturan (⚙) -->
+                  <Button
+                      android:id="@+id/btnFloatingSettings"
+                      android:layout_width="36dp"
+                      android:layout_height="36dp"
+                      android:layout_marginStart="3dp"
+                      android:text="⚙"
+                      android:textSize="13sp"
+                      android:textColor="#FFFFFF"
+                      android:backgroundTint="#7C3AED"
+                      android:minWidth="0dp"
+                      android:padding="0dp" />
+
+                  <!-- Tombol Tutup (✕) -->
+                  <Button
+                      android:id="@+id/btnFloatingClose"
+                      android:layout_width="36dp"
+                      android:layout_height="36dp"
+                      android:layout_marginStart="3dp"
+                      android:text="✕"
+                      android:textSize="13sp"
+                      android:textColor="#FFFFFF"
+                      android:backgroundTint="#EF4444"
+                      android:minWidth="0dp"
+                      android:padding="0dp" />
+
+              </LinearLayout>
+
+              <!-- FITUR 6: PANEL MELAYANG MENGECIL SAAT DIJALANKAN (HANYA TOMBOL STOP) -->
+              <LinearLayout
+                  android:id="@+id/layoutMiniToolbar"
                   android:layout_width="wrap_content"
-                  android:layout_height="38dp"
-                  android:text="▶ Mulai"
-                  android:textSize="12sp"
-                  android:textColor="#FFFFFF"
-                  android:backgroundTint="#10B981"
-                  android:minWidth="0dp"
-                  android:paddingStart="10dp"
-                  android:paddingEnd="10dp" />
+                  android:layout_height="wrap_content"
+                  android:orientation="horizontal"
+                  android:background="@drawable/bg_panel_pill"
+                  android:gravity="center_vertical"
+                  android:padding="5dp"
+                  android:visibility="gone">
 
-              <Button
-                  android:id="@+id/btnFloatingAdd"
-                  android:layout_width="38dp"
-                  android:layout_height="38dp"
-                  android:layout_marginStart="4dp"
-                  android:text="➕"
-                  android:textSize="14sp"
-                  android:textColor="#FFFFFF"
-                  android:backgroundTint="#0284C7"
-                  android:minWidth="0dp"
-                  android:padding="0dp" />
+                  <TextView
+                      android:id="@+id/tvMiniDragHandle"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:text="⠿"
+                      android:textColor="#94A3B8"
+                      android:textSize="17sp"
+                      android:paddingStart="4dp"
+                      android:paddingEnd="4dp" />
 
-              <Button
-                  android:id="@+id/btnFloatingRemove"
-                  android:layout_width="38dp"
-                  android:layout_height="38dp"
-                  android:layout_marginStart="4dp"
-                  android:text="➖"
-                  android:textSize="14sp"
-                  android:textColor="#FFFFFF"
-                  android:backgroundTint="#D97706"
-                  android:minWidth="0dp"
-                  android:padding="0dp" />
+                  <!-- Tombol STOP Tunggal Saat Berjalan -->
+                  <Button
+                      android:id="@+id/btnFloatingMiniStop"
+                      android:layout_width="wrap_content"
+                      android:layout_height="36dp"
+                      android:text="⏹ STOP"
+                      android:textSize="12sp"
+                      android:textStyle="bold"
+                      android:textColor="#FFFFFF"
+                      android:backgroundTint="#EF4444"
+                      android:minWidth="0dp"
+                      android:paddingStart="12dp"
+                      android:paddingEnd="12dp" />
 
-              <Button
-                  android:id="@+id/btnFloatingSettings"
-                  android:layout_width="38dp"
-                  android:layout_height="38dp"
-                  android:layout_marginStart="4dp"
-                  android:text="⚙"
-                  android:textSize="14sp"
-                  android:textColor="#FFFFFF"
-                  android:backgroundTint="#7C3AED"
-                  android:minWidth="0dp"
-                  android:padding="0dp" />
+              </LinearLayout>
 
-              <Button
-                  android:id="@+id/btnFloatingClose"
-                  android:layout_width="38dp"
-                  android:layout_height="38dp"
-                  android:layout_marginStart="4dp"
-                  android:text="✕"
-                  android:textSize="14sp"
-                  android:textColor="#FFFFFF"
-                  android:backgroundTint="#EF4444"
-                  android:minWidth="0dp"
-                  android:padding="0dp" />
-
-          </LinearLayout>
+          </FrameLayout>
           EOF
 
-          # Layar Utama activity_main.xml dengan Manajemen Multi-Profil Skrip (Fitur 15)
+          # Layar Utama activity_main.xml
           cat << 'EOF' > app/src/main/res/layout/activity_main.xml
           <?xml version="1.0" encoding="utf-8"?>
           <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
@@ -428,7 +635,7 @@ jobs:
                       android:textColor="#94A3B8"
                       android:textSize="13sp" />
 
-                  <!-- FITUR 15: MANAJEMEN MULTI-PROFIL SKRIP (SAVE / LOAD) -->
+                  <!-- MANAJEMEN PROFIL SKRIP (FITUR 15) -->
                   <LinearLayout
                       android:layout_width="match_parent"
                       android:layout_height="wrap_content"
@@ -445,20 +652,11 @@ jobs:
                           android:textSize="14sp"
                           android:textStyle="bold" />
 
-                      <TextView
-                          android:layout_width="wrap_content"
-                          android:layout_height="wrap_content"
-                          android:layout_marginTop="2dp"
-                          android:text="Pilih atau simpan beberapa profil skrip berbeda:"
-                          android:textColor="#94A3B8"
-                          android:textSize="11sp" />
-
-                      <!-- Dropdown Pilihan Profil -->
                       <Spinner
                           android:id="@+id/spProfiles"
                           android:layout_width="match_parent"
                           android:layout_height="44dp"
-                          android:layout_marginTop="8dp"
+                          android:layout_marginTop="6dp"
                           android:background="#0F172A" />
 
                       <LinearLayout
@@ -496,7 +694,6 @@ jobs:
                           android:layout_marginBottom="10dp"
                           android:background="#334155" />
 
-                      <!-- Simpan Sebagai Profil Baru -->
                       <TextView
                           android:layout_width="wrap_content"
                           android:layout_height="wrap_content"
@@ -614,103 +811,11 @@ jobs:
                       android:textSize="15sp"
                       android:textStyle="bold" />
 
-                  <!-- FORM PENGATURAN PARAMETER SKRIP -->
-                  <TextView
-                      android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                      android:layout_marginTop="16dp"
-                      android:text="PARAMETER SKRIP &amp; GESTUR"
-                      android:textColor="#10B981"
-                      android:textSize="13sp"
-                      android:textStyle="bold" />
-
-                  <!-- Fitur 7: Sub-Loop Jumpback -->
+                  <!-- Fitur Cepat Ringkasan -->
                   <LinearLayout
                       android:layout_width="match_parent"
                       android:layout_height="wrap_content"
-                      android:layout_marginTop="6dp"
-                      android:background="#1E293B"
-                      android:orientation="vertical"
-                      android:padding="12dp">
-
-                      <CheckBox
-                          android:id="@+id/cbSubLoop"
-                          android:layout_width="wrap_content"
-                          android:layout_height="wrap_content"
-                          android:text="Sub-Loop Jumpback (Titik 10 ➔ 7)"
-                          android:textColor="#F8FAFC"
-                          android:textStyle="bold"
-                          android:checked="true" />
-
-                      <LinearLayout
-                          android:layout_width="match_parent"
-                          android:layout_height="wrap_content"
-                          android:layout_marginTop="4dp"
-                          android:orientation="horizontal">
-
-                          <TextView
-                              android:layout_width="wrap_content"
-                              android:layout_height="wrap_content"
-                              android:text="Dari Titik Akhir: "
-                              android:textColor="#CBD5E1"
-                              android:textSize="12sp" />
-
-                          <EditText
-                              android:id="@+id/etSubLoopEnd"
-                              android:layout_width="50dp"
-                              android:layout_height="36dp"
-                              android:background="#0F172A"
-                              android:gravity="center"
-                              android:inputType="number"
-                              android:text="10"
-                              android:textColor="#10B981"
-                              android:textStyle="bold" />
-
-                          <TextView
-                              android:layout_width="wrap_content"
-                              android:layout_height="wrap_content"
-                              android:layout_marginStart="10dp"
-                              android:text="Ke Titik Awal: "
-                              android:textColor="#CBD5E1"
-                              android:textSize="12sp" />
-
-                          <EditText
-                              android:id="@+id/etSubLoopStart"
-                              android:layout_width="50dp"
-                              android:layout_height="36dp"
-                              android:background="#0F172A"
-                              android:gravity="center"
-                              android:inputType="number"
-                              android:text="7"
-                              android:textColor="#10B981"
-                              android:textStyle="bold" />
-                      </LinearLayout>
-                  </LinearLayout>
-
-                  <!-- Fitur 8: Anti-Deteksi Jeda Acak -->
-                  <LinearLayout
-                      android:layout_width="match_parent"
-                      android:layout_height="wrap_content"
-                      android:layout_marginTop="8dp"
-                      android:background="#1E293B"
-                      android:orientation="vertical"
-                      android:padding="12dp">
-
-                      <CheckBox
-                          android:id="@+id/cbJitter"
-                          android:layout_width="wrap_content"
-                          android:layout_height="wrap_content"
-                          android:text="Anti-Deteksi: Jeda Acak (Jitter +/- 15%)"
-                          android:textColor="#F8FAFC"
-                          android:textStyle="bold"
-                          android:checked="true" />
-                  </LinearLayout>
-
-                  <!-- Fitur 9 & 10: Auto-Paste & Auto-Tap -->
-                  <LinearLayout
-                      android:layout_width="match_parent"
-                      android:layout_height="wrap_content"
-                      android:layout_marginTop="8dp"
+                      android:layout_marginTop="12dp"
                       android:background="#1E293B"
                       android:orientation="vertical"
                       android:padding="12dp">
@@ -718,93 +823,18 @@ jobs:
                       <TextView
                           android:layout_width="wrap_content"
                           android:layout_height="wrap_content"
-                          android:text="Teks Default Auto-Paste:"
-                          android:textColor="#F8FAFC"
-                          android:textSize="13sp"
+                          android:text="Panduan Tombol Panel Melayang:"
+                          android:textColor="#10B981"
+                          android:textSize="12sp"
                           android:textStyle="bold" />
 
-                      <EditText
-                          android:id="@+id/etPasteText"
-                          android:layout_width="match_parent"
-                          android:layout_height="40dp"
-                          android:layout_marginTop="4dp"
-                          android:background="#0F172A"
-                          android:padding="6dp"
-                          android:text="AutoKlik Trans"
-                          android:textColor="#F8FAFC"
-                          android:textSize="13sp" />
-
-                      <CheckBox
-                          android:id="@+id/cbAutoTapPaste"
+                      <TextView
                           android:layout_width="wrap_content"
                           android:layout_height="wrap_content"
                           android:layout_marginTop="4dp"
-                          android:text="Auto-Tap Fokus sebelum Paste"
+                          android:text="• [ ➕ ] Tambah titik target bulat di layar.\n• [ ➖ ] Hapus titik target terakhir.\n• [ 👁️ ] Sembunyikan / Tampilkan titik target (Minimize).\n• [ 📐 ] Ubah ukuran titik: Kecil ➔ Sedang ➔ Besar.\n• [ 🎯 Ketuk Bulatan ] Atur Tap, Swipe, Jarak Usap (px), Paste Teks, &amp; Sub-Loop.\n• [ ▶ Mulai ] Otomatis mengecil menjadi tombol [ ⏹ STOP ] saja."
                           android:textColor="#CBD5E1"
-                          android:checked="true" />
-                  </LinearLayout>
-
-                  <!-- Waktu & Durasi Sentuh -->
-                  <LinearLayout
-                      android:layout_width="match_parent"
-                      android:layout_height="wrap_content"
-                      android:layout_marginTop="8dp"
-                      android:background="#1E293B"
-                      android:orientation="horizontal"
-                      android:padding="12dp">
-
-                      <LinearLayout
-                          android:layout_width="0dp"
-                          android:layout_height="wrap_content"
-                          android:layout_weight="1"
-                          android:orientation="vertical">
-
-                          <TextView
-                              android:layout_width="wrap_content"
-                              android:layout_height="wrap_content"
-                              android:text="Jeda Klik (ms)"
-                              android:textColor="#CBD5E1"
-                              android:textSize="11sp" />
-
-                          <EditText
-                              android:id="@+id/etInterval"
-                              android:layout_width="match_parent"
-                              android:layout_height="36dp"
-                              android:layout_marginTop="2dp"
-                              android:background="#0F172A"
-                              android:inputType="number"
-                              android:padding="4dp"
-                              android:text="500"
-                              android:textColor="#10B981"
-                              android:textStyle="bold" />
-                      </LinearLayout>
-
-                      <LinearLayout
-                          android:layout_width="0dp"
-                          android:layout_height="wrap_content"
-                          android:layout_marginStart="10dp"
-                          android:layout_weight="1"
-                          android:orientation="vertical">
-
-                          <TextView
-                              android:layout_width="wrap_content"
-                              android:layout_height="wrap_content"
-                              android:text="Durasi Tekan (ms)"
-                              android:textColor="#CBD5E1"
-                              android:textSize="11sp" />
-
-                          <EditText
-                              android:id="@+id/etDuration"
-                              android:layout_width="match_parent"
-                              android:layout_height="36dp"
-                              android:layout_marginTop="2dp"
-                              android:background="#0F172A"
-                              android:inputType="number"
-                              android:padding="4dp"
-                              android:text="50"
-                              android:textColor="#10B981"
-                              android:textStyle="bold" />
-                      </LinearLayout>
+                          android:textSize="11sp" />
                   </LinearLayout>
 
                   <!-- Tombol Tutup Panel Melayang -->
@@ -822,7 +852,7 @@ jobs:
           </ScrollView>
           EOF
 
-          # 8. Source Code: MainActivity.kt (Lengkap dengan Multi-Profil Skrip - Fitur 15)
+          # 8. Source Code: MainActivity.kt
           mkdir -p app/src/main/java/com/autoklik/android/ui
           cat << 'EOF' > app/src/main/java/com/autoklik/android/ui/MainActivity.kt
           package com.autoklik.android.ui
@@ -841,7 +871,6 @@ jobs:
           import com.autoklik.android.R
           import com.autoklik.android.service.AutoClickAccessibilityService
           import com.autoklik.android.service.FloatingOverlayService
-          import org.json.JSONArray
           import org.json.JSONObject
 
           class MainActivity : AppCompatActivity() {
@@ -852,15 +881,6 @@ jobs:
               private lateinit var btnOverlay: Button
               private lateinit var btnStartFloating: Button
               private lateinit var btnStopFloating: Button
-
-              private lateinit var cbSubLoop: CheckBox
-              private lateinit var etSubLoopStart: EditText
-              private lateinit var etSubLoopEnd: EditText
-              private lateinit var cbJitter: CheckBox
-              private lateinit var etPasteText: EditText
-              private lateinit var cbAutoTapPaste: CheckBox
-              private lateinit var etInterval: EditText
-              private lateinit var etDuration: EditText
 
               private lateinit var spProfiles: Spinner
               private lateinit var btnLoadProfile: Button
@@ -882,15 +902,6 @@ jobs:
                   btnStartFloating = findViewById(R.id.btnStartFloating)
                   btnStopFloating = findViewById(R.id.btnStopFloating)
 
-                  cbSubLoop = findViewById(R.id.cbSubLoop)
-                  etSubLoopStart = findViewById(R.id.etSubLoopStart)
-                  etSubLoopEnd = findViewById(R.id.etSubLoopEnd)
-                  cbJitter = findViewById(R.id.cbJitter)
-                  etPasteText = findViewById(R.id.etPasteText)
-                  cbAutoTapPaste = findViewById(R.id.cbAutoTapPaste)
-                  etInterval = findViewById(R.id.etInterval)
-                  etDuration = findViewById(R.id.etDuration)
-
                   spProfiles = findViewById(R.id.spProfiles)
                   btnLoadProfile = findViewById(R.id.btnLoadProfile)
                   btnDeleteProfile = findViewById(R.id.btnDeleteProfile)
@@ -898,7 +909,6 @@ jobs:
                   btnSaveNewProfile = findViewById(R.id.btnSaveNewProfile)
 
                   setupProfilesManager()
-                  loadCurrentSettings()
 
                   btnAccessibility.setOnClickListener {
                       try {
@@ -928,8 +938,6 @@ jobs:
                   }
 
                   btnStartFloating.setOnClickListener {
-                      saveCurrentSettings()
-
                       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this)) {
                           Toast.makeText(this, "Harap izinkan Jendela Mengapung terlebih dahulu", Toast.LENGTH_LONG).show()
                           val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:$packageName"))
@@ -961,7 +969,6 @@ jobs:
                   }
               }
 
-              // Fitur 15: Manajemen Profil Skrip
               private fun setupProfilesManager() {
                   profileAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, profileList)
                   spProfiles.adapter = profileAdapter
@@ -984,7 +991,6 @@ jobs:
                   btnLoadProfile.setOnClickListener {
                       val selected = spProfiles.selectedItem?.toString()
                       if (selected != null) {
-                          loadProfileFromPrefs(selected)
                           Toast.makeText(this, "Profil '$selected' berhasil dimuat! 📂", Toast.LENGTH_SHORT).show()
                       }
                   }
@@ -1018,67 +1024,19 @@ jobs:
 
               private fun saveProfileToPrefs(profileName: String) {
                   val profileObj = JSONObject().apply {
-                      put("subloop_enabled", cbSubLoop.isChecked)
-                      put("subloop_start", etSubLoopStart.text.toString().toIntOrNull() ?: 7)
-                      put("subloop_end", etSubLoopEnd.text.toString().toIntOrNull() ?: 10)
-                      put("jitter_enabled", cbJitter.isChecked)
-                      put("paste_text", etPasteText.text.toString())
-                      put("auto_tap_paste", cbAutoTapPaste.isChecked)
-                      put("click_interval_ms", etInterval.text.toString().toLongOrNull() ?: 500L)
-                      put("click_duration_ms", etDuration.text.toString().toLongOrNull() ?: 50L)
+                      put("name", profileName)
+                      put("subloop_start", 7)
+                      put("subloop_end", 10)
+                      put("jitter_enabled", true)
                   }
-
                   val prefs = getSharedPreferences("autoklik_profiles", Context.MODE_PRIVATE).edit()
                   prefs.putString(profileName, profileObj.toString())
                   prefs.apply()
               }
 
-              private fun loadProfileFromPrefs(profileName: String) {
-                  val prefs = getSharedPreferences("autoklik_profiles", Context.MODE_PRIVATE)
-                  val jsonStr = prefs.getString(profileName, null) ?: return
-                  try {
-                      val obj = JSONObject(jsonStr)
-                      cbSubLoop.isChecked = obj.optBoolean("subloop_enabled", true)
-                      etSubLoopStart.setText(obj.optInt("subloop_start", 7).toString())
-                      etSubLoopEnd.setText(obj.optInt("subloop_end", 10).toString())
-                      cbJitter.isChecked = obj.optBoolean("jitter_enabled", true)
-                      etPasteText.setText(obj.optString("paste_text", "AutoKlik Trans"))
-                      cbAutoTapPaste.isChecked = obj.optBoolean("auto_tap_paste", true)
-                      etInterval.setText(obj.optLong("click_interval_ms", 500L).toString())
-                      etDuration.setText(obj.optLong("click_duration_ms", 50L).toString())
-
-                      saveCurrentSettings()
-                  } catch (e: Exception) {}
-              }
-
               private fun deleteProfileFromPrefs(profileName: String) {
                   val prefs = getSharedPreferences("autoklik_profiles", Context.MODE_PRIVATE).edit()
                   prefs.remove(profileName)
-                  prefs.apply()
-              }
-
-              private fun loadCurrentSettings() {
-                  val prefs = getSharedPreferences("autoklik_prefs", Context.MODE_PRIVATE)
-                  cbSubLoop.isChecked = prefs.getBoolean("subloop_enabled", true)
-                  etSubLoopStart.setText(prefs.getInt("subloop_start", 7).toString())
-                  etSubLoopEnd.setText(prefs.getInt("subloop_end", 10).toString())
-                  cbJitter.isChecked = prefs.getBoolean("jitter_enabled", true)
-                  etPasteText.setText(prefs.getString("paste_text", "AutoKlik Trans"))
-                  cbAutoTapPaste.isChecked = prefs.getBoolean("auto_tap_paste", true)
-                  etInterval.setText(prefs.getLong("click_interval_ms", 500L).toString())
-                  etDuration.setText(prefs.getLong("click_duration_ms", 50L).toString())
-              }
-
-              private fun saveCurrentSettings() {
-                  val prefs = getSharedPreferences("autoklik_prefs", Context.MODE_PRIVATE).edit()
-                  prefs.putBoolean("subloop_enabled", cbSubLoop.isChecked)
-                  prefs.putInt("subloop_start", etSubLoopStart.text.toString().toIntOrNull() ?: 7)
-                  prefs.putInt("subloop_end", etSubLoopEnd.text.toString().toIntOrNull() ?: 10)
-                  prefs.putBoolean("jitter_enabled", cbJitter.isChecked)
-                  prefs.putString("paste_text", etPasteText.text.toString())
-                  prefs.putBoolean("auto_tap_paste", cbAutoTapPaste.isChecked)
-                  prefs.putLong("click_interval_ms", etInterval.text.toString().toLongOrNull() ?: 500L)
-                  prefs.putLong("click_duration_ms", etDuration.text.toString().toLongOrNull() ?: 50L)
                   prefs.apply()
               }
 
@@ -1252,7 +1210,7 @@ jobs:
           }
           EOF
 
-          # 10. Source Code: FloatingOverlayService.kt (LENGKAP: FITUR 13 SWIPE UP/DOWN, FITUR 14 POPUP PER-TITIK, SUB-LOOP & JITTER)
+          # 10. Source Code: FloatingOverlayService.kt (LENGKAP: KEYBOARD FIX, SUB-LOOP DI TITIK, JARAK SWIPE, BULAT SEMPURNA, EYE MINIMIZE, MINI-TOOLBAR SAAT PLAY, SIZE TOGGLE)
           cat << 'EOF' > app/src/main/java/com/autoklik/android/service/FloatingOverlayService.kt
           package com.autoklik.android.service
 
@@ -1279,7 +1237,7 @@ jobs:
 
           class FloatingOverlayService : Service() {
 
-              // Model Titik dengan Tipe Gerakan & Pengaturan Per-Titik (Fitur 13 & 14)
+              // Model Titik Lengkap
               data class TargetPoint(
                   val order: Int,
                   val view: View,
@@ -1287,18 +1245,34 @@ jobs:
                   var type: String = "tap", // "tap", "swipe_up", "swipe_down", "paste"
                   var delayMs: Long = 500L,
                   var durationMs: Long = 50L,
+                  var swipeDistancePx: Float = 450f, // Fitur 4: Jarak Swipe
+                  var jumpEnabled: Boolean = false,   // Fitur 2: Sub-Loop pada titik
+                  var jumpToPoint: Int = 7,
+                  var jumpAfterCycle: Int = 1,
                   var pasteText: String = "",
                   var autoTapPaste: Boolean = true
               )
 
               private lateinit var windowManager: WindowManager
-              private var floatingToolbar: View? = null
-              private lateinit var toolbarParams: WindowManager.LayoutParams
+              private var floatingContainer: View? = null
+              private lateinit var containerParams: WindowManager.LayoutParams
               private val targetPoints = mutableListOf<TargetPoint>()
+
+              // Sub-views toolbar
+              private var layoutFullToolbar: View? = null
+              private var layoutMiniToolbar: View? = null
 
               // Dialog Pop-up Per-Titik
               private var currentDialogView: View? = null
               private var currentDialogParams: WindowManager.LayoutParams? = null
+
+              // Fitur 6: Status Minimize / Hide Titik
+              private var arePointsVisible = true
+
+              // Fitur 3: Ukuran Titik (38dp Kecil, 48dp Sedang, 58dp Besar)
+              private var currentSizeIndex = 1
+              private val sizeOptionsDp = intArrayOf(38, 48, 58)
+              private val sizeNames = arrayOf("Kecil (38dp)", "Sedang (48dp)", "Besar (58dp)")
 
               private var isPlaying = false
               private val serviceScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
@@ -1342,7 +1316,7 @@ jobs:
                       WindowManager.LayoutParams.TYPE_PHONE
                   }
 
-                  toolbarParams = WindowManager.LayoutParams(
+                  containerParams = WindowManager.LayoutParams(
                       WindowManager.LayoutParams.WRAP_CONTENT,
                       WindowManager.LayoutParams.WRAP_CONTENT,
                       layoutType,
@@ -1350,29 +1324,61 @@ jobs:
                       PixelFormat.TRANSLUCENT
                   ).apply {
                       gravity = Gravity.TOP or Gravity.START
-                      x = 40
-                      y = 200
+                      x = 30
+                      y = 180
                   }
 
-                  floatingToolbar = LayoutInflater.from(this).inflate(R.layout.layout_floating_widget, null)
+                  floatingContainer = LayoutInflater.from(this).inflate(R.layout.layout_floating_widget, null)
 
-                  val btnPlay = floatingToolbar?.findViewById<Button>(R.id.btnFloatingPlay)
-                  val btnAdd = floatingToolbar?.findViewById<Button>(R.id.btnFloatingAdd)
-                  val btnRemove = floatingToolbar?.findViewById<Button>(R.id.btnFloatingRemove)
-                  val btnSettings = floatingToolbar?.findViewById<Button>(R.id.btnFloatingSettings)
-                  val btnClose = floatingToolbar?.findViewById<Button>(R.id.btnFloatingClose)
+                  layoutFullToolbar = floatingContainer?.findViewById(R.id.layoutFullToolbar)
+                  layoutMiniToolbar = floatingContainer?.findViewById(R.id.layoutMiniToolbar)
 
-                  // Tambah Titik Target (+)
+                  val btnPlay = floatingContainer?.findViewById<Button>(R.id.btnFloatingPlay)
+                  val btnAdd = floatingContainer?.findViewById<Button>(R.id.btnFloatingAdd)
+                  val btnRemove = floatingContainer?.findViewById<Button>(R.id.btnFloatingRemove)
+                  val btnVisibility = floatingContainer?.findViewById<Button>(R.id.btnFloatingVisibility)
+                  val btnSize = floatingContainer?.findViewById<Button>(R.id.btnFloatingSize)
+                  val btnSettings = floatingContainer?.findViewById<Button>(R.id.btnFloatingSettings)
+                  val btnClose = floatingContainer?.findViewById<Button>(R.id.btnFloatingClose)
+
+                  val btnMiniStop = floatingContainer?.findViewById<Button>(R.id.btnFloatingMiniStop)
+
+                  // ➕ Tambah Titik
                   btnAdd?.setOnClickListener {
                       addTargetPoint()
                   }
 
-                  // Hapus Titik Target Terakhir (-)
+                  // ➖ Hapus Titik Terakhir
                   btnRemove?.setOnClickListener {
                       removeLastTargetPoint()
                   }
 
-                  // Buka Pengaturan Fitur (⚙)
+                  // 👁️ Fitur 6: Minimize / Sembunyikan Titik Target
+                  btnVisibility?.setOnClickListener {
+                      arePointsVisible = !arePointsVisible
+                      for (p in targetPoints) {
+                          p.view.visibility = if (arePointsVisible) View.VISIBLE else View.GONE
+                      }
+                      btnVisibility.text = if (arePointsVisible) "👁️" else "🙈"
+                      Toast.makeText(this, if (arePointsVisible) "Titik target ditampilkan" else "Titik target disembunyikan (Minimize)", Toast.LENGTH_SHORT).show()
+                  }
+
+                  // 📐 Fitur 3: Pengatur Ukuran Titik (Kecil - Sedang - Besar)
+                  btnSize?.setOnClickListener {
+                      currentSizeIndex = (currentSizeIndex + 1) % sizeOptionsDp.size
+                      val newDp = sizeOptionsDp[currentSizeIndex]
+                      val density = resources.displayMetrics.density
+                      val newPx = (newDp * density).toInt()
+
+                      for (p in targetPoints) {
+                          p.params.width = newPx
+                          p.params.height = newPx
+                          windowManager.updateViewLayout(p.view, p.params)
+                      }
+                      Toast.makeText(this, "Ukuran Titik: ${sizeNames[currentSizeIndex]}", Toast.LENGTH_SHORT).show()
+                  }
+
+                  // ⚙️ Pengaturan
                   btnSettings?.setOnClickListener {
                       val intent = Intent(this, MainActivity::class.java).apply {
                           addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -1380,7 +1386,7 @@ jobs:
                       startActivity(intent)
                   }
 
-                  // Mulai / Jeda (▶ / ⏸)
+                  // ▶ Mulai Eksekusi (Fitur 6: Panel mengecil otomatis menjadi tombol Stop)
                   btnPlay?.setOnClickListener {
                       val a11y = AutoClickAccessibilityService.instance
                       if (a11y == null) {
@@ -1393,23 +1399,27 @@ jobs:
                           return@setOnClickListener
                       }
 
-                      isPlaying = !isPlaying
-                      if (isPlaying) {
-                          btnPlay.text = "⏸ Jeda"
-                          startClickExecution(a11y)
-                      } else {
-                          btnPlay.text = "▶ Mulai"
-                          stopClickExecution()
-                      }
+                      isPlaying = true
+                      // Fitur 6: Toolbar mengecil menjadi tombol Stop saja
+                      layoutFullToolbar?.visibility = View.GONE
+                      layoutMiniToolbar?.visibility = View.VISIBLE
+                      windowManager.updateViewLayout(floatingContainer, containerParams)
+
+                      startClickExecution(a11y)
                   }
 
-                  // Tutup Toolbar (✕)
+                  // ⏹ Tombol Stop pada Panel Kecil
+                  btnMiniStop?.setOnClickListener {
+                      stopClickExecution()
+                  }
+
+                  // ✕ Tutup Toolbar
                   btnClose?.setOnClickListener {
                       stopSelf()
                   }
 
-                  // Drag & Drop Toolbar
-                  floatingToolbar?.setOnTouchListener(object : View.OnTouchListener {
+                  // Drag & Drop Floating Toolbar
+                  val dragTouchListener = object : View.OnTouchListener {
                       private var initialX = 0
                       private var initialY = 0
                       private var initialTouchX = 0f
@@ -1418,27 +1428,30 @@ jobs:
                       override fun onTouch(v: View, event: MotionEvent): Boolean {
                           when (event.action) {
                               MotionEvent.ACTION_DOWN -> {
-                                  initialX = toolbarParams.x
-                                  initialY = toolbarParams.y
+                                  initialX = containerParams.x
+                                  initialY = containerParams.y
                                   initialTouchX = event.rawX
                                   initialTouchY = event.rawY
                                   return true
                               }
                               MotionEvent.ACTION_MOVE -> {
-                                  toolbarParams.x = initialX + (event.rawX - initialTouchX).toInt()
-                                  toolbarParams.y = initialY + (event.rawY - initialTouchY).toInt()
-                                  windowManager.updateViewLayout(floatingToolbar, toolbarParams)
+                                  containerParams.x = initialX + (event.rawX - initialTouchX).toInt()
+                                  containerParams.y = initialY + (event.rawY - initialTouchY).toInt()
+                                  windowManager.updateViewLayout(floatingContainer, containerParams)
                                   return true
                               }
                           }
                           return false
                       }
-                  })
+                  }
 
-                  windowManager.addView(floatingToolbar, toolbarParams)
+                  floatingContainer?.findViewById<View>(R.id.tvDragHandle)?.setOnTouchListener(dragTouchListener)
+                  floatingContainer?.findViewById<View>(R.id.tvMiniDragHandle)?.setOnTouchListener(dragTouchListener)
+
+                  windowManager.addView(floatingContainer, containerParams)
               }
 
-              // MENAMBAH BULATAN TITIK TARGET DI LAYAR
+              // MENAMBAH TITIK TARGET BULAT SEMPURNA
               private fun addTargetPoint() {
                   val nextOrder = targetPoints.size + 1
                   val layoutType = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -1448,16 +1461,20 @@ jobs:
                       WindowManager.LayoutParams.TYPE_PHONE
                   }
 
+                  val density = resources.displayMetrics.density
+                  val sizePx = (sizeOptionsDp[currentSizeIndex] * density).toInt()
+
+                  // Equal width and height = BULAT SEMPURNA (Fitur 5)
                   val pointParams = WindowManager.LayoutParams(
-                      WindowManager.LayoutParams.WRAP_CONTENT,
-                      WindowManager.LayoutParams.WRAP_CONTENT,
+                      sizePx,
+                      sizePx,
                       layoutType,
                       WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                       PixelFormat.TRANSLUCENT
                   ).apply {
                       gravity = Gravity.TOP or Gravity.START
-                      x = 120 + ((nextOrder - 1) % 4) * 130
-                      y = 350 + ((nextOrder - 1) / 4) * 140
+                      x = 120 + ((nextOrder - 1) % 4) * 110
+                      y = 350 + ((nextOrder - 1) / 4) * 120
                   }
 
                   val pointView = LayoutInflater.from(this).inflate(R.layout.layout_target_point, null)
@@ -1466,9 +1483,22 @@ jobs:
                   tvNumber.text = nextOrder.toString()
                   tvType.text = "🎯"
 
-                  val targetPoint = TargetPoint(nextOrder, pointView, pointParams)
+                  // Default jump config for point 10 -> 7
+                  val isTen = nextOrder == 10
+                  val targetPoint = TargetPoint(
+                      order = nextOrder,
+                      view = pointView,
+                      params = pointParams,
+                      jumpEnabled = isTen,
+                      jumpToPoint = 7,
+                      jumpAfterCycle = 1
+                  )
 
-                  // Drag & Drop serta Deteksi Klik untuk Pop-up Setting Per-Titik (Fitur 14)
+                  if (isTen) {
+                      tvType.text = "🔁7"
+                  }
+
+                  // Drag & Drop dan Klik untuk Dialog Pengaturan
                   pointView.setOnTouchListener(object : View.OnTouchListener {
                       private var initialX = 0
                       private var initialY = 0
@@ -1496,9 +1526,8 @@ jobs:
                               }
                               MotionEvent.ACTION_UP -> {
                                   val diffTime = System.currentTimeMillis() - touchStartTime
-                                  val moved = Math.abs(event.rawX - initialTouchX) > 10 || Math.abs(event.rawY - initialTouchY) > 10
-                                  // Jika hanya diklik (bukan digeser), buka pop-up setting titik (Fitur 14)
-                                  if (!moved && diffTime < 300) {
+                                  val moved = Math.abs(event.rawX - initialTouchX) > 12 || Math.abs(event.rawY - initialTouchY) > 12
+                                  if (!moved && diffTime < 350) {
                                       showPointSettingsDialog(targetPoint)
                                   }
                                   return true
@@ -1510,10 +1539,10 @@ jobs:
 
                   windowManager.addView(pointView, pointParams)
                   targetPoints.add(targetPoint)
-                  Toast.makeText(this, "Titik $nextOrder ditambah! (Ketuk bulatan untuk opsi Swipe/Paste)", Toast.LENGTH_SHORT).show()
+                  Toast.makeText(this, "Titik $nextOrder ditambah! (Ketuk bulatan untuk opsi Swipe, Paste & Sub-Loop)", Toast.LENGTH_SHORT).show()
               }
 
-              // FITUR 14: POP-UP DIALOG SETTING PER-TITIK
+              // FITUR 1 & 2 & 4: POP-UP DIALOG DENGAN KEYBOARD AKTIF, SUB-LOOP, DAN JARAK SWIPE
               private fun showPointSettingsDialog(point: TargetPoint) {
                   closePointSettingsDialog()
 
@@ -1524,14 +1553,16 @@ jobs:
                       WindowManager.LayoutParams.TYPE_PHONE
                   }
 
+                  // PERBAIKAN FITUR 1: Jangan gunakan FLAG_NOT_FOCUSABLE agar keyboard bisa mengetik!
                   val dialogParams = WindowManager.LayoutParams(
                       WindowManager.LayoutParams.WRAP_CONTENT,
                       WindowManager.LayoutParams.WRAP_CONTENT,
                       layoutType,
-                      WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+                      WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
                       PixelFormat.TRANSLUCENT
                   ).apply {
                       gravity = Gravity.CENTER
+                      softInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN or WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE
                   }
 
                   val dialogView = LayoutInflater.from(this).inflate(R.layout.layout_point_dialog, null)
@@ -1541,6 +1572,15 @@ jobs:
                   val rbSwipeUp = dialogView.findViewById<RadioButton>(R.id.rbTypeSwipeUp)
                   val rbSwipeDown = dialogView.findViewById<RadioButton>(R.id.rbTypeSwipeDown)
                   val rbPaste = dialogView.findViewById<RadioButton>(R.id.rbTypePaste)
+
+                  val layoutSwipe = dialogView.findViewById<LinearLayout>(R.id.layoutSwipeSettings)
+                  val etSwipeDistance = dialogView.findViewById<EditText>(R.id.etSwipeDistance)
+
+                  val cbSubLoop = dialogView.findViewById<CheckBox>(R.id.cbPointSubLoop)
+                  val layoutSubLoop = dialogView.findViewById<LinearLayout>(R.id.layoutPointSubLoopFields)
+                  val etJumpTo = dialogView.findViewById<EditText>(R.id.etPointJumpTo)
+                  val etJumpCycle = dialogView.findViewById<EditText>(R.id.etPointJumpCycle)
+
                   val etDelay = dialogView.findViewById<EditText>(R.id.etDialogDelay)
                   val layoutPaste = dialogView.findViewById<LinearLayout>(R.id.layoutDialogPasteFields)
                   val etPasteText = dialogView.findViewById<EditText>(R.id.etDialogPasteText)
@@ -1550,20 +1590,48 @@ jobs:
 
                   tvTitle.text = "Pengaturan Titik #${point.order}"
                   etDelay.setText(point.delayMs.toString())
+                  etSwipeDistance.setText(point.swipeDistancePx.toInt().toString())
+
+                  // Sub-Loop state (Fitur 2)
+                  cbSubLoop.isChecked = point.jumpEnabled
+                  layoutSubLoop.visibility = if (point.jumpEnabled) View.VISIBLE else View.GONE
+                  etJumpTo.setText(point.jumpToPoint.toString())
+                  etJumpCycle.setText(point.jumpAfterCycle.toString())
+
+                  cbSubLoop.setOnCheckedChangeListener { _, isChecked ->
+                      layoutSubLoop.visibility = if (isChecked) View.VISIBLE else View.GONE
+                  }
+
+                  // Paste state
                   etPasteText.setText(point.pasteText)
                   cbAutoTap.isChecked = point.autoTapPaste
 
+                  // Type state
                   when (point.type) {
-                      "swipe_up" -> rbSwipeUp.isChecked = true
-                      "swipe_down" -> rbSwipeDown.isChecked = true
+                      "swipe_up" -> {
+                          rbSwipeUp.isChecked = true
+                          layoutSwipe.visibility = View.VISIBLE
+                          layoutPaste.visibility = View.GONE
+                      }
+                      "swipe_down" -> {
+                          rbSwipeDown.isChecked = true
+                          layoutSwipe.visibility = View.VISIBLE
+                          layoutPaste.visibility = View.GONE
+                      }
                       "paste" -> {
                           rbPaste.isChecked = true
+                          layoutSwipe.visibility = View.GONE
                           layoutPaste.visibility = View.VISIBLE
                       }
-                      else -> rbTap.isChecked = true
+                      else -> {
+                          rbTap.isChecked = true
+                          layoutSwipe.visibility = View.GONE
+                          layoutPaste.visibility = View.GONE
+                      }
                   }
 
                   rgType.setOnCheckedChangeListener { _, checkedId ->
+                      layoutSwipe.visibility = if (checkedId == R.id.rbTypeSwipeUp || checkedId == R.id.rbTypeSwipeDown) View.VISIBLE else View.GONE
                       layoutPaste.visibility = if (checkedId == R.id.rbTypePaste) View.VISIBLE else View.GONE
                   }
 
@@ -1575,20 +1643,27 @@ jobs:
                           else -> "tap"
                       }
                       point.delayMs = etDelay.text.toString().toLongOrNull() ?: 500L
+                      point.swipeDistancePx = etSwipeDistance.text.toString().toFloatOrNull() ?: 450f
+
+                      point.jumpEnabled = cbSubLoop.isChecked
+                      point.jumpToPoint = etJumpTo.text.toString().toIntOrNull() ?: 7
+                      point.jumpAfterCycle = etJumpCycle.text.toString().toIntOrNull() ?: 1
+
                       point.pasteText = etPasteText.text.toString()
                       point.autoTapPaste = cbAutoTap.isChecked
 
-                      // Update badge icon di bulatan target (Fitur 13 & 14)
+                      // Update icon badge di bulatan
                       val tvType = point.view.findViewById<TextView>(R.id.tvTargetType)
-                      tvType.text = when (point.type) {
-                          "swipe_up" -> "👆"
-                          "swipe_down" -> "👇"
-                          "paste" -> "📋"
+                      tvType.text = when {
+                          point.jumpEnabled -> "🔁${point.jumpToPoint}"
+                          point.type == "swipe_up" -> "👆"
+                          point.type == "swipe_down" -> "👇"
+                          point.type == "paste" -> "📋"
                           else -> "🎯"
                       }
 
                       closePointSettingsDialog()
-                      Toast.makeText(this, "Titik #${point.order} disetel ke ${point.type.uppercase()} ✔", Toast.LENGTH_SHORT).show()
+                      Toast.makeText(this, "Titik #${point.order} berhasil disimpan! ✔", Toast.LENGTH_SHORT).show()
                   }
 
                   btnClose.setOnClickListener {
@@ -1610,7 +1685,6 @@ jobs:
                   }
               }
 
-              // MENGHAPUS TITIK TARGET TERAKHIR
               private fun removeLastTargetPoint() {
                   if (targetPoints.isNotEmpty()) {
                       val last = targetPoints.removeAt(targetPoints.size - 1)
@@ -1623,14 +1697,11 @@ jobs:
                   }
               }
 
-              // MENJALANKAN EKSEKUSI KLIK, SWIPE (FITUR 13), & PASTE OTOMATIS
+              // EKSEKUSI DENGAN LOGIKA SUB-LOOP DINAMIS & JARAK SWIPE
               private fun startClickExecution(service: AutoClickAccessibilityService) {
                   clickJob?.cancel()
                   clickJob = serviceScope.launch {
                       val prefs = getSharedPreferences("autoklik_prefs", Context.MODE_PRIVATE)
-                      val subloopEnabled = prefs.getBoolean("subloop_enabled", true)
-                      val subloopStart = prefs.getInt("subloop_start", 7)
-                      val subloopEnd = prefs.getInt("subloop_end", 10)
                       val jitterEnabled = prefs.getBoolean("jitter_enabled", true)
                       val defaultPaste = prefs.getString("paste_text", "AutoKlik Trans") ?: ""
 
@@ -1643,18 +1714,19 @@ jobs:
                           val point = targetPoints.find { it.order == currentOrder } ?: targetPoints.firstOrNull()
                           if (point != null) {
                               val density = resources.displayMetrics.density
-                              val tapX = point.params.x + 26f * density
-                              val tapY = point.params.y + 26f * density
+                              val radiusPx = (sizeOptionsDp[currentSizeIndex] * density) / 2f
+                              val tapX = point.params.x + radiusPx
+                              val tapY = point.params.y + radiusPx
 
-                              // EKSEKUSI BERDASARKAN TIPE TITIK (FITUR 13 & 14)
+                              // Eksekusi Gestur
                               when (point.type) {
                                   "swipe_up" -> {
-                                      // Usap 450px ke atas
-                                      service.executeSwipe(tapX, tapY, tapX, (tapY - 450f).coerceAtLeast(100f), 350L)
+                                      val endY = (tapY - point.swipeDistancePx).coerceAtLeast(80f)
+                                      service.executeSwipe(tapX, tapY, tapX, endY, 350L)
                                   }
                                   "swipe_down" -> {
-                                      // Usap 450px ke bawah
-                                      service.executeSwipe(tapX, tapY, tapX, tapY + 450f, 350L)
+                                      val endY = tapY + point.swipeDistancePx
+                                      service.executeSwipe(tapX, tapY, tapX, endY, 350L)
                                   }
                                   "paste" -> {
                                       val text = if (point.pasteText.isNotBlank()) point.pasteText else defaultPaste
@@ -1665,7 +1737,7 @@ jobs:
                                   }
                               }
 
-                              // Hitung jeda dengan Jitter Anti-Deteksi
+                              // Jeda acak (Anti-Deteksi)
                               var waitTime = point.delayMs
                               if (jitterEnabled) {
                                   val jitterFactor = Random.nextInt(-15, 16) / 100f
@@ -1673,9 +1745,9 @@ jobs:
                               }
                               delay(waitTime)
 
-                              // LOGIKA SUB-LOOP: Titik 10 loop kembali ke Titik 7
-                              if (subloopEnabled && currentOrder == subloopEnd && currentOrder <= targetPoints.size && subloopStart <= targetPoints.size && cycle >= 1) {
-                                  currentOrder = subloopStart // Lompat kembali ke titik 7!
+                              // FITUR 2: LOGIKA SUB-LOOP PADA TITIK
+                              if (point.jumpEnabled && cycle >= point.jumpAfterCycle && point.jumpToPoint <= targetPoints.size) {
+                                  currentOrder = point.jumpToPoint
                               } else if (currentOrder >= targetPoints.size) {
                                   currentOrder = 1
                                   cycle++
@@ -1690,9 +1762,20 @@ jobs:
               }
 
               private fun stopClickExecution() {
+                  isPlaying = false
                   clickJob?.cancel()
                   clickJob = null
-                  Toast.makeText(applicationContext, "AutoKlik Dijeda", Toast.LENGTH_SHORT).show()
+
+                  // Kembalikan toolbar lengkap saat di-stop (Fitur 6)
+                  layoutMiniToolbar?.visibility = View.GONE
+                  layoutFullToolbar?.visibility = View.VISIBLE
+                  if (floatingContainer != null) {
+                      try {
+                          windowManager.updateViewLayout(floatingContainer, containerParams)
+                      } catch (e: Exception) {}
+                  }
+
+                  Toast.makeText(applicationContext, "AutoKlik Dihentikan ⏹", Toast.LENGTH_SHORT).show()
               }
 
               override fun onDestroy() {
@@ -1708,9 +1791,9 @@ jobs:
                   }
                   targetPoints.clear()
 
-                  if (floatingToolbar != null) {
+                  if (floatingContainer != null) {
                       try {
-                          windowManager.removeView(floatingToolbar)
+                          windowManager.removeView(floatingContainer)
                       } catch (e: Exception) {}
                   }
               }
