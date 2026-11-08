@@ -867,7 +867,7 @@ jobs:
                   android:orientation="horizontal"
                   android:background="@drawable/bg_panel_pill"
                   android:gravity="center_vertical"
-                  android:padding="5dp">
+                  android:padding="4dp">
 
                   <TextView
                       android:id="@+id/tvDragHandle"
@@ -875,31 +875,31 @@ jobs:
                       android:layout_height="wrap_content"
                       android:text="⠿"
                       android:textColor="#94A3B8"
-                      android:textSize="17sp"
-                      android:paddingStart="4dp"
-                      android:paddingEnd="4dp" />
+                      android:textSize="16sp"
+                      android:paddingStart="3dp"
+                      android:paddingEnd="3dp" />
 
                   <!-- Tombol Play / Mulai -->
                   <Button
                       android:id="@+id/btnFloatingPlay"
                       android:layout_width="wrap_content"
-                      android:layout_height="36dp"
+                      android:layout_height="34dp"
                       android:text="▶ Mulai"
-                      android:textSize="12sp"
+                      android:textSize="11sp"
                       android:textColor="#FFFFFF"
                       android:backgroundTint="#10B981"
                       android:minWidth="0dp"
-                      android:paddingStart="8dp"
-                      android:paddingEnd="8dp" />
+                      android:paddingStart="7dp"
+                      android:paddingEnd="7dp" />
 
                   <!-- Tombol Tambah Titik (+) -->
                   <Button
                       android:id="@+id/btnFloatingAdd"
-                      android:layout_width="36dp"
-                      android:layout_height="36dp"
-                      android:layout_marginStart="4dp"
+                      android:layout_width="32dp"
+                      android:layout_height="34dp"
+                      android:layout_marginStart="3dp"
                       android:text="➕"
-                      android:textSize="13sp"
+                      android:textSize="12sp"
                       android:textColor="#FFFFFF"
                       android:backgroundTint="#0284C7"
                       android:minWidth="0dp"
@@ -908,11 +908,11 @@ jobs:
                   <!-- Tombol Kurangi Titik (-) -->
                   <Button
                       android:id="@+id/btnFloatingRemove"
-                      android:layout_width="36dp"
-                      android:layout_height="36dp"
-                      android:layout_marginStart="3dp"
+                      android:layout_width="32dp"
+                      android:layout_height="34dp"
+                      android:layout_marginStart="2dp"
                       android:text="➖"
-                      android:textSize="13sp"
+                      android:textSize="12sp"
                       android:textColor="#FFFFFF"
                       android:backgroundTint="#D97706"
                       android:minWidth="0dp"
@@ -921,50 +921,63 @@ jobs:
                   <!-- Tombol Minimize / Sembunyikan Titik (👁️) -->
                   <Button
                       android:id="@+id/btnFloatingVisibility"
-                      android:layout_width="36dp"
-                      android:layout_height="36dp"
-                      android:layout_marginStart="3dp"
+                      android:layout_width="32dp"
+                      android:layout_height="34dp"
+                      android:layout_marginStart="2dp"
                       android:text="👁️"
-                      android:textSize="13sp"
+                      android:textSize="12sp"
                       android:textColor="#FFFFFF"
                       android:backgroundTint="#475569"
                       android:minWidth="0dp"
                       android:padding="0dp" />
 
-                  <!-- FITUR 2: PENGATUR UKURAN PERSENTASE 0-100% (20dp-40dp) (📐) -->
+                  <!-- PENGATUR UKURAN PERSENTASE 0-100% (20dp-40dp) (📐) -->
                   <Button
                       android:id="@+id/btnFloatingSize"
-                      android:layout_width="36dp"
-                      android:layout_height="36dp"
-                      android:layout_marginStart="3dp"
+                      android:layout_width="32dp"
+                      android:layout_height="34dp"
+                      android:layout_marginStart="2dp"
                       android:text="📐"
-                      android:textSize="13sp"
+                      android:textSize="12sp"
                       android:textColor="#FFFFFF"
                       android:backgroundTint="#0D9488"
                       android:minWidth="0dp"
                       android:padding="0dp" />
 
-                  <!-- FITUR 3: TOMBOL SAVE KONFIGURASI PADA PANEL MELAYANG (💾) -->
+                  <!-- TOMBOL SAVE KONFIGURASI PADA PANEL MELAYANG (💾) -->
                   <Button
                       android:id="@+id/btnFloatingSave"
-                      android:layout_width="36dp"
-                      android:layout_height="36dp"
-                      android:layout_marginStart="3dp"
+                      android:layout_width="32dp"
+                      android:layout_height="34dp"
+                      android:layout_marginStart="2dp"
                       android:text="💾"
-                      android:textSize="13sp"
+                      android:textSize="12sp"
                       android:textColor="#FFFFFF"
                       android:backgroundTint="#059669"
+                      android:minWidth="0dp"
+                      android:padding="0dp" />
+
+                  <!-- TOMBOL LOAD SETTING KONFIGURASI PADA PANEL MELAYANG (📂) -->
+                  <Button
+                      android:id="@+id/btnFloatingLoad"
+                      android:layout_width="32dp"
+                      android:layout_height="34dp"
+                      android:layout_marginStart="2dp"
+                      android:text="📂"
+                      android:textSize="12sp"
+                      android:textColor="#FFFFFF"
+                      android:backgroundTint="#2563EB"
                       android:minWidth="0dp"
                       android:padding="0dp" />
 
                   <!-- Tombol Pengaturan (⚙) -->
                   <Button
                       android:id="@+id/btnFloatingSettings"
-                      android:layout_width="36dp"
-                      android:layout_height="36dp"
-                      android:layout_marginStart="3dp"
+                      android:layout_width="32dp"
+                      android:layout_height="34dp"
+                      android:layout_marginStart="2dp"
                       android:text="⚙"
-                      android:textSize="13sp"
+                      android:textSize="12sp"
                       android:textColor="#FFFFFF"
                       android:backgroundTint="#7C3AED"
                       android:minWidth="0dp"
@@ -973,11 +986,11 @@ jobs:
                   <!-- Tombol Tutup (✕) -->
                   <Button
                       android:id="@+id/btnFloatingClose"
-                      android:layout_width="36dp"
-                      android:layout_height="36dp"
-                      android:layout_marginStart="3dp"
+                      android:layout_width="32dp"
+                      android:layout_height="34dp"
+                      android:layout_marginStart="2dp"
                       android:text="✕"
-                      android:textSize="13sp"
+                      android:textSize="12sp"
                       android:textColor="#FFFFFF"
                       android:backgroundTint="#EF4444"
                       android:minWidth="0dp"
@@ -1355,6 +1368,41 @@ jobs:
                   }, null)
               }
 
+              private fun findEditableNode(root: AccessibilityNodeInfo?, targetX: Int, targetY: Int): AccessibilityNodeInfo? {
+                  if (root == null) return null
+
+                  // 1. Cek node yang sedang memiliki fokus input aktif
+                  val focused = root.findFocus(AccessibilityNodeInfo.FOCUS_INPUT)
+                  if (focused != null && (focused.isEditable || focused.className?.contains("EditText", true) == true)) {
+                      return focused
+                  }
+
+                  // 2. Jika di Chrome/WebView fokus belum terdeteksi, cari node editable yang mencakup koordinat (targetX, targetY)
+                  val rect = android.graphics.Rect()
+                  val queue = ArrayDeque<AccessibilityNodeInfo>()
+                  queue.add(root)
+
+                  var bestMatch: AccessibilityNodeInfo? = null
+                  while (queue.isNotEmpty()) {
+                      val current = queue.removeFirst()
+                      current.getBoundsInScreen(rect)
+                      val isInput = current.isEditable ||
+                          current.className?.contains("EditText", true) == true ||
+                          current.className?.contains("Input", true) == true
+
+                      if (isInput && rect.contains(targetX, targetY)) {
+                          bestMatch = current
+                          break
+                      }
+
+                      for (i in 0 until current.childCount) {
+                          current.getChild(i)?.let { queue.add(it) }
+                      }
+                  }
+                  return bestMatch ?: focused
+              }
+
+              @RequiresApi(Build.VERSION_CODES.N)
               fun executePaste(
                   x: Float,
                   y: Float,
@@ -1362,42 +1410,60 @@ jobs:
                   autoTapToFocus: Boolean = true,
                   callback: (() -> Unit)? = null
               ) {
-                  val performPaste = {
-                      val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-                      val clip = ClipData.newPlainText("AutoKlikPaste", textToPaste)
-                      clipboard.setPrimaryClip(clip)
+                  val performTypeAndSuggest = {
+                      serviceScope.launch {
+                          try {
+                              val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                              val clip = ClipData.newPlainText("AutoKlikPaste", textToPaste)
+                              clipboard.setPrimaryClip(clip)
 
-                      val rootNode = rootInActiveWindow
-                      val focusedNode = rootNode?.findFocus(AccessibilityNodeInfo.FOCUS_INPUT)
+                              val rootNode = rootInActiveWindow
+                              val targetNode = findEditableNode(rootNode, x.toInt(), y.toInt())
 
-                      if (focusedNode != null && focusedNode.isEditable) {
-                          // Gunakan ACTION_PASTE terlebih dahulu agar memicu event input nyata di web/form sehingga pop-up sugesti muncul
-                          val pasted = focusedNode.performAction(AccessibilityNodeInfo.ACTION_PASTE)
-                          if (!pasted) {
-                              val arguments = Bundle().apply {
-                                  putCharSequence(
-                                      AccessibilityNodeInfo.ACTION_ARGUMENT_SET_TEXT_CHARSEQUENCE,
-                                      textToPaste
-                                  )
+                              if (targetNode != null) {
+                                  // Pastikan node fokus & aktif
+                                  targetNode.performAction(AccessibilityNodeInfo.ACTION_FOCUS)
+                                  targetNode.performAction(AccessibilityNodeInfo.ACTION_CLICK)
+                                  delay(80)
+
+                                  // Kosongkan dulu lalu ketik/tempel teks (misal huruf "a") agar event input form terpancing
+                                  val pasted = targetNode.performAction(AccessibilityNodeInfo.ACTION_PASTE)
+                                  if (!pasted) {
+                                      val setArgs = Bundle().apply {
+                                          putCharSequence(
+                                              AccessibilityNodeInfo.ACTION_ARGUMENT_SET_TEXT_CHARSEQUENCE,
+                                              textToPaste
+                                          )
+                                      }
+                                      targetNode.performAction(AccessibilityNodeInfo.ACTION_SET_TEXT, setArgs)
+                                  }
+
+                                  // Pindahkan kursor ke ujung huruf (misal setelah huruf "a") untuk memicu popup sugesti form
+                                  val selArgs = Bundle().apply {
+                                      putInt(AccessibilityNodeInfo.ACTION_ARGUMENT_SELECTION_START_INT, textToPaste.length)
+                                      putInt(AccessibilityNodeInfo.ACTION_ARGUMENT_SELECTION_END_INT, textToPaste.length)
+                                  }
+                                  targetNode.performAction(AccessibilityNodeInfo.ACTION_SET_SELECTION, selArgs)
                               }
-                              focusedNode.performAction(AccessibilityNodeInfo.ACTION_SET_TEXT, arguments)
+                          } catch (e: Exception) {
+                              // Abaikan jika node sudah tertutup
+                          } finally {
+                              callback?.invoke()
                           }
-                          focusedNode.recycle()
                       }
-                      rootNode?.recycle()
-                      callback?.invoke()
                   }
 
                   if (autoTapToFocus) {
-                      // Beri ketukan awal agar kursor aktif pada form target
-                      executeTap(x, y, 50L) {
+                      // Tahap 1: Ketuk fisik pada form target untuk memancing Keyboard keluar & mengaktifkan kursor
+                      executeTap(x, y, 65L) {
                           serviceScope.launch {
-                              delay(150) // Beri waktu WebView / Form mengaktifkan listener input
-                              performPaste()
+                              // Tahap 2: Tunggu 350ms hingga Keyboard muncul dan form siap menerima huruf
+                              delay(350)
+                              performTypeAndSuggest()
                           }
                       }
                   } else {
-                      performPaste()
+                      performTypeAndSuggest()
                   }
               }
           }
@@ -1413,7 +1479,9 @@ jobs:
           import android.app.Service
           import android.content.Context
           import android.content.Intent
+          import android.graphics.Color
           import android.graphics.PixelFormat
+          import android.graphics.drawable.GradientDrawable
           import android.os.Build
           import android.os.IBinder
           import android.view.Gravity
@@ -1428,6 +1496,7 @@ jobs:
           import kotlinx.coroutines.*
           import org.json.JSONArray
           import org.json.JSONObject
+          import kotlin.coroutines.resume
           import kotlin.random.Random
 
           class FloatingOverlayService : Service() {
@@ -1467,6 +1536,10 @@ jobs:
               private var currentSizeDialogView: View? = null
               private var currentSizeDialogParams: WindowManager.LayoutParams? = null
 
+              // Dialog Save & Load Konfigurasi pada Panel Melayang
+              private var currentConfigDialogView: View? = null
+              private var currentConfigDialogParams: WindowManager.LayoutParams? = null
+
               // Status Minimize / Hide Titik
               private var arePointsVisible = true
 
@@ -1485,6 +1558,14 @@ jobs:
                   loadSavedSizePercent()
                   startForegroundNotification()
                   setupFloatingToolbar()
+              }
+
+              override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+                  val profileToLoad = intent?.getStringExtra("load_profile_name")
+                  if (!profileToLoad.isNullOrBlank()) {
+                      loadNamedConfiguration(profileToLoad)
+                  }
+                  return START_STICKY
               }
 
               private fun loadSavedSizePercent() {
@@ -1549,6 +1630,7 @@ jobs:
                   val btnVisibility = floatingContainer?.findViewById<Button>(R.id.btnFloatingVisibility)
                   val btnSize = floatingContainer?.findViewById<Button>(R.id.btnFloatingSize)
                   val btnSave = floatingContainer?.findViewById<Button>(R.id.btnFloatingSave)
+                  val btnLoad = floatingContainer?.findViewById<Button>(R.id.btnFloatingLoad)
                   val btnSettings = floatingContainer?.findViewById<Button>(R.id.btnFloatingSettings)
                   val btnClose = floatingContainer?.findViewById<Button>(R.id.btnFloatingClose)
 
@@ -1574,14 +1656,19 @@ jobs:
                       Toast.makeText(this, if (arePointsVisible) "Titik target ditampilkan" else "Titik target disembunyikan (Minimize)", Toast.LENGTH_SHORT).show()
                   }
 
-                  // 📐 FITUR 2: Dialog Ukuran Persentase 0-100% (20dp-40dp)
+                  // 📐 Dialog Ukuran Persentase 0-100% (20dp-40dp)
                   btnSize?.setOnClickListener {
                       showSizeDialog()
                   }
 
-                  // 💾 FITUR 3: Simpan Konfigurasi pada Panel Melayang
+                  // 💾 Simpan Konfigurasi (Beri Nama -> Save) pada Panel Melayang
                   btnSave?.setOnClickListener {
-                      saveCurrentConfiguration()
+                      showSaveConfigDialog()
+                  }
+
+                  // 📂 Load Setting Konfigurasi pada Panel Melayang
+                  btnLoad?.setOnClickListener {
+                      showLoadConfigDialog()
                   }
 
                   // ⚙️ Pengaturan
@@ -1601,11 +1688,16 @@ jobs:
                       }
 
                       if (targetPoints.isEmpty()) {
-                          Toast.makeText(this, "Tekan tombol ➕ untuk menambah titik target!", Toast.LENGTH_LONG).show()
+                          Toast.makeText(this, "Tekan tombol ➕ untuk menambah titik atau 📂 untuk Load konfigurasi!", Toast.LENGTH_LONG).show()
                           return@setOnClickListener
                       }
 
                       isPlaying = true
+                      closePointSettingsDialog()
+                      closeSizeDialog()
+                      closeConfigDialog()
+                      setTargetPointsTouchable(false)
+
                       layoutFullToolbar?.visibility = View.GONE
                       layoutMiniToolbar?.visibility = View.VISIBLE
                       windowManager.updateViewLayout(floatingContainer, containerParams)
@@ -1656,15 +1748,155 @@ jobs:
                   windowManager.addView(floatingContainer, containerParams)
               }
 
-              // FITUR 3: LOGIKA SIMPAN KONFIGURASI DARI PANEL MELAYANG
-              private fun saveCurrentConfiguration() {
+              // FITUR SAVE KONFIGURASI (BERI NAMA -> SAVE) & LOAD SETTING PADA PANEL MELAYANG
+              private fun closeConfigDialog() {
+                  if (currentConfigDialogView != null) {
+                      try {
+                          windowManager.removeView(currentConfigDialogView)
+                      } catch (e: Exception) {}
+                      currentConfigDialogView = null
+                      currentConfigDialogParams = null
+                  }
+              }
+
+              private fun showSaveConfigDialog() {
                   if (targetPoints.isEmpty()) {
-                      Toast.makeText(this, "Tambahkan titik target terlebih dahulu!", Toast.LENGTH_SHORT).show()
+                      Toast.makeText(this, "Tambahkan minimal 1 titik target (➕) terlebih dahulu untuk disimpan!", Toast.LENGTH_LONG).show()
                       return
                   }
 
+                  closePointSettingsDialog()
+                  closeSizeDialog()
+                  closeConfigDialog()
+
+                  val density = resources.displayMetrics.density
+                  val pad = (16 * density).toInt()
+                  val layoutType = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                      WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
+                  } else {
+                      @Suppress("DEPRECATION")
+                      WindowManager.LayoutParams.TYPE_PHONE
+                  }
+
+                  // Penting: Jangan gunakan FLAG_NOT_FOCUSABLE agar Keyboard muncul saat mengetik nama konfigurasi
+                  currentConfigDialogParams = WindowManager.LayoutParams(
+                      (310 * density).toInt(),
+                      WindowManager.LayoutParams.WRAP_CONTENT,
+                      layoutType,
+                      WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
+                      PixelFormat.TRANSLUCENT
+                  ).apply {
+                      gravity = Gravity.CENTER
+                      softInputMode = WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE
+                  }
+
+                  val root = LinearLayout(this).apply {
+                      orientation = LinearLayout.VERTICAL
+                      setPadding(pad, pad, pad, pad)
+                      background = GradientDrawable().apply {
+                          setColor(Color.parseColor("#0F172A"))
+                          cornerRadius = 16f * density
+                          setStroke((2 * density).toInt(), Color.parseColor("#10B981"))
+                      }
+                  }
+
+                  val tvTitle = TextView(this).apply {
+                      text = "💾 Simpan Konfigurasi AutoKlik"
+                      textSize = 15f
+                      setTextColor(Color.parseColor("#34D399"))
+                      setTypeface(typeface, android.graphics.Typeface.BOLD)
+                  }
+                  root.addView(tvTitle)
+
+                  val tvDesc = TextView(this).apply {
+                      text = "Menyimpan ${targetPoints.size} titik aktif (posisi, jeda ms/detik, panjang garis swipe & teks paste)."
+                      textSize = 11.5f
+                      setTextColor(Color.parseColor("#CBD5E1"))
+                      setPadding(0, (4 * density).toInt(), 0, (10 * density).toInt())
+                  }
+                  root.addView(tvDesc)
+
+                  val tvLabel = TextView(this).apply {
+                      text = "Beri Nama Konfigurasi:"
+                      textSize = 12f
+                      setTextColor(Color.parseColor("#F8FAFC"))
+                      setTypeface(typeface, android.graphics.Typeface.BOLD)
+                  }
+                  root.addView(tvLabel)
+
+                  val etConfigName = EditText(this).apply {
+                      hint = "Contoh: Tiket Ferizy / Setting 1"
+                      setHintTextColor(Color.parseColor("#64748B"))
+                      setTextColor(Color.WHITE)
+                      textSize = 13f
+                      setSingleLine(true)
+                      setPadding((12 * density).toInt(), (10 * density).toInt(), (12 * density).toInt(), (10 * density).toInt())
+                      background = GradientDrawable().apply {
+                          setColor(Color.parseColor("#1E293B"))
+                          cornerRadius = 8f * density
+                          setStroke((1 * density).toInt(), Color.parseColor("#38BDF8"))
+                      }
+                      val lp = LinearLayout.LayoutParams(
+                          LinearLayout.LayoutParams.MATCH_PARENT,
+                          LinearLayout.LayoutParams.WRAP_CONTENT
+                      )
+                      lp.topMargin = (6 * density).toInt()
+                      lp.bottomMargin = (14 * density).toInt()
+                      layoutParams = lp
+                  }
+                  root.addView(etConfigName)
+
+                  val btnRow = LinearLayout(this).apply {
+                      orientation = LinearLayout.HORIZONTAL
+                      layoutParams = LinearLayout.LayoutParams(
+                          LinearLayout.LayoutParams.MATCH_PARENT,
+                          LinearLayout.LayoutParams.WRAP_CONTENT
+                      )
+                  }
+
+                  val btnCancel = Button(this).apply {
+                      text = "✕ Batal"
+                      textSize = 12f
+                      setTextColor(Color.WHITE)
+                      backgroundTintList = android.content.res.ColorStateList.valueOf(Color.parseColor("#475569"))
+                      layoutParams = LinearLayout.LayoutParams(0, (40 * density).toInt(), 1f).apply {
+                          marginEnd = (6 * density).toInt()
+                      }
+                      setOnClickListener {
+                          closeConfigDialog()
+                      }
+                  }
+
+                  val btnConfirmSave = Button(this).apply {
+                      text = "💾 SAVE"
+                      textSize = 12f
+                      setTextColor(Color.WHITE)
+                      setTypeface(typeface, android.graphics.Typeface.BOLD)
+                      backgroundTintList = android.content.res.ColorStateList.valueOf(Color.parseColor("#059669"))
+                      layoutParams = LinearLayout.LayoutParams(0, (40 * density).toInt(), 1.3f)
+                      setOnClickListener {
+                          val rawName = etConfigName.text.toString().trim()
+                          if (rawName.isEmpty()) {
+                              Toast.makeText(this@FloatingOverlayService, "Harap isi nama konfigurasi terlebih dahulu!", Toast.LENGTH_SHORT).show()
+                              return@setOnClickListener
+                          }
+                          saveNamedConfiguration(rawName)
+                          closeConfigDialog()
+                      }
+                  }
+
+                  btnRow.addView(btnCancel)
+                  btnRow.addView(btnConfirmSave)
+                  root.addView(btnRow)
+
+                  windowManager.addView(root, currentConfigDialogParams)
+                  currentConfigDialogView = root
+                  etConfigName.requestFocus()
+              }
+
+              private fun saveNamedConfiguration(configName: String) {
                   try {
-                      val configArray = JSONArray()
+                      val pointsArray = JSONArray()
                       for (p in targetPoints) {
                           val obj = JSONObject().apply {
                               put("order", p.order)
@@ -1681,17 +1913,293 @@ jobs:
                               put("pasteText", p.pasteText)
                               put("autoTapPaste", p.autoTapPaste)
                           }
-                          configArray.put(obj)
+                          pointsArray.put(obj)
                       }
 
-                      val prefs = getSharedPreferences("autoklik_saved_config", Context.MODE_PRIVATE).edit()
-                      prefs.putString("saved_points_json", configArray.toString())
-                      prefs.putInt("size_percent", currentSizePercent)
-                      prefs.apply()
+                      val profileObj = JSONObject().apply {
+                          put("name", configName)
+                          put("size_percent", currentSizePercent)
+                          put("points", pointsArray)
+                          put("saved_at", System.currentTimeMillis())
+                      }
 
-                      Toast.makeText(this, "💾 Konfigurasi (${targetPoints.size} titik) berhasil disimpan!", Toast.LENGTH_LONG).show()
+                      // Simpan ke autoklik_profiles agar bisa di-load dari Panel Melayang (📂) maupun dari MainActivity
+                      val profilePrefs = getSharedPreferences("autoklik_profiles", Context.MODE_PRIVATE).edit()
+                      profilePrefs.putString(configName, profileObj.toString())
+                      profilePrefs.apply()
+
+                      val configPrefs = getSharedPreferences("autoklik_saved_config", Context.MODE_PRIVATE).edit()
+                      configPrefs.putString("last_saved_name", configName)
+                      configPrefs.putInt("size_percent", currentSizePercent)
+                      configPrefs.apply()
+
+                      Toast.makeText(this, "💾 Konfigurasi '$configName' (${targetPoints.size} titik) berhasil disimpan!", Toast.LENGTH_LONG).show()
                   } catch (e: Exception) {
                       Toast.makeText(this, "Gagal menyimpan: ${e.message}", Toast.LENGTH_SHORT).show()
+                  }
+              }
+
+              private fun showLoadConfigDialog() {
+                  closePointSettingsDialog()
+                  closeSizeDialog()
+                  closeConfigDialog()
+
+                  val density = resources.displayMetrics.density
+                  val pad = (16 * density).toInt()
+                  val layoutType = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                      WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
+                  } else {
+                      @Suppress("DEPRECATION")
+                      WindowManager.LayoutParams.TYPE_PHONE
+                  }
+
+                  currentConfigDialogParams = WindowManager.LayoutParams(
+                      (320 * density).toInt(),
+                      WindowManager.LayoutParams.WRAP_CONTENT,
+                      layoutType,
+                      WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
+                      PixelFormat.TRANSLUCENT
+                  ).apply {
+                      gravity = Gravity.CENTER
+                  }
+
+                  val root = LinearLayout(this).apply {
+                      orientation = LinearLayout.VERTICAL
+                      setPadding(pad, pad, pad, pad)
+                      background = GradientDrawable().apply {
+                          setColor(Color.parseColor("#0F172A"))
+                          cornerRadius = 16f * density
+                          setStroke((2 * density).toInt(), Color.parseColor("#3B82F6"))
+                      }
+                  }
+
+                  val tvTitle = TextView(this).apply {
+                      text = "📂 Load Setting Konfigurasi"
+                      textSize = 15f
+                      setTextColor(Color.parseColor("#60A5FA"))
+                      setTypeface(typeface, android.graphics.Typeface.BOLD)
+                  }
+                  root.addView(tvTitle)
+
+                  val tvSub = TextView(this).apply {
+                      text = "Pilih konfigurasi yang telah disimpan untuk dimuat kembali:"
+                      textSize = 11.5f
+                      setTextColor(Color.parseColor("#CBD5E1"))
+                      setPadding(0, (4 * density).toInt(), 0, (10 * density).toInt())
+                  }
+                  root.addView(tvSub)
+
+                  val scrollView = ScrollView(this).apply {
+                      layoutParams = LinearLayout.LayoutParams(
+                          LinearLayout.LayoutParams.MATCH_PARENT,
+                          (210 * density).toInt()
+                      )
+                  }
+
+                  val listContainer = LinearLayout(this).apply {
+                      orientation = LinearLayout.VERTICAL
+                      layoutParams = LinearLayout.LayoutParams(
+                          LinearLayout.LayoutParams.MATCH_PARENT,
+                          LinearLayout.LayoutParams.WRAP_CONTENT
+                      )
+                  }
+
+                  val prefs = getSharedPreferences("autoklik_profiles", Context.MODE_PRIVATE)
+                  val savedEntries = mutableListOf<Pair<String, JSONObject>>()
+
+                  for ((key, value) in prefs.all) {
+                      val str = value as? String ?: continue
+                      try {
+                          val json = JSONObject(str)
+                          val pts = json.optJSONArray("points")
+                          if (pts != null && pts.length() > 0) {
+                              savedEntries.add(key to json)
+                          }
+                      } catch (e: Exception) {}
+                  }
+
+                  savedEntries.sortByDescending { it.second.optLong("saved_at", 0L) }
+
+                  if (savedEntries.isEmpty()) {
+                      val tvEmpty = TextView(this).apply {
+                          text = "Belum ada konfigurasi tersimpan.\n\nCara menyimpan:\n1. Tambah titik (➕) dan atur posisinya.\n2. Tekan tombol 💾 di panel melayang.\n3. Beri nama konfigurasi lalu tekan SAVE."
+                          textSize = 12f
+                          setTextColor(Color.parseColor("#94A3B8"))
+                          setPadding((10 * density).toInt(), (14 * density).toInt(), (10 * density).toInt(), (14 * density).toInt())
+                          background = GradientDrawable().apply {
+                              setColor(Color.parseColor("#1E293B"))
+                              cornerRadius = 10f * density
+                          }
+                      }
+                      listContainer.addView(tvEmpty)
+                  } else {
+                      for ((name, jsonObj) in savedEntries) {
+                          val ptsCount = jsonObj.optJSONArray("points")?.length() ?: 0
+
+                          val itemRow = LinearLayout(this).apply {
+                              orientation = LinearLayout.HORIZONTAL
+                              gravity = Gravity.CENTER_VERTICAL
+                              setPadding((10 * density).toInt(), (8 * density).toInt(), (10 * density).toInt(), (8 * density).toInt())
+                              background = GradientDrawable().apply {
+                                  setColor(Color.parseColor("#1E293B"))
+                                  cornerRadius = 10f * density
+                                  setStroke((1 * density).toInt(), Color.parseColor("#334155"))
+                              }
+                              layoutParams = LinearLayout.LayoutParams(
+                                  LinearLayout.LayoutParams.MATCH_PARENT,
+                                  LinearLayout.LayoutParams.WRAP_CONTENT
+                              ).apply {
+                                  bottomMargin = (8 * density).toInt()
+                              }
+                          }
+
+                          val textCol = LinearLayout(this).apply {
+                              orientation = LinearLayout.VERTICAL
+                              layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+                          }
+
+                          val tvName = TextView(this).apply {
+                              text = "📌 $name"
+                              textSize = 13f
+                              setTextColor(Color.WHITE)
+                              setTypeface(typeface, android.graphics.Typeface.BOLD)
+                          }
+
+                          val tvInfo = TextView(this).apply {
+                              text = "$ptsCount titik tersimpan"
+                              textSize = 11f
+                              setTextColor(Color.parseColor("#38BDF8"))
+                          }
+
+                          textCol.addView(tvName)
+                          textCol.addView(tvInfo)
+
+                          val btnLoadItem = Button(this).apply {
+                              text = "📂 LOAD"
+                              textSize = 11f
+                              setTextColor(Color.WHITE)
+                              setTypeface(typeface, android.graphics.Typeface.BOLD)
+                              backgroundTintList = android.content.res.ColorStateList.valueOf(Color.parseColor("#2563EB"))
+                              minWidth = 0
+                              setPadding((10 * density).toInt(), 0, (10 * density).toInt(), 0)
+                              layoutParams = LinearLayout.LayoutParams(
+                                  LinearLayout.LayoutParams.WRAP_CONTENT,
+                                  (34 * density).toInt()
+                              ).apply {
+                                  marginEnd = (4 * density).toInt()
+                              }
+                              setOnClickListener {
+                                  loadNamedConfiguration(name)
+                                  closeConfigDialog()
+                              }
+                          }
+
+                          val btnDelItem = Button(this).apply {
+                              text = "🗑️"
+                              textSize = 11f
+                              setTextColor(Color.WHITE)
+                              backgroundTintList = android.content.res.ColorStateList.valueOf(Color.parseColor("#DC2626"))
+                              minWidth = 0
+                              setPadding(0, 0, 0, 0)
+                              layoutParams = LinearLayout.LayoutParams(
+                                  (34 * density).toInt(),
+                                  (34 * density).toInt()
+                              )
+                              setOnClickListener {
+                                  prefs.edit().remove(name).apply()
+                                  Toast.makeText(this@FloatingOverlayService, "Konfigurasi '$name' dihapus", Toast.LENGTH_SHORT).show()
+                                  showLoadConfigDialog()
+                              }
+                          }
+
+                          itemRow.addView(textCol)
+                          itemRow.addView(btnLoadItem)
+                          itemRow.addView(btnDelItem)
+                          listContainer.addView(itemRow)
+                      }
+                  }
+
+                  scrollView.addView(listContainer)
+                  root.addView(scrollView)
+
+                  val bottomRow = LinearLayout(this).apply {
+                      orientation = LinearLayout.HORIZONTAL
+                      layoutParams = LinearLayout.LayoutParams(
+                          LinearLayout.LayoutParams.MATCH_PARENT,
+                          LinearLayout.LayoutParams.WRAP_CONTENT
+                      ).apply {
+                          topMargin = (10 * density).toInt()
+                      }
+                  }
+
+                  val btnGoSave = Button(this).apply {
+                      text = "💾 Simpan Baru"
+                      textSize = 11.5f
+                      setTextColor(Color.WHITE)
+                      backgroundTintList = android.content.res.ColorStateList.valueOf(Color.parseColor("#059669"))
+                      layoutParams = LinearLayout.LayoutParams(0, (38 * density).toInt(), 1f).apply {
+                          marginEnd = (6 * density).toInt()
+                      }
+                      setOnClickListener {
+                          showSaveConfigDialog()
+                      }
+                  }
+
+                  val btnCloseLoad = Button(this).apply {
+                      text = "✕ Tutup"
+                      textSize = 11.5f
+                      setTextColor(Color.WHITE)
+                      backgroundTintList = android.content.res.ColorStateList.valueOf(Color.parseColor("#475569"))
+                      layoutParams = LinearLayout.LayoutParams(0, (38 * density).toInt(), 1f)
+                      setOnClickListener {
+                          closeConfigDialog()
+                      }
+                  }
+
+                  bottomRow.addView(btnGoSave)
+                  bottomRow.addView(btnCloseLoad)
+                  root.addView(bottomRow)
+
+                  windowManager.addView(root, currentConfigDialogParams)
+                  currentConfigDialogView = root
+              }
+
+              private fun loadNamedConfiguration(configName: String) {
+                  val prefs = getSharedPreferences("autoklik_profiles", Context.MODE_PRIVATE)
+                  val rawJson = prefs.getString(configName, null)
+                  if (rawJson.isNullOrBlank()) {
+                      Toast.makeText(this, "Konfigurasi '$configName' tidak ditemukan!", Toast.LENGTH_SHORT).show()
+                      return
+                  }
+
+                  try {
+                      val profileObj = JSONObject(rawJson)
+                      val pointsArray = profileObj.optJSONArray("points")
+                      if (pointsArray == null || pointsArray.length() == 0) {
+                          Toast.makeText(this, "Konfigurasi '$configName' belum memiliki titik tersimpan!", Toast.LENGTH_SHORT).show()
+                          return
+                      }
+
+                      // Hapus titik lama dari layar
+                      for (point in targetPoints) {
+                          try {
+                              windowManager.removeView(point.view)
+                          } catch (e: Exception) {}
+                      }
+                      targetPoints.clear()
+
+                      currentSizePercent = profileObj.optInt("size_percent", currentSizePercent).coerceIn(0, 100)
+                      arePointsVisible = true
+                      floatingContainer?.findViewById<Button>(R.id.btnFloatingVisibility)?.text = "👁️"
+
+                      for (i in 0 until pointsArray.length()) {
+                          val ptObj = pointsArray.getJSONObject(i)
+                          addTargetPoint(ptObj)
+                      }
+
+                      Toast.makeText(this, "📂 Konfigurasi '$configName' (${targetPoints.size} titik) berhasil dimuat!", Toast.LENGTH_LONG).show()
+                  } catch (e: Exception) {
+                      Toast.makeText(this, "Gagal memuat konfigurasi: ${e.message}", Toast.LENGTH_SHORT).show()
                   }
               }
 
@@ -1776,15 +2284,18 @@ jobs:
                   }
               }
 
-              // MENAMBAH TITIK TARGET DENGAN GARIS PANAH SWIPE
-              private fun addTargetPoint() {
-                  val nextOrder = targetPoints.size + 1
+              // MENAMBAH TITIK TARGET DENGAN GARIS PANAH SWIPE (BARU ATAU DARI LOAD KONFIGURASI)
+              private fun addTargetPoint(savedObj: JSONObject? = null) {
+                  val nextOrder = savedObj?.optInt("order", targetPoints.size + 1) ?: (targetPoints.size + 1)
                   val layoutType = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                       WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
                   } else {
                       @Suppress("DEPRECATION")
                       WindowManager.LayoutParams.TYPE_PHONE
                   }
+
+                  val defaultX = 120 + ((nextOrder - 1) % 4) * 110
+                  val defaultY = 350 + ((nextOrder - 1) / 4) * 120
 
                   val pointParams = WindowManager.LayoutParams(
                       WindowManager.LayoutParams.WRAP_CONTENT,
@@ -1794,8 +2305,8 @@ jobs:
                       PixelFormat.TRANSLUCENT
                   ).apply {
                       gravity = Gravity.TOP or Gravity.START
-                      x = 120 + ((nextOrder - 1) % 4) * 110
-                      y = 350 + ((nextOrder - 1) / 4) * 120
+                      x = savedObj?.optInt("x", defaultX) ?: defaultX
+                      y = savedObj?.optInt("y", defaultY) ?: defaultY
                   }
 
                   val pointView = LayoutInflater.from(this).inflate(R.layout.layout_target_point, null)
@@ -1817,13 +2328,20 @@ jobs:
                       order = nextOrder,
                       view = pointView,
                       params = pointParams,
-                      jumpEnabled = isTen,
-                      jumpToPoint = 7,
-                      jumpAfterCycle = 1
+                      type = savedObj?.optString("type", "tap") ?: "tap",
+                      delayValue = savedObj?.optDouble("delayValue", 500.0) ?: 500.0,
+                      delayUnit = savedObj?.optString("delayUnit", "ms") ?: "ms",
+                      delayMs = savedObj?.optLong("delayMs", 500L) ?: 500L,
+                      swipeDistancePx = savedObj?.optDouble("swipeDistancePx", 300.0)?.toFloat() ?: 300f,
+                      jumpEnabled = savedObj?.optBoolean("jumpEnabled", isTen) ?: isTen,
+                      jumpToPoint = savedObj?.optInt("jumpToPoint", 7) ?: 7,
+                      jumpAfterCycle = savedObj?.optInt("jumpAfterCycle", 1) ?: 1,
+                      pasteText = savedObj?.optString("pasteText", "") ?: "",
+                      autoTapPaste = savedObj?.optBoolean("autoTapPaste", true) ?: true
                   )
 
-                  if (isTen) {
-                      tvType.text = "🔁7"
+                  if (targetPoint.jumpEnabled) {
+                      tvType.text = "🔁${targetPoint.jumpToPoint}"
                   }
 
                   // 1. Sentuh & Seret Bulatan Nomor (pointRoot) untuk memindahkan posisi titik atau ketuk untuk buka Dialog
@@ -1945,7 +2463,9 @@ jobs:
                   windowManager.addView(pointView, pointParams)
                   targetPoints.add(targetPoint)
                   updatePointVisual(targetPoint)
-                  Toast.makeText(this, "Titik $nextOrder ditambah! (Ketuk angka untuk opsi Swipe & Jeda)", Toast.LENGTH_SHORT).show()
+                  if (savedObj == null) {
+                      Toast.makeText(this, "Titik $nextOrder ditambah! (Ketuk angka untuk opsi Swipe & Jeda)", Toast.LENGTH_SHORT).show()
+                  }
               }
 
               // MEMPERBARUI TAMPILAN VISUAL TITIK (UKURAN & GARIS PANAH SWIPE 1:1)
@@ -2213,13 +2733,27 @@ jobs:
                   }
               }
 
+              // Mengatur apakah bulatan titik menembus sentuhan ke form di bawahnya saat Play berjalan
+              private fun setTargetPointsTouchable(touchable: Boolean) {
+                  for (p in targetPoints) {
+                      p.params.flags = if (touchable) {
+                          WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+                      } else {
+                          WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+                      }
+                      try {
+                          windowManager.updateViewLayout(p.view, p.params)
+                      } catch (e: Exception) {}
+                  }
+              }
+
               // EKSEKUSI DENGAN KOORDINAT PRESISI & PANJANG GARIS PANAH SWIPE
               private fun startClickExecution(service: AutoClickAccessibilityService) {
                   clickJob?.cancel()
                   clickJob = serviceScope.launch {
                       val prefs = getSharedPreferences("autoklik_prefs", Context.MODE_PRIVATE)
                       val jitterEnabled = prefs.getBoolean("jitter_enabled", true)
-                      val defaultPaste = prefs.getString("paste_text", "AutoKlik Trans") ?: ""
+                      val defaultPaste = prefs.getString("paste_text", "a") ?: "a"
 
                       Toast.makeText(applicationContext, "AutoKlik Berjalan!", Toast.LENGTH_SHORT).show()
 
@@ -2236,23 +2770,30 @@ jobs:
                               val tapX = loc[0] + (pointRoot.width / 2f)
                               val tapY = loc[1] + (pointRoot.height / 2f)
 
-                              // Eksekusi Gestur Sesuai Panjang Garis Panah Swipe yang Diseret di Layar
-                              when (point.type) {
-                                  "swipe_up" -> {
-                                      val endY = (tapY - point.swipeDistancePx).coerceAtLeast(50f)
-                                      service.executeSwipe(tapX, tapY, tapX, endY, 350L)
-                                  }
-                                  "swipe_down" -> {
-                                      val maxScreenY = resources.displayMetrics.heightPixels - 50f
-                                      val endY = (tapY + point.swipeDistancePx).coerceAtMost(maxScreenY)
-                                      service.executeSwipe(tapX, tapY, tapX, endY, 350L)
-                                  }
-                                  "paste" -> {
-                                      val text = if (point.pasteText.isNotBlank()) point.pasteText else defaultPaste
-                                      service.executePaste(tapX, tapY, text, point.autoTapPaste)
-                                  }
-                                  else -> {
-                                      service.executeTap(tapX, tapY, point.durationMs)
+                              // Tunggu aksi (Tap / Swipe / Paste + Keyboard + Ketik) selesai sebelum menghitung jeda titik
+                              withTimeoutOrNull(2500L) {
+                                  suspendCancellableCoroutine<Unit> { cont ->
+                                      val done = {
+                                          if (cont.isActive) cont.resume(Unit)
+                                      }
+                                      when (point.type) {
+                                          "swipe_up" -> {
+                                              val endY = (tapY - point.swipeDistancePx).coerceAtLeast(50f)
+                                              service.executeSwipe(tapX, tapY, tapX, endY, 350L, done)
+                                          }
+                                          "swipe_down" -> {
+                                              val maxScreenY = resources.displayMetrics.heightPixels - 50f
+                                              val endY = (tapY + point.swipeDistancePx).coerceAtMost(maxScreenY)
+                                              service.executeSwipe(tapX, tapY, tapX, endY, 350L, done)
+                                          }
+                                          "paste" -> {
+                                              val text = if (point.pasteText.isNotBlank()) point.pasteText else defaultPaste
+                                              service.executePaste(tapX, tapY, text, point.autoTapPaste, done)
+                                          }
+                                          else -> {
+                                              service.executeTap(tapX, tapY, point.durationMs, done)
+                                          }
+                                      }
                                   }
                               }
 
@@ -2285,6 +2826,8 @@ jobs:
                   clickJob?.cancel()
                   clickJob = null
 
+                  setTargetPointsTouchable(true)
+
                   layoutMiniToolbar?.visibility = View.GONE
                   layoutFullToolbar?.visibility = View.VISIBLE
                   if (floatingContainer != null) {
@@ -2302,6 +2845,7 @@ jobs:
                   serviceScope.cancel()
                   closePointSettingsDialog()
                   closeSizeDialog()
+                  closeConfigDialog()
 
                   for (point in targetPoints) {
                       try {
@@ -2444,31 +2988,48 @@ jobs:
                   btnSaveNewProfile.setOnClickListener {
                       val name = etNewProfileName.text.toString().trim()
                       if (name.isEmpty()) {
-                          Toast.makeText(this, "Ketikkan nama profil skrip terlebih dahulu!", Toast.LENGTH_SHORT).show()
+                          Toast.makeText(this, "Ketikkan nama konfigurasi terlebih dahulu!", Toast.LENGTH_SHORT).show()
                           return@setOnClickListener
                       }
 
                       saveProfileToPrefs(name)
                       etNewProfileName.setText("")
                       loadProfileListFromPrefs()
-                      Toast.makeText(this, "Profil '$name' berhasil disimpan! ✔", Toast.LENGTH_SHORT).show()
+                      Toast.makeText(this, "Konfigurasi '$name' berhasil disimpan! ✔", Toast.LENGTH_SHORT).show()
                   }
 
                   btnLoadProfile.setOnClickListener {
                       val selected = spProfiles.selectedItem?.toString()
-                      if (selected != null) {
-                          Toast.makeText(this, "Profil '$selected' berhasil dimuat! 📂", Toast.LENGTH_SHORT).show()
+                      if (selected.isNullOrBlank() || selected == "(Belum ada konfigurasi tersimpan)") {
+                          Toast.makeText(this, "Pilih konfigurasi yang valid atau simpan dari tombol 💾 di panel melayang!", Toast.LENGTH_LONG).show()
+                          return@setOnClickListener
                       }
+
+                      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this)) {
+                          Toast.makeText(this, "Harap izinkan Jendela Mengapung terlebih dahulu", Toast.LENGTH_LONG).show()
+                          return@setOnClickListener
+                      }
+
+                      val intent = Intent(this, FloatingOverlayService::class.java).apply {
+                          putExtra("load_profile_name", selected)
+                      }
+                      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                          startForegroundService(intent)
+                      } else {
+                          startService(intent)
+                      }
+                      Toast.makeText(this, "Konfigurasi '$selected' dimuat ke Panel Melayang! 📂", Toast.LENGTH_SHORT).show()
+                      moveTaskToBack(true)
                   }
 
                   btnDeleteProfile.setOnClickListener {
                       val selected = spProfiles.selectedItem?.toString()
-                      if (selected != null && profileList.size > 1) {
+                      if (!selected.isNullOrBlank() && selected != "(Belum ada konfigurasi tersimpan)") {
                           deleteProfileFromPrefs(selected)
                           loadProfileListFromPrefs()
-                          Toast.makeText(this, "Profil '$selected' dihapus 🗑️", Toast.LENGTH_SHORT).show()
+                          Toast.makeText(this, "Konfigurasi '$selected' dihapus 🗑️", Toast.LENGTH_SHORT).show()
                       } else {
-                          Toast.makeText(this, "Profil default tidak dapat dihapus", Toast.LENGTH_SHORT).show()
+                          Toast.makeText(this, "Tidak ada konfigurasi untuk dihapus", Toast.LENGTH_SHORT).show()
                       }
                   }
               }
@@ -2476,24 +3037,46 @@ jobs:
               private fun loadProfileListFromPrefs() {
                   profileList.clear()
                   val prefs = getSharedPreferences("autoklik_profiles", Context.MODE_PRIVATE)
-                  val allKeys = prefs.all.keys
-                  if (allKeys.isEmpty()) {
-                      saveProfileToPrefs("10 Titik Sub-Loop (10 ➔ 7)")
-                      saveProfileToPrefs("Auto-Scroll Feed (Swipe Up)")
-                      saveProfileToPrefs("Auto-Paste & Multi-Tap")
-                      profileList.addAll(listOf("10 Titik Sub-Loop (10 ➔ 7)", "Auto-Scroll Feed (Swipe Up)", "Auto-Paste & Multi-Tap"))
-                  } else {
-                      profileList.addAll(allKeys)
+                  for ((key, value) in prefs.all) {
+                      val str = value as? String ?: continue
+                      try {
+                          val json = JSONObject(str)
+                          val pts = json.optJSONArray("points")
+                          if (pts != null && pts.length() > 0) {
+                              profileList.add(key)
+                          }
+                      } catch (e: Exception) {}
+                  }
+
+                  if (profileList.isEmpty()) {
+                      profileList.add("(Belum ada konfigurasi tersimpan)")
                   }
                   profileAdapter.notifyDataSetChanged()
               }
 
               private fun saveProfileToPrefs(profileName: String) {
+                  val defaultPoints = org.json.JSONArray().apply {
+                      put(JSONObject().apply {
+                          put("order", 1)
+                          put("x", 220)
+                          put("y", 420)
+                          put("type", "tap")
+                          put("delayValue", 500.0)
+                          put("delayUnit", "ms")
+                          put("delayMs", 500L)
+                          put("swipeDistancePx", 300.0)
+                          put("jumpEnabled", false)
+                          put("jumpToPoint", 7)
+                          put("jumpAfterCycle", 1)
+                          put("pasteText", "a")
+                          put("autoTapPaste", true)
+                      })
+                  }
                   val profileObj = JSONObject().apply {
                       put("name", profileName)
-                      put("subloop_start", 7)
-                      put("subloop_end", 10)
-                      put("jitter_enabled", true)
+                      put("size_percent", 50)
+                      put("points", defaultPoints)
+                      put("saved_at", System.currentTimeMillis())
                   }
                   val prefs = getSharedPreferences("autoklik_profiles", Context.MODE_PRIVATE).edit()
                   prefs.putString(profileName, profileObj.toString())
@@ -2509,6 +3092,7 @@ jobs:
               override fun onResume() {
                   super.onResume()
                   updatePermissionStatus()
+                  loadProfileListFromPrefs()
               }
 
               private fun isAccessibilityServiceEnabled(): Boolean {
