@@ -91,7 +91,7 @@ jobs:
               android:notificationTimeout="100" />
           EOF
 
-          # 6. Icons & Vector Drawables
+          # 6. Icons & Vector Drawables & Shape Target Point
           mkdir -p app/src/main/res/drawable
           cat << 'EOF' > app/src/main/res/drawable/ic_launcher_foreground.xml
           <vector xmlns:android="http://schemas.android.com/apk/res/android"
@@ -105,8 +105,42 @@ jobs:
           </vector>
           EOF
 
-          # 7. Layouts: activity_main.xml & layout_floating_widget.xml
+          cat << 'EOF' > app/src/main/res/drawable/bg_target_point.xml
+          <?xml version="1.0" encoding="utf-8"?>
+          <shape xmlns:android="http://schemas.android.com/apk/res/android"
+              android:shape="oval">
+              <solid android:color="#CC0F172A" />
+              <stroke android:width="3dp" android:color="#10B981" />
+          </shape>
+          EOF
+
+          # 7. Layouts: layout_target_point.xml, layout_floating_widget.xml & activity_main.xml
           mkdir -p app/src/main/res/layout
+
+          cat << 'EOF' > app/src/main/res/layout/layout_target_point.xml
+          <?xml version="1.0" encoding="utf-8"?>
+          <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="48dp"
+              android:layout_height="48dp"
+              android:background="@drawable/bg_target_point">
+
+              <TextView
+                  android:id="@+id/tvTargetNumber"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_gravity="center"
+                  android:text="1"
+                  android:textColor="#FFFFFF"
+                  android:textSize="18sp"
+                  android:textStyle="bold" />
+
+              <View
+                  android:layout_width="4dp"
+                  android:layout_height="4dp"
+                  android:layout_gravity="center"
+                  android:background="#EF4444" />
+          </FrameLayout>
+          EOF
 
           cat << 'EOF' > app/src/main/res/layout/layout_floating_widget.xml
           <?xml version="1.0" encoding="utf-8"?>
@@ -114,20 +148,22 @@ jobs:
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:orientation="horizontal"
-              android:background="#E60F172A"
+              android:background="#F00F172A"
               android:gravity="center_vertical"
-              android:padding="8dp">
+              android:padding="6dp">
 
+              <!-- Handle Geser Widget -->
               <TextView
                   android:id="@+id/tvDragHandle"
                   android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
-                  android:text="⠿ AutoKlik"
-                  android:textColor="#10B981"
-                  android:textStyle="bold"
-                  android:textSize="14sp"
-                  android:paddingEnd="12dp" />
+                  android:text="⠿"
+                  android:textColor="#94A3B8"
+                  android:textSize="18sp"
+                  android:paddingStart="4dp"
+                  android:paddingEnd="6dp" />
 
+              <!-- Tombol Play / Pause -->
               <Button
                   android:id="@+id/btnFloatingPlay"
                   android:layout_width="wrap_content"
@@ -137,14 +173,54 @@ jobs:
                   android:textColor="#FFFFFF"
                   android:backgroundTint="#10B981"
                   android:minWidth="0dp"
-                  android:paddingStart="12dp"
-                  android:paddingEnd="12dp" />
+                  android:paddingStart="10dp"
+                  android:paddingEnd="10dp" />
 
+              <!-- Tombol Tambah Titik (+) -->
+              <Button
+                  android:id="@+id/btnFloatingAdd"
+                  android:layout_width="38dp"
+                  android:layout_height="38dp"
+                  android:layout_marginStart="4dp"
+                  android:text="➕"
+                  android:textSize="14sp"
+                  android:textColor="#FFFFFF"
+                  android:backgroundTint="#0284C7"
+                  android:minWidth="0dp"
+                  android:padding="0dp" />
+
+              <!-- Tombol Kurangi Titik (-) -->
+              <Button
+                  android:id="@+id/btnFloatingRemove"
+                  android:layout_width="38dp"
+                  android:layout_height="38dp"
+                  android:layout_marginStart="4dp"
+                  android:text="➖"
+                  android:textSize="14sp"
+                  android:textColor="#FFFFFF"
+                  android:backgroundTint="#D97706"
+                  android:minWidth="0dp"
+                  android:padding="0dp" />
+
+              <!-- Tombol Pengaturan (⚙) -->
+              <Button
+                  android:id="@+id/btnFloatingSettings"
+                  android:layout_width="38dp"
+                  android:layout_height="38dp"
+                  android:layout_marginStart="4dp"
+                  android:text="⚙"
+                  android:textSize="14sp"
+                  android:textColor="#FFFFFF"
+                  android:backgroundTint="#7C3AED"
+                  android:minWidth="0dp"
+                  android:padding="0dp" />
+
+              <!-- Tombol Tutup (✕) -->
               <Button
                   android:id="@+id/btnFloatingClose"
                   android:layout_width="38dp"
                   android:layout_height="38dp"
-                  android:layout_marginStart="8dp"
+                  android:layout_marginStart="4dp"
                   android:text="✕"
                   android:textSize="14sp"
                   android:textColor="#FFFFFF"
@@ -181,7 +257,7 @@ jobs:
                       android:layout_width="wrap_content"
                       android:layout_height="wrap_content"
                       android:layout_marginTop="4dp"
-                      android:text="Pengontrol Klik Otomatis &amp; Multi-Touch"
+                      android:text="Konfigurasi Fitur &amp; Panel Kontrol"
                       android:textColor="#94A3B8"
                       android:textSize="14sp" />
 
@@ -199,40 +275,24 @@ jobs:
                           android:layout_height="wrap_content"
                           android:text="1. Layanan Aksesibilitas (Wajib)"
                           android:textColor="#F8FAFC"
-                          android:textSize="16sp"
+                          android:textSize="15sp"
                           android:textStyle="bold" />
 
                       <TextView
                           android:id="@+id/txtAccessibilityStatus"
                           android:layout_width="wrap_content"
                           android:layout_height="wrap_content"
-                          android:layout_marginTop="6dp"
+                          android:layout_marginTop="4dp"
                           android:text="Status: Memeriksa..."
                           android:textColor="#EF4444"
-                          android:textSize="14sp"
+                          android:textSize="13sp"
                           android:textStyle="bold" />
-
-                      <TextView
-                          android:layout_width="wrap_content"
-                          android:layout_height="wrap_content"
-                          android:layout_marginTop="4dp"
-                          android:text="Diperlukan agar aplikasi bisa mengetuk &amp; mengusap layar otomatis."
-                          android:textColor="#94A3B8"
-                          android:textSize="12sp" />
-
-                      <TextView
-                          android:layout_width="wrap_content"
-                          android:layout_height="wrap_content"
-                          android:layout_marginTop="4dp"
-                          android:text="💡 Tips Redmi/HyperOS: Buka Pengaturan Tambahan > Aksesibilitas > Aplikasi Terunduh > Aktifkan AutoKlik"
-                          android:textColor="#38BDF8"
-                          android:textSize="11sp" />
 
                       <Button
                           android:id="@+id/btnAccessibility"
                           android:layout_width="match_parent"
                           android:layout_height="wrap_content"
-                          android:layout_marginTop="10dp"
+                          android:layout_marginTop="8dp"
                           android:backgroundTint="#334155"
                           android:text="⚙️ Buka Pengaturan Aksesibilitas"
                           android:textColor="#F8FAFC" />
@@ -242,7 +302,7 @@ jobs:
                   <LinearLayout
                       android:layout_width="match_parent"
                       android:layout_height="wrap_content"
-                      android:layout_marginTop="12dp"
+                      android:layout_marginTop="10dp"
                       android:background="#1E293B"
                       android:orientation="vertical"
                       android:padding="14dp">
@@ -252,70 +312,152 @@ jobs:
                           android:layout_height="wrap_content"
                           android:text="2. Izin Jendela Mengapung (Overlay)"
                           android:textColor="#F8FAFC"
-                          android:textSize="16sp"
+                          android:textSize="15sp"
                           android:textStyle="bold" />
 
                       <TextView
                           android:id="@+id/txtOverlayStatus"
                           android:layout_width="wrap_content"
                           android:layout_height="wrap_content"
-                          android:layout_marginTop="6dp"
+                          android:layout_marginTop="4dp"
                           android:text="Status: Memeriksa..."
                           android:textColor="#EF4444"
-                          android:textSize="14sp"
+                          android:textSize="13sp"
                           android:textStyle="bold" />
-
-                      <TextView
-                          android:layout_width="wrap_content"
-                          android:layout_height="wrap_content"
-                          android:layout_marginTop="4dp"
-                          android:text="Diperlukan agar panel tombol Play/Pause melayang di atas aplikasi lain."
-                          android:textColor="#94A3B8"
-                          android:textSize="12sp" />
 
                       <Button
                           android:id="@+id/btnOverlay"
                           android:layout_width="match_parent"
                           android:layout_height="wrap_content"
-                          android:layout_marginTop="10dp"
+                          android:layout_marginTop="8dp"
                           android:backgroundTint="#334155"
                           android:text="🔓 Izinkan Jendela Mengapung"
                           android:textColor="#F8FAFC" />
                   </LinearLayout>
 
-                  <!-- Tombol Aksi Utama -->
+                  <!-- Tombol Luncurkan Panel Melayang -->
+                  <Button
+                      android:id="@+id/btnStartFloating"
+                      android:layout_width="match_parent"
+                      android:layout_height="52dp"
+                      android:layout_marginTop="14dp"
+                      android:backgroundTint="#10B981"
+                      android:text="▶ TAMPILKAN PANEL MELAYANG"
+                      android:textColor="#FFFFFF"
+                      android:textSize="15sp"
+                      android:textStyle="bold" />
+
+                  <!-- FORM PENGATURAN FITUR AUTOKLIK -->
+                  <TextView
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:layout_marginTop="20dp"
+                      android:text="PENGATURAN SKRIP &amp; FITUR"
+                      android:textColor="#10B981"
+                      android:textSize="14sp"
+                      android:textStyle="bold" />
+
+                  <!-- Fitur 1: Sub-Loop Jumpback -->
                   <LinearLayout
                       android:layout_width="match_parent"
                       android:layout_height="wrap_content"
-                      android:layout_marginTop="16dp"
-                      android:orientation="vertical">
+                      android:layout_marginTop="8dp"
+                      android:background="#1E293B"
+                      android:orientation="vertical"
+                      android:padding="14dp">
 
-                      <Button
-                          android:id="@+id/btnStartFloating"
-                          android:layout_width="match_parent"
-                          android:layout_height="52dp"
-                          android:backgroundTint="#10B981"
-                          android:text="▶ TAMPILKAN PANEL MELAYANG"
-                          android:textColor="#FFFFFF"
-                          android:textSize="15sp"
-                          android:textStyle="bold" />
+                      <CheckBox
+                          android:id="@+id/cbSubLoop"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:text="Aktifkan Sub-Loop Siklus (Loop Balik)"
+                          android:textColor="#F8FAFC"
+                          android:textStyle="bold"
+                          android:checked="true" />
 
-                      <Button
-                          android:id="@+id/btnStopFloating"
+                      <TextView
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:text="Contoh: Titik 10 loop kembali ke Titik 7 setelah Siklus 1"
+                          android:textColor="#94A3B8"
+                          android:textSize="12sp" />
+
+                      <LinearLayout
                           android:layout_width="match_parent"
-                          android:layout_height="48dp"
+                          android:layout_height="wrap_content"
                           android:layout_marginTop="8dp"
-                          android:backgroundTint="#EF4444"
-                          android:text="⏹ TUTUP PANEL MELAYANG"
-                          android:textColor="#FFFFFF"
-                          android:textSize="14sp" />
+                          android:orientation="horizontal">
+
+                          <TextView
+                              android:layout_width="wrap_content"
+                              android:layout_height="wrap_content"
+                              android:text="Dari Titik Akhir: "
+                              android:textColor="#CBD5E1"
+                              android:textSize="12sp" />
+
+                          <EditText
+                              android:id="@+id/etSubLoopEnd"
+                              android:layout_width="60dp"
+                              android:layout_height="40dp"
+                              android:background="#0F172A"
+                              android:gravity="center"
+                              android:inputType="number"
+                              android:text="10"
+                              android:textColor="#10B981"
+                              android:textStyle="bold" />
+
+                          <TextView
+                              android:layout_width="wrap_content"
+                              android:layout_height="wrap_content"
+                              android:layout_marginStart="10dp"
+                              android:text="Ke Titik Awal: "
+                              android:textColor="#CBD5E1"
+                              android:textSize="12sp" />
+
+                          <EditText
+                              android:id="@+id/etSubLoopStart"
+                              android:layout_width="60dp"
+                              android:layout_height="40dp"
+                              android:background="#0F172A"
+                              android:gravity="center"
+                              android:inputType="number"
+                              android:text="7"
+                              android:textColor="#10B981"
+                              android:textStyle="bold" />
+                      </LinearLayout>
                   </LinearLayout>
 
-                  <!-- Ringkasan Fitur Aktif -->
+                  <!-- Fitur 2: Anti-Deteksi Jeda Acak -->
                   <LinearLayout
                       android:layout_width="match_parent"
                       android:layout_height="wrap_content"
-                      android:layout_marginTop="16dp"
+                      android:layout_marginTop="10dp"
+                      android:background="#1E293B"
+                      android:orientation="vertical"
+                      android:padding="14dp">
+
+                      <CheckBox
+                          android:id="@+id/cbJitter"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:text="Anti-Deteksi: Jeda Acak (Jitter +/- 15%)"
+                          android:textColor="#F8FAFC"
+                          android:textStyle="bold"
+                          android:checked="true" />
+
+                      <TextView
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:text="Membuat pola sentuhan natural seperti jari manusia asli agar tidak terbaca bot."
+                          android:textColor="#94A3B8"
+                          android:textSize="12sp" />
+                  </LinearLayout>
+
+                  <!-- Fitur 3: Custom Paste & Auto-Tap -->
+                  <LinearLayout
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:layout_marginTop="10dp"
                       android:background="#1E293B"
                       android:orientation="vertical"
                       android:padding="14dp">
@@ -323,43 +465,119 @@ jobs:
                       <TextView
                           android:layout_width="wrap_content"
                           android:layout_height="wrap_content"
-                          android:text="Fitur AutoKlik Aktif:"
-                          android:textColor="#10B981"
+                          android:text="Fitur Auto-Paste Teks:"
+                          android:textColor="#F8FAFC"
                           android:textSize="14sp"
                           android:textStyle="bold" />
 
-                      <TextView
+                      <EditText
+                          android:id="@+id/etPasteText"
+                          android:layout_width="match_parent"
+                          android:layout_height="44dp"
+                          android:layout_marginTop="6dp"
+                          android:background="#0F172A"
+                          android:hint="Teks untuk ditempel otomatis"
+                          android:padding="8dp"
+                          android:text="AutoKlik Trans"
+                          android:textColor="#F8FAFC"
+                          android:textColorHint="#64748B"
+                          android:textSize="13sp" />
+
+                      <CheckBox
+                          android:id="@+id/cbAutoTapPaste"
                           android:layout_width="wrap_content"
                           android:layout_height="wrap_content"
                           android:layout_marginTop="6dp"
-                          android:text="✔ Multi-Touch Gestures (Tap, Swipe Up, Swipe Down, Paste)"
+                          android:text="Auto-Tap Kolom Sebelum Paste (Fokus Kursor)"
                           android:textColor="#CBD5E1"
-                          android:textSize="12sp" />
-
-                      <TextView
-                          android:layout_width="wrap_content"
-                          android:layout_height="wrap_content"
-                          android:layout_marginTop="3dp"
-                          android:text="✔ Jeda Acak Anti-Deteksi (Interval Jitter +/- 15%)"
-                          android:textColor="#CBD5E1"
-                          android:textSize="12sp" />
-
-                      <TextView
-                          android:layout_width="wrap_content"
-                          android:layout_height="wrap_content"
-                          android:layout_marginTop="3dp"
-                          android:text="✔ Auto-Tap Fokus sebelum Paste Teks"
-                          android:textColor="#CBD5E1"
-                          android:textSize="12sp" />
-
-                      <TextView
-                          android:layout_width="wrap_content"
-                          android:layout_height="wrap_content"
-                          android:layout_marginTop="3dp"
-                          android:text="✔ Sub-Loop Khusus: Titik 10 loop kembali ke Titik 7"
-                          android:textColor="#CBD5E1"
-                          android:textSize="12sp" />
+                          android:checked="true" />
                   </LinearLayout>
+
+                  <!-- Fitur 4: Jeda & Durasi Sentuh -->
+                  <LinearLayout
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:layout_marginTop="10dp"
+                      android:background="#1E293B"
+                      android:orientation="horizontal"
+                      android:padding="14dp">
+
+                      <LinearLayout
+                          android:layout_width="0dp"
+                          android:layout_height="wrap_content"
+                          android:layout_weight="1"
+                          android:orientation="vertical">
+
+                          <TextView
+                              android:layout_width="wrap_content"
+                              android:layout_height="wrap_content"
+                              android:text="Jeda Antar Klik (ms)"
+                              android:textColor="#CBD5E1"
+                              android:textSize="12sp" />
+
+                          <EditText
+                              android:id="@+id/etInterval"
+                              android:layout_width="match_parent"
+                              android:layout_height="40dp"
+                              android:layout_marginTop="4dp"
+                              android:background="#0F172A"
+                              android:inputType="number"
+                              android:padding="6dp"
+                              android:text="500"
+                              android:textColor="#10B981"
+                              android:textStyle="bold" />
+                      </LinearLayout>
+
+                      <LinearLayout
+                          android:layout_width="0dp"
+                          android:layout_height="wrap_content"
+                          android:layout_marginStart="10dp"
+                          android:layout_weight="1"
+                          android:orientation="vertical">
+
+                          <TextView
+                              android:layout_width="wrap_content"
+                              android:layout_height="wrap_content"
+                              android:text="Durasi Tekan (ms)"
+                              android:textColor="#CBD5E1"
+                              android:textSize="12sp" />
+
+                          <EditText
+                              android:id="@+id/etDuration"
+                              android:layout_width="match_parent"
+                              android:layout_height="40dp"
+                              android:layout_marginTop="4dp"
+                              android:background="#0F172A"
+                              android:inputType="number"
+                              android:padding="6dp"
+                              android:text="50"
+                              android:textColor="#10B981"
+                              android:textStyle="bold" />
+                      </LinearLayout>
+                  </LinearLayout>
+
+                  <!-- Tombol Simpan Pengaturan -->
+                  <Button
+                      android:id="@+id/btnSaveSettings"
+                      android:layout_width="match_parent"
+                      android:layout_height="48dp"
+                      android:layout_marginTop="14dp"
+                      android:backgroundTint="#3B82F6"
+                      android:text="💾 SIMPAN PENGATURAN SKRIP"
+                      android:textColor="#FFFFFF"
+                      android:textSize="14sp"
+                      android:textStyle="bold" />
+
+                  <!-- Tombol Tutup Panel Melayang -->
+                  <Button
+                      android:id="@+id/btnStopFloating"
+                      android:layout_width="match_parent"
+                      android:layout_height="44dp"
+                      android:layout_marginTop="10dp"
+                      android:backgroundTint="#EF4444"
+                      android:text="⏹ TUTUP PANEL MELAYANG"
+                      android:textColor="#FFFFFF"
+                      android:textSize="13sp" />
 
               </LinearLayout>
           </ScrollView>
@@ -379,9 +597,7 @@ jobs:
           import android.os.Bundle
           import android.provider.Settings
           import android.view.accessibility.AccessibilityManager
-          import android.widget.Button
-          import android.widget.TextView
-          import android.widget.Toast
+          import android.widget.*
           import androidx.appcompat.app.AppCompatActivity
           import com.autoklik.android.R
           import com.autoklik.android.service.AutoClickAccessibilityService
@@ -396,6 +612,16 @@ jobs:
               private lateinit var btnStartFloating: Button
               private lateinit var btnStopFloating: Button
 
+              private lateinit var cbSubLoop: CheckBox
+              private lateinit var etSubLoopStart: EditText
+              private lateinit var etSubLoopEnd: EditText
+              private lateinit var cbJitter: CheckBox
+              private lateinit var etPasteText: EditText
+              private lateinit var cbAutoTapPaste: CheckBox
+              private lateinit var etInterval: EditText
+              private lateinit var etDuration: EditText
+              private lateinit var btnSaveSettings: Button
+
               override fun onCreate(savedInstanceState: Bundle?) {
                   super.onCreate(savedInstanceState)
                   setContentView(R.layout.activity_main)
@@ -406,6 +632,23 @@ jobs:
                   btnOverlay = findViewById(R.id.btnOverlay)
                   btnStartFloating = findViewById(R.id.btnStartFloating)
                   btnStopFloating = findViewById(R.id.btnStopFloating)
+
+                  cbSubLoop = findViewById(R.id.cbSubLoop)
+                  etSubLoopStart = findViewById(R.id.etSubLoopStart)
+                  etSubLoopEnd = findViewById(R.id.etSubLoopEnd)
+                  cbJitter = findViewById(R.id.cbJitter)
+                  etPasteText = findViewById(R.id.etPasteText)
+                  cbAutoTapPaste = findViewById(R.id.cbAutoTapPaste)
+                  etInterval = findViewById(R.id.etInterval)
+                  etDuration = findViewById(R.id.etDuration)
+                  btnSaveSettings = findViewById(R.id.btnSaveSettings)
+
+                  loadSettings()
+
+                  btnSaveSettings.setOnClickListener {
+                      saveSettings()
+                      Toast.makeText(this, "Pengaturan Fitur Berhasil Disimpan! ✔", Toast.LENGTH_SHORT).show()
+                  }
 
                   btnAccessibility.setOnClickListener {
                       try {
@@ -435,6 +678,8 @@ jobs:
                   }
 
                   btnStartFloating.setOnClickListener {
+                      saveSettings()
+
                       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this)) {
                           Toast.makeText(this, "Harap izinkan Jendela Mengapung terlebih dahulu", Toast.LENGTH_LONG).show()
                           val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:$packageName"))
@@ -455,7 +700,7 @@ jobs:
                       } else {
                           startService(intent)
                       }
-                      Toast.makeText(this, "Panel Melayang Aktif!", Toast.LENGTH_SHORT).show()
+                      Toast.makeText(this, "Panel Melayang Aktif! Tekan ➕ untuk tambah titik target.", Toast.LENGTH_LONG).show()
                       moveTaskToBack(true)
                   }
 
@@ -464,6 +709,31 @@ jobs:
                       stopService(intent)
                       Toast.makeText(this, "Panel Melayang Ditutup", Toast.LENGTH_SHORT).show()
                   }
+              }
+
+              private fun loadSettings() {
+                  val prefs = getSharedPreferences("autoklik_prefs", Context.MODE_PRIVATE)
+                  cbSubLoop.isChecked = prefs.getBoolean("subloop_enabled", true)
+                  etSubLoopStart.setText(prefs.getInt("subloop_start", 7).toString())
+                  etSubLoopEnd.setText(prefs.getInt("subloop_end", 10).toString())
+                  cbJitter.isChecked = prefs.getBoolean("jitter_enabled", true)
+                  etPasteText.setText(prefs.getString("paste_text", "AutoKlik Trans"))
+                  cbAutoTapPaste.isChecked = prefs.getBoolean("auto_tap_paste", true)
+                  etInterval.setText(prefs.getLong("click_interval_ms", 500L).toString())
+                  etDuration.setText(prefs.getLong("click_duration_ms", 50L).toString())
+              }
+
+              private fun saveSettings() {
+                  val prefs = getSharedPreferences("autoklik_prefs", Context.MODE_PRIVATE).edit()
+                  prefs.putBoolean("subloop_enabled", cbSubLoop.isChecked)
+                  prefs.putInt("subloop_start", etSubLoopStart.text.toString().toIntOrNull() ?: 7)
+                  prefs.putInt("subloop_end", etSubLoopEnd.text.toString().toIntOrNull() ?: 10)
+                  prefs.putBoolean("jitter_enabled", cbJitter.isChecked)
+                  prefs.putString("paste_text", etPasteText.text.toString())
+                  prefs.putBoolean("auto_tap_paste", cbAutoTapPaste.isChecked)
+                  prefs.putLong("click_interval_ms", etInterval.text.toString().toLongOrNull() ?: 500L)
+                  prefs.putLong("click_duration_ms", etDuration.text.toString().toLongOrNull() ?: 50L)
+                  prefs.apply()
               }
 
               override fun onResume() {
@@ -480,9 +750,7 @@ jobs:
                               return true
                           }
                       }
-                  } catch (e: Exception) {
-                      // fallback check instance
-                  }
+                  } catch (e: Exception) {}
                   return AutoClickAccessibilityService.instance != null
               }
 
@@ -638,7 +906,7 @@ jobs:
           }
           EOF
 
-          # 10. Source Code: FloatingOverlayService.kt
+          # 10. Source Code: FloatingOverlayService.kt (DENGAN TARGET BULAT & KONTROL + / -)
           cat << 'EOF' > app/src/main/java/com/autoklik/android/service/FloatingOverlayService.kt
           package com.autoklik.android.service
 
@@ -657,16 +925,27 @@ jobs:
           import android.view.View
           import android.view.WindowManager
           import android.widget.Button
+          import android.widget.TextView
           import android.widget.Toast
           import androidx.core.app.NotificationCompat
           import com.autoklik.android.R
+          import com.autoklik.android.ui.MainActivity
           import kotlinx.coroutines.*
+          import kotlin.random.Random
 
           class FloatingOverlayService : Service() {
 
+              data class TargetPoint(
+                  val order: Int,
+                  val view: View,
+                  val params: WindowManager.LayoutParams
+              )
+
               private lateinit var windowManager: WindowManager
-              private var floatingView: View? = null
-              private lateinit var params: WindowManager.LayoutParams
+              private var floatingToolbar: View? = null
+              private lateinit var toolbarParams: WindowManager.LayoutParams
+              private val targetPoints = mutableListOf<TargetPoint>()
+
               private var isPlaying = false
               private val serviceScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
               private var clickJob: Job? = null
@@ -677,7 +956,7 @@ jobs:
                   super.onCreate()
                   windowManager = getSystemService(Context.WINDOW_SERVICE) as WindowManager
                   startForegroundNotification()
-                  setupFloatingWidget()
+                  setupFloatingToolbar()
               }
 
               private fun startForegroundNotification() {
@@ -701,7 +980,7 @@ jobs:
                   startForeground(1001, notification)
               }
 
-              private fun setupFloatingWidget() {
+              private fun setupFloatingToolbar() {
                   val layoutType = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                       WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
                   } else {
@@ -709,7 +988,7 @@ jobs:
                       WindowManager.LayoutParams.TYPE_PHONE
                   }
 
-                  params = WindowManager.LayoutParams(
+                  toolbarParams = WindowManager.LayoutParams(
                       WindowManager.LayoutParams.WRAP_CONTENT,
                       WindowManager.LayoutParams.WRAP_CONTENT,
                       layoutType,
@@ -717,15 +996,37 @@ jobs:
                       PixelFormat.TRANSLUCENT
                   ).apply {
                       gravity = Gravity.TOP or Gravity.START
-                      x = 80
-                      y = 250
+                      x = 40
+                      y = 200
                   }
 
-                  floatingView = LayoutInflater.from(this).inflate(R.layout.layout_floating_widget, null)
+                  floatingToolbar = LayoutInflater.from(this).inflate(R.layout.layout_floating_widget, null)
 
-                  val btnPlay = floatingView?.findViewById<Button>(R.id.btnFloatingPlay)
-                  val btnClose = floatingView?.findViewById<Button>(R.id.btnFloatingClose)
+                  val btnPlay = floatingToolbar?.findViewById<Button>(R.id.btnFloatingPlay)
+                  val btnAdd = floatingToolbar?.findViewById<Button>(R.id.btnFloatingAdd)
+                  val btnRemove = floatingToolbar?.findViewById<Button>(R.id.btnFloatingRemove)
+                  val btnSettings = floatingToolbar?.findViewById<Button>(R.id.btnFloatingSettings)
+                  val btnClose = floatingToolbar?.findViewById<Button>(R.id.btnFloatingClose)
 
+                  // Tambah Titik Target (+)
+                  btnAdd?.setOnClickListener {
+                      addTargetPoint()
+                  }
+
+                  // Hapus Titik Target Terakhir (-)
+                  btnRemove?.setOnClickListener {
+                      removeLastTargetPoint()
+                  }
+
+                  // Buka Pengaturan Fitur (⚙)
+                  btnSettings?.setOnClickListener {
+                      val intent = Intent(this, MainActivity::class.java).apply {
+                          addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                      }
+                      startActivity(intent)
+                  }
+
+                  // Mulai / Jeda (▶ / ⏸)
                   btnPlay?.setOnClickListener {
                       val a11y = AutoClickAccessibilityService.instance
                       if (a11y == null) {
@@ -733,21 +1034,28 @@ jobs:
                           return@setOnClickListener
                       }
 
+                      if (targetPoints.isEmpty()) {
+                          Toast.makeText(this, "Tekan tombol ➕ untuk menambah titik target!", Toast.LENGTH_LONG).show()
+                          return@setOnClickListener
+                      }
+
                       isPlaying = !isPlaying
                       if (isPlaying) {
                           btnPlay.text = "⏸ Jeda"
-                          startClickLoop(a11y)
+                          startClickExecution(a11y)
                       } else {
                           btnPlay.text = "▶ Mulai"
-                          stopClickLoop()
+                          stopClickExecution()
                       }
                   }
 
+                  // Tutup Toolbar (✕)
                   btnClose?.setOnClickListener {
                       stopSelf()
                   }
 
-                  floatingView?.setOnTouchListener(object : View.OnTouchListener {
+                  // Drag & Drop Toolbar
+                  floatingToolbar?.setOnTouchListener(object : View.OnTouchListener {
                       private var initialX = 0
                       private var initialY = 0
                       private var initialTouchX = 0f
@@ -756,16 +1064,16 @@ jobs:
                       override fun onTouch(v: View, event: MotionEvent): Boolean {
                           when (event.action) {
                               MotionEvent.ACTION_DOWN -> {
-                                  initialX = params.x
-                                  initialY = params.y
+                                  initialX = toolbarParams.x
+                                  initialY = toolbarParams.y
                                   initialTouchX = event.rawX
                                   initialTouchY = event.rawY
                                   return true
                               }
                               MotionEvent.ACTION_MOVE -> {
-                                  params.x = initialX + (event.rawX - initialTouchX).toInt()
-                                  params.y = initialY + (event.rawY - initialTouchY).toInt()
-                                  windowManager.updateViewLayout(floatingView, params)
+                                  toolbarParams.x = initialX + (event.rawX - initialTouchX).toInt()
+                                  toolbarParams.y = initialY + (event.rawY - initialTouchY).toInt()
+                                  windowManager.updateViewLayout(floatingToolbar, toolbarParams)
                                   return true
                               }
                           }
@@ -773,24 +1081,140 @@ jobs:
                       }
                   })
 
-                  windowManager.addView(floatingView, params)
+                  windowManager.addView(floatingToolbar, toolbarParams)
               }
 
-              private fun startClickLoop(service: AutoClickAccessibilityService) {
+              // MENAMBAH BULATAN TITIK TARGET DI LAYAR
+              private fun addTargetPoint() {
+                  val nextOrder = targetPoints.size + 1
+                  val layoutType = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                      WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
+                  } else {
+                      @Suppress("DEPRECATION")
+                      WindowManager.LayoutParams.TYPE_PHONE
+                  }
+
+                  val pointParams = WindowManager.LayoutParams(
+                      WindowManager.LayoutParams.WRAP_CONTENT,
+                      WindowManager.LayoutParams.WRAP_CONTENT,
+                      layoutType,
+                      WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+                      PixelFormat.TRANSLUCENT
+                  ).apply {
+                      gravity = Gravity.TOP or Gravity.START
+                      x = 150 + ((nextOrder - 1) % 4) * 120
+                      y = 350 + ((nextOrder - 1) / 4) * 140
+                  }
+
+                  val pointView = LayoutInflater.from(this).inflate(R.layout.layout_target_point, null)
+                  val tvNumber = pointView.findViewById<TextView>(R.id.tvTargetNumber)
+                  tvNumber.text = nextOrder.toString()
+
+                  // Drag & Drop untuk Titik Target Bulat
+                  pointView.setOnTouchListener(object : View.OnTouchListener {
+                      private var initialX = 0
+                      private var initialY = 0
+                      private var initialTouchX = 0f
+                      private var initialTouchY = 0f
+
+                      override fun onTouch(v: View, event: MotionEvent): Boolean {
+                          when (event.action) {
+                              MotionEvent.ACTION_DOWN -> {
+                                  initialX = pointParams.x
+                                  initialY = pointParams.y
+                                  initialTouchX = event.rawX
+                                  initialTouchY = event.rawY
+                                  return true
+                              }
+                              MotionEvent.ACTION_MOVE -> {
+                                  pointParams.x = initialX + (event.rawX - initialTouchX).toInt()
+                                  pointParams.y = initialY + (event.rawY - initialTouchY).toInt()
+                                  windowManager.updateViewLayout(pointView, pointParams)
+                                  return true
+                              }
+                          }
+                          return false
+                      }
+                  })
+
+                  windowManager.addView(pointView, pointParams)
+                  val newPoint = TargetPoint(nextOrder, pointView, pointParams)
+                  targetPoints.add(newPoint)
+                  Toast.makeText(this, "Titik $nextOrder ditambahkan. Geser ke tombol target!", Toast.LENGTH_SHORT).show()
+              }
+
+              // MENGHAPUS TITIK TARGET TERAKHIR
+              private fun removeLastTargetPoint() {
+                  if (targetPoints.isNotEmpty()) {
+                      val last = targetPoints.removeAt(targetPoints.size - 1)
+                      try {
+                          windowManager.removeView(last.view)
+                          Toast.makeText(this, "Titik ${last.order} dihapus", Toast.LENGTH_SHORT).show()
+                      } catch (e: Exception) {}
+                  } else {
+                      Toast.makeText(this, "Tidak ada titik untuk dihapus", Toast.LENGTH_SHORT).show()
+                  }
+              }
+
+              // MENJALANKAN EKSEKUSI KLIK OTOMATIS DENGAN SUB-LOOP & JITTER
+              private fun startClickExecution(service: AutoClickAccessibilityService) {
                   clickJob?.cancel()
                   clickJob = serviceScope.launch {
+                      val prefs = getSharedPreferences("autoklik_prefs", Context.MODE_PRIVATE)
+                      val subloopEnabled = prefs.getBoolean("subloop_enabled", true)
+                      val subloopStart = prefs.getInt("subloop_start", 7)
+                      val subloopEnd = prefs.getInt("subloop_end", 10)
+                      val jitterEnabled = prefs.getBoolean("jitter_enabled", true)
+                      val pasteText = prefs.getString("paste_text", "AutoKlik Trans") ?: ""
+                      val autoTapPaste = prefs.getBoolean("auto_tap_paste", true)
+                      val clickInterval = prefs.getLong("click_interval_ms", 500L)
+                      val clickDuration = prefs.getLong("click_duration_ms", 50L)
+
                       Toast.makeText(applicationContext, "AutoKlik Dimulai!", Toast.LENGTH_SHORT).show()
-                      while (isActive && isPlaying) {
-                          val displayMetrics = resources.displayMetrics
-                          val targetX = displayMetrics.widthPixels / 2f
-                          val targetY = displayMetrics.heightPixels / 2f
-                          service.executeTap(targetX, targetY, 50L)
-                          delay(1000L)
+
+                      var currentOrder = 1
+                      var cycle = 1
+
+                      while (isActive && isPlaying && targetPoints.isNotEmpty()) {
+                          val point = targetPoints.find { it.order == currentOrder } ?: targetPoints.firstOrNull()
+                          if (point != null) {
+                              // Titik tengah bulatan
+                              val density = resources.displayMetrics.density
+                              val tapX = point.params.x + 24f * density
+                              val tapY = point.params.y + 24f * density
+
+                              // Jika titik terakhir & ada teks paste, jalankan executePaste
+                              if (currentOrder == targetPoints.size && pasteText.isNotBlank()) {
+                                  service.executePaste(tapX, tapY, pasteText, autoTapPaste)
+                              } else {
+                                  service.executeTap(tapX, tapY, clickDuration)
+                              }
+
+                              // Hitung jeda dengan Jitter Anti-Deteksi
+                              var waitTime = clickInterval
+                              if (jitterEnabled) {
+                                  val jitterFactor = Random.nextInt(-15, 16) / 100f
+                                  waitTime = (waitTime * (1f + jitterFactor)).toLong().coerceAtLeast(50L)
+                              }
+                              delay(waitTime)
+
+                              // LOGIKA SUB-LOOP: Titik 10 loop kembali ke Titik 7
+                              if (subloopEnabled && currentOrder == subloopEnd && currentOrder <= targetPoints.size && subloopStart <= targetPoints.size && cycle >= 1) {
+                                  currentOrder = subloopStart // Lompat kembali ke titik 7!
+                              } else if (currentOrder >= targetPoints.size) {
+                                  currentOrder = 1
+                                  cycle++
+                              } else {
+                                  currentOrder++
+                              }
+                          } else {
+                              currentOrder = 1
+                          }
                       }
                   }
               }
 
-              private fun stopClickLoop() {
+              private fun stopClickExecution() {
                   clickJob?.cancel()
                   clickJob = null
                   Toast.makeText(applicationContext, "AutoKlik Dijeda", Toast.LENGTH_SHORT).show()
@@ -798,11 +1222,21 @@ jobs:
 
               override fun onDestroy() {
                   super.onDestroy()
-                  stopClickLoop()
+                  stopClickExecution()
                   serviceScope.cancel()
-                  if (floatingView != null) {
+
+                  // Hapus semua bulatan target
+                  for (point in targetPoints) {
                       try {
-                          windowManager.removeView(floatingView)
+                          windowManager.removeView(point.view)
+                      } catch (e: Exception) {}
+                  }
+                  targetPoints.clear()
+
+                  // Hapus toolbar
+                  if (floatingToolbar != null) {
+                      try {
+                          windowManager.removeView(floatingToolbar)
                       } catch (e: Exception) {}
                   }
               }
