@@ -22,11 +22,18 @@ jobs:
 
       - name: Auto-generate Android Scaffolding & Fix Resources
         run: |
-          # 1. Ganti ikon ke ikon bawaan Android yang dijamin selalu ada
+          # 1. Enable AndroidX in gradle.properties (MEMPERBAIKI ERROR checkDebugAarMetadata)
+          cat << 'EOF' > gradle.properties
+          android.useAndroidX=true
+          android.enableJetifier=true
+          org.gradle.jvmargs=-Xmx2048m -Dfile.encoding=UTF-8
+          EOF
+
+          # 2. Fix icons in AndroidManifest.xml
           sed -i 's|@mipmap/ic_launcher_round|@android:drawable/sym_def_app_icon|g' app/src/main/AndroidManifest.xml || true
           sed -i 's|@mipmap/ic_launcher|@android:drawable/sym_def_app_icon|g' app/src/main/AndroidManifest.xml || true
 
-          # 2. settings.gradle
+          # 3. settings.gradle
           cat << 'EOF' > settings.gradle
           pluginManagement {
               repositories {
@@ -46,7 +53,7 @@ jobs:
           include ':app'
           EOF
 
-          # 3. build.gradle
+          # 4. build.gradle
           cat << 'EOF' > build.gradle
           plugins {
               id 'com.android.application' version '8.2.2' apply false
@@ -55,7 +62,7 @@ jobs:
           }
           EOF
 
-          # 4. Values (Strings & Tema)
+          # 5. Values (Strings & Themes)
           mkdir -p app/src/main/res/values
           cat << 'EOF' > app/src/main/res/values/strings.xml
           <resources>
@@ -70,7 +77,7 @@ jobs:
           </resources>
           EOF
 
-          # 5. Icon & Layout Panel Melayang
+          # 6. Icon & Layout Panel Melayang
           mkdir -p app/src/main/res/drawable
           cat << 'EOF' > app/src/main/res/drawable/ic_launcher_foreground.xml
           <vector xmlns:android="http://schemas.android.com/apk/res/android"
@@ -101,7 +108,7 @@ jobs:
           </FrameLayout>
           EOF
 
-          # 6. MainActivity.kt (Layar Utama)
+          # 7. MainActivity.kt (Layar Utama)
           mkdir -p app/src/main/java/com/autoklik/android/ui
           cat << 'EOF' > app/src/main/java/com/autoklik/android/ui/MainActivity.kt
           package com.autoklik.android.ui
@@ -116,7 +123,7 @@ jobs:
           }
           EOF
 
-          # 7. app/build.gradle
+          # 8. app/build.gradle
           cat << 'EOF' > app/build.gradle
           plugins {
               id 'com.android.application'
