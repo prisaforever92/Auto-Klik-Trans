@@ -22,18 +22,14 @@ jobs:
 
       - name: Auto-generate Android Scaffolding & Fix Resources
         run: |
-          # 1. Enable AndroidX in gradle.properties (MEMPERBAIKI ERROR checkDebugAarMetadata)
+          # 1. Enable AndroidX in gradle.properties
           cat << 'EOF' > gradle.properties
           android.useAndroidX=true
           android.enableJetifier=true
           org.gradle.jvmargs=-Xmx2048m -Dfile.encoding=UTF-8
           EOF
 
-          # 2. Fix icons in AndroidManifest.xml
-          sed -i 's|@mipmap/ic_launcher_round|@android:drawable/sym_def_app_icon|g' app/src/main/AndroidManifest.xml || true
-          sed -i 's|@mipmap/ic_launcher|@android:drawable/sym_def_app_icon|g' app/src/main/AndroidManifest.xml || true
-
-          # 3. settings.gradle
+          # 2. settings.gradle
           cat << 'EOF' > settings.gradle
           pluginManagement {
               repositories {
@@ -53,7 +49,7 @@ jobs:
           include ':app'
           EOF
 
-          # 4. build.gradle
+          # 3. build.gradle
           cat << 'EOF' > build.gradle
           plugins {
               id 'com.android.application' version '8.2.2' apply false
@@ -62,22 +58,40 @@ jobs:
           }
           EOF
 
-          # 5. Values (Strings & Themes)
+          # 4. Strings & Themes
           mkdir -p app/src/main/res/values
           cat << 'EOF' > app/src/main/res/values/strings.xml
           <resources>
-              <string name="app_name">AutoKlik Android</string>
-              <string name="accessibility_desc">Layanan Aksesibilitas AutoKlik</string>
+              <string name="app_name">AutoKlik Trans</string>
+              <string name="accessibility_desc">Layanan Aksesibilitas AutoKlik untuk simulasi sentuhan dan multi-gesture tanpa root.</string>
           </resources>
           EOF
 
           cat << 'EOF' > app/src/main/res/values/themes.xml
           <resources>
-              <style name="Theme.Material3.DayNight.NoActionBar" parent="Theme.MaterialComponents.DayNight.NoActionBar" />
+              <style name="Theme.Material3.DayNight.NoActionBar" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+                  <item name="colorPrimary">#10B981</item>
+                  <item name="android:statusBarColor">#0F172A</item>
+                  <item name="android:windowBackground">#0F172A</item>
+              </style>
           </resources>
           EOF
 
-          # 6. Icon & Layout Panel Melayang
+          # 5. Accessibility Service Config XML
+          mkdir -p app/src/main/res/xml
+          cat << 'EOF' > app/src/main/res/xml/accessibility_service_config.xml
+          <?xml version="1.0" encoding="utf-8"?>
+          <accessibility-service xmlns:android="http://schemas.android.com/apk/res/android"
+              android:accessibilityEventTypes="typeAllMask"
+              android:accessibilityFeedbackType="feedbackGeneric"
+              android:accessibilityFlags="flagDefault|flagRetrieveInteractiveWindows"
+              android:canPerformGestures="true"
+              android:canRetrieveWindowContent="true"
+              android:description="@string/accessibility_desc"
+              android:notificationTimeout="100" />
+          EOF
+
+          # 6. Icons & Vector Drawables
           mkdir -p app/src/main/res/drawable
           cat << 'EOF' > app/src/main/res/drawable/ic_launcher_foreground.xml
           <vector xmlns:android="http://schemas.android.com/apk/res/android"
@@ -91,39 +105,763 @@ jobs:
           </vector>
           EOF
 
+          # 7. Layouts: activity_main.xml & layout_floating_widget.xml
           mkdir -p app/src/main/res/layout
+
           cat << 'EOF' > app/src/main/res/layout/layout_floating_widget.xml
           <?xml version="1.0" encoding="utf-8"?>
-          <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+          <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
-              android:background="#DD1E293B"
+              android:orientation="horizontal"
+              android:background="#E60F172A"
+              android:gravity="center_vertical"
               android:padding="8dp">
+
               <TextView
+                  android:id="@+id/tvDragHandle"
                   android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
-                  android:text="AutoKlik"
+                  android:text="⠿ AutoKlik"
                   android:textColor="#10B981"
-                  android:textStyle="bold" />
-          </FrameLayout>
+                  android:textStyle="bold"
+                  android:textSize="14sp"
+                  android:paddingEnd="12dp" />
+
+              <Button
+                  android:id="@+id/btnFloatingPlay"
+                  android:layout_width="wrap_content"
+                  android:layout_height="38dp"
+                  android:text="▶ Mulai"
+                  android:textSize="12sp"
+                  android:textColor="#FFFFFF"
+                  android:backgroundTint="#10B981"
+                  android:minWidth="0dp"
+                  android:paddingStart="12dp"
+                  android:paddingEnd="12dp" />
+
+              <Button
+                  android:id="@+id/btnFloatingClose"
+                  android:layout_width="38dp"
+                  android:layout_height="38dp"
+                  android:layout_marginStart="8dp"
+                  android:text="✕"
+                  android:textSize="14sp"
+                  android:textColor="#FFFFFF"
+                  android:backgroundTint="#EF4444"
+                  android:minWidth="0dp"
+                  android:padding="0dp" />
+
+          </LinearLayout>
           EOF
 
-          # 7. MainActivity.kt (Layar Utama)
+          cat << 'EOF' > app/src/main/res/layout/activity_main.xml
+          <?xml version="1.0" encoding="utf-8"?>
+          <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="#0F172A"
+              android:padding="16dp">
+
+              <LinearLayout
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:orientation="vertical">
+
+                  <!-- Header -->
+                  <TextView
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:text="AutoKlik Trans"
+                      android:textColor="#10B981"
+                      android:textSize="24sp"
+                      android:textStyle="bold" />
+
+                  <TextView
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:layout_marginTop="4dp"
+                      android:text="Pengontrol Klik Otomatis &amp; Multi-Touch"
+                      android:textColor="#94A3B8"
+                      android:textSize="14sp" />
+
+                  <!-- Card Izin 1: Aksesibilitas -->
+                  <LinearLayout
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:layout_marginTop="16dp"
+                      android:background="#1E293B"
+                      android:orientation="vertical"
+                      android:padding="14dp">
+
+                      <TextView
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:text="1. Layanan Aksesibilitas (Wajib)"
+                          android:textColor="#F8FAFC"
+                          android:textSize="16sp"
+                          android:textStyle="bold" />
+
+                      <TextView
+                          android:id="@+id/txtAccessibilityStatus"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:layout_marginTop="6dp"
+                          android:text="Status: Memeriksa..."
+                          android:textColor="#EF4444"
+                          android:textSize="14sp"
+                          android:textStyle="bold" />
+
+                      <TextView
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:layout_marginTop="4dp"
+                          android:text="Diperlukan agar aplikasi bisa mengetuk &amp; mengusap layar otomatis."
+                          android:textColor="#94A3B8"
+                          android:textSize="12sp" />
+
+                      <TextView
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:layout_marginTop="4dp"
+                          android:text="💡 Tips Redmi/HyperOS: Buka Pengaturan Tambahan > Aksesibilitas > Aplikasi Terunduh > Aktifkan AutoKlik"
+                          android:textColor="#38BDF8"
+                          android:textSize="11sp" />
+
+                      <Button
+                          android:id="@+id/btnAccessibility"
+                          android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:layout_marginTop="10dp"
+                          android:backgroundTint="#334155"
+                          android:text="⚙️ Buka Pengaturan Aksesibilitas"
+                          android:textColor="#F8FAFC" />
+                  </LinearLayout>
+
+                  <!-- Card Izin 2: Jendela Mengapung / Overlay -->
+                  <LinearLayout
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:layout_marginTop="12dp"
+                      android:background="#1E293B"
+                      android:orientation="vertical"
+                      android:padding="14dp">
+
+                      <TextView
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:text="2. Izin Jendela Mengapung (Overlay)"
+                          android:textColor="#F8FAFC"
+                          android:textSize="16sp"
+                          android:textStyle="bold" />
+
+                      <TextView
+                          android:id="@+id/txtOverlayStatus"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:layout_marginTop="6dp"
+                          android:text="Status: Memeriksa..."
+                          android:textColor="#EF4444"
+                          android:textSize="14sp"
+                          android:textStyle="bold" />
+
+                      <TextView
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:layout_marginTop="4dp"
+                          android:text="Diperlukan agar panel tombol Play/Pause melayang di atas aplikasi lain."
+                          android:textColor="#94A3B8"
+                          android:textSize="12sp" />
+
+                      <Button
+                          android:id="@+id/btnOverlay"
+                          android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:layout_marginTop="10dp"
+                          android:backgroundTint="#334155"
+                          android:text="🔓 Izinkan Jendela Mengapung"
+                          android:textColor="#F8FAFC" />
+                  </LinearLayout>
+
+                  <!-- Tombol Aksi Utama -->
+                  <LinearLayout
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:layout_marginTop="16dp"
+                      android:orientation="vertical">
+
+                      <Button
+                          android:id="@+id/btnStartFloating"
+                          android:layout_width="match_parent"
+                          android:layout_height="52dp"
+                          android:backgroundTint="#10B981"
+                          android:text="▶ TAMPILKAN PANEL MELAYANG"
+                          android:textColor="#FFFFFF"
+                          android:textSize="15sp"
+                          android:textStyle="bold" />
+
+                      <Button
+                          android:id="@+id/btnStopFloating"
+                          android:layout_width="match_parent"
+                          android:layout_height="48dp"
+                          android:layout_marginTop="8dp"
+                          android:backgroundTint="#EF4444"
+                          android:text="⏹ TUTUP PANEL MELAYANG"
+                          android:textColor="#FFFFFF"
+                          android:textSize="14sp" />
+                  </LinearLayout>
+
+                  <!-- Ringkasan Fitur Aktif -->
+                  <LinearLayout
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:layout_marginTop="16dp"
+                      android:background="#1E293B"
+                      android:orientation="vertical"
+                      android:padding="14dp">
+
+                      <TextView
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:text="Fitur AutoKlik Aktif:"
+                          android:textColor="#10B981"
+                          android:textSize="14sp"
+                          android:textStyle="bold" />
+
+                      <TextView
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:layout_marginTop="6dp"
+                          android:text="✔ Multi-Touch Gestures (Tap, Swipe Up, Swipe Down, Paste)"
+                          android:textColor="#CBD5E1"
+                          android:textSize="12sp" />
+
+                      <TextView
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:layout_marginTop="3dp"
+                          android:text="✔ Jeda Acak Anti-Deteksi (Interval Jitter +/- 15%)"
+                          android:textColor="#CBD5E1"
+                          android:textSize="12sp" />
+
+                      <TextView
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:layout_marginTop="3dp"
+                          android:text="✔ Auto-Tap Fokus sebelum Paste Teks"
+                          android:textColor="#CBD5E1"
+                          android:textSize="12sp" />
+
+                      <TextView
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:layout_marginTop="3dp"
+                          android:text="✔ Sub-Loop Khusus: Titik 10 loop kembali ke Titik 7"
+                          android:textColor="#CBD5E1"
+                          android:textSize="12sp" />
+                  </LinearLayout>
+
+              </LinearLayout>
+          </ScrollView>
+          EOF
+
+          # 8. Source Code: MainActivity.kt
           mkdir -p app/src/main/java/com/autoklik/android/ui
           cat << 'EOF' > app/src/main/java/com/autoklik/android/ui/MainActivity.kt
           package com.autoklik.android.ui
 
+          import android.accessibilityservice.AccessibilityServiceInfo
+          import android.content.Context
+          import android.content.Intent
+          import android.graphics.Color
+          import android.net.Uri
+          import android.os.Build
           import android.os.Bundle
+          import android.provider.Settings
+          import android.view.accessibility.AccessibilityManager
+          import android.widget.Button
+          import android.widget.TextView
+          import android.widget.Toast
           import androidx.appcompat.app.AppCompatActivity
+          import com.autoklik.android.R
+          import com.autoklik.android.service.AutoClickAccessibilityService
+          import com.autoklik.android.service.FloatingOverlayService
 
           class MainActivity : AppCompatActivity() {
+
+              private lateinit var txtAccessibilityStatus: TextView
+              private lateinit var txtOverlayStatus: TextView
+              private lateinit var btnAccessibility: Button
+              private lateinit var btnOverlay: Button
+              private lateinit var btnStartFloating: Button
+              private lateinit var btnStopFloating: Button
+
               override fun onCreate(savedInstanceState: Bundle?) {
                   super.onCreate(savedInstanceState)
+                  setContentView(R.layout.activity_main)
+
+                  txtAccessibilityStatus = findViewById(R.id.txtAccessibilityStatus)
+                  txtOverlayStatus = findViewById(R.id.txtOverlayStatus)
+                  btnAccessibility = findViewById(R.id.btnAccessibility)
+                  btnOverlay = findViewById(R.id.btnOverlay)
+                  btnStartFloating = findViewById(R.id.btnStartFloating)
+                  btnStopFloating = findViewById(R.id.btnStopFloating)
+
+                  btnAccessibility.setOnClickListener {
+                      try {
+                          val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
+                          startActivity(intent)
+                          Toast.makeText(this, "Buka Aplikasi Terunduh > Aktifkan AutoKlik", Toast.LENGTH_LONG).show()
+                      } catch (e: Exception) {
+                          Toast.makeText(this, "Buka Pengaturan Aksesibilitas di HP Anda", Toast.LENGTH_SHORT).show()
+                      }
+                  }
+
+                  btnOverlay.setOnClickListener {
+                      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                          try {
+                              val intent = Intent(
+                                  Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                                  Uri.parse("package:$packageName")
+                              )
+                              startActivity(intent)
+                          } catch (e: Exception) {
+                              val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION)
+                              startActivity(intent)
+                          }
+                      } else {
+                          Toast.makeText(this, "Izin overlay otomatis aktif pada versi ini", Toast.LENGTH_SHORT).show()
+                      }
+                  }
+
+                  btnStartFloating.setOnClickListener {
+                      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this)) {
+                          Toast.makeText(this, "Harap izinkan Jendela Mengapung terlebih dahulu", Toast.LENGTH_LONG).show()
+                          val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:$packageName"))
+                          startActivity(intent)
+                          return@setOnClickListener
+                      }
+
+                      if (!isAccessibilityServiceEnabled()) {
+                          Toast.makeText(this, "Harap aktifkan Layanan Aksesibilitas AutoKlik!", Toast.LENGTH_LONG).show()
+                          val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
+                          startActivity(intent)
+                          return@setOnClickListener
+                      }
+
+                      val intent = Intent(this, FloatingOverlayService::class.java)
+                      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                          startForegroundService(intent)
+                      } else {
+                          startService(intent)
+                      }
+                      Toast.makeText(this, "Panel Melayang Aktif!", Toast.LENGTH_SHORT).show()
+                      moveTaskToBack(true)
+                  }
+
+                  btnStopFloating.setOnClickListener {
+                      val intent = Intent(this, FloatingOverlayService::class.java)
+                      stopService(intent)
+                      Toast.makeText(this, "Panel Melayang Ditutup", Toast.LENGTH_SHORT).show()
+                  }
+              }
+
+              override fun onResume() {
+                  super.onResume()
+                  updatePermissionStatus()
+              }
+
+              private fun isAccessibilityServiceEnabled(): Boolean {
+                  try {
+                      val am = getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
+                      val enabledServices = am.getEnabledAccessibilityServiceList(AccessibilityServiceInfo.FEEDBACK_ALL_MASK)
+                      for (service in enabledServices) {
+                          if (service.resolveInfo.serviceInfo.packageName == packageName) {
+                              return true
+                          }
+                      }
+                  } catch (e: Exception) {
+                      // fallback check instance
+                  }
+                  return AutoClickAccessibilityService.instance != null
+              }
+
+              private fun updatePermissionStatus() {
+                  val isA11y = isAccessibilityServiceEnabled()
+                  if (isA11y) {
+                      txtAccessibilityStatus.text = "Status: 🟢 AKTIF (Siap Klik Otomatis)"
+                      txtAccessibilityStatus.setTextColor(Color.parseColor("#22C55E"))
+                  } else {
+                      txtAccessibilityStatus.text = "Status: 🔴 NONAKTIF (Harap Aktifkan)"
+                      txtAccessibilityStatus.setTextColor(Color.parseColor("#EF4444"))
+                  }
+
+                  val isOverlay = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                      Settings.canDrawOverlays(this)
+                  } else {
+                      true
+                  }
+                  if (isOverlay) {
+                      txtOverlayStatus.text = "Status: 🟢 SUDAH DIIZINKAN"
+                      txtOverlayStatus.setTextColor(Color.parseColor("#22C55E"))
+                  } else {
+                      txtOverlayStatus.text = "Status: 🔴 BELUM DIIZINKAN (Wajib)"
+                      txtOverlayStatus.setTextColor(Color.parseColor("#EF4444"))
+                  }
               }
           }
           EOF
 
-          # 8. app/build.gradle
+          # 9. Source Code: AutoClickAccessibilityService.kt
+          mkdir -p app/src/main/java/com/autoklik/android/service
+          cat << 'EOF' > app/src/main/java/com/autoklik/android/service/AutoClickAccessibilityService.kt
+          package com.autoklik.android.service
+
+          import android.accessibilityservice.AccessibilityService
+          import android.accessibilityservice.GestureDescription
+          import android.content.ClipData
+          import android.content.ClipboardManager
+          import android.content.Context
+          import android.graphics.Path
+          import android.os.Build
+          import android.os.Bundle
+          import android.view.accessibility.AccessibilityEvent
+          import android.view.accessibility.AccessibilityNodeInfo
+          import androidx.annotation.RequiresApi
+          import kotlinx.coroutines.*
+
+          class AutoClickAccessibilityService : AccessibilityService() {
+
+              private val serviceScope = CoroutineScope(Dispatchers.Default + SupervisorJob())
+
+              companion object {
+                  var instance: AutoClickAccessibilityService? = null
+                      private set
+              }
+
+              override fun onServiceConnected() {
+                  super.onServiceConnected()
+                  instance = this
+              }
+
+              override fun onAccessibilityEvent(event: AccessibilityEvent?) {}
+
+              override fun onInterrupt() {
+                  instance = null
+              }
+
+              override fun onDestroy() {
+                  super.onDestroy()
+                  instance = null
+                  serviceScope.cancel()
+              }
+
+              @RequiresApi(Build.VERSION_CODES.N)
+              fun executeTap(x: Float, y: Float, durationMs: Long = 50L, callback: (() -> Unit)? = null) {
+                  val path = Path().apply { moveTo(x, y) }
+                  val stroke = GestureDescription.StrokeDescription(path, 0L, durationMs)
+                  val gesture = GestureDescription.Builder().addStroke(stroke).build()
+
+                  dispatchGesture(gesture, object : GestureResultCallback() {
+                      override fun onCompleted(gestureDescription: GestureDescription?) {
+                          callback?.invoke()
+                      }
+                      override fun onCancelled(gestureDescription: GestureDescription?) {
+                          callback?.invoke()
+                      }
+                  }, null)
+              }
+
+              @RequiresApi(Build.VERSION_CODES.N)
+              fun executeSwipe(
+                  startX: Float,
+                  startY: Float,
+                  endX: Float,
+                  endY: Float,
+                  durationMs: Long = 300L,
+                  callback: (() -> Unit)? = null
+              ) {
+                  val path = Path().apply {
+                      moveTo(startX, startY)
+                      lineTo(endX, endY)
+                  }
+                  val stroke = GestureDescription.StrokeDescription(path, 0L, durationMs)
+                  val gesture = GestureDescription.Builder().addStroke(stroke).build()
+
+                  dispatchGesture(gesture, object : GestureResultCallback() {
+                      override fun onCompleted(gestureDescription: GestureDescription?) {
+                          callback?.invoke()
+                      }
+                  }, null)
+              }
+
+              fun executePaste(
+                  x: Float,
+                  y: Float,
+                  textToPaste: String,
+                  autoTapToFocus: Boolean = true,
+                  callback: (() -> Unit)? = null
+              ) {
+                  val performPaste = {
+                      val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                      val clip = ClipData.newPlainText("AutoKlikPaste", textToPaste)
+                      clipboard.setPrimaryClip(clip)
+
+                      val rootNode = rootInActiveWindow
+                      val focusedNode = rootNode?.findFocus(AccessibilityNodeInfo.FOCUS_INPUT)
+
+                      if (focusedNode != null && focusedNode.isEditable) {
+                          val arguments = Bundle().apply {
+                              putCharSequence(
+                                  AccessibilityNodeInfo.ACTION_ARGUMENT_SET_TEXT_CHARSEQUENCE,
+                                  textToPaste
+                              )
+                          }
+                          focusedNode.performAction(AccessibilityNodeInfo.ACTION_SET_TEXT, arguments)
+                          focusedNode.recycle()
+                      }
+                      rootNode?.recycle()
+                      callback?.invoke()
+                  }
+
+                  if (autoTapToFocus) {
+                      executeTap(x, y, 50L) {
+                          serviceScope.launch {
+                              delay(80)
+                              performPaste()
+                          }
+                      }
+                  } else {
+                      performPaste()
+                  }
+              }
+          }
+          EOF
+
+          # 10. Source Code: FloatingOverlayService.kt
+          cat << 'EOF' > app/src/main/java/com/autoklik/android/service/FloatingOverlayService.kt
+          package com.autoklik.android.service
+
+          import android.app.Notification
+          import android.app.NotificationChannel
+          import android.app.NotificationManager
+          import android.app.Service
+          import android.content.Context
+          import android.content.Intent
+          import android.graphics.PixelFormat
+          import android.os.Build
+          import android.os.IBinder
+          import android.view.Gravity
+          import android.view.LayoutInflater
+          import android.view.MotionEvent
+          import android.view.View
+          import android.view.WindowManager
+          import android.widget.Button
+          import android.widget.Toast
+          import androidx.core.app.NotificationCompat
+          import com.autoklik.android.R
+          import kotlinx.coroutines.*
+
+          class FloatingOverlayService : Service() {
+
+              private lateinit var windowManager: WindowManager
+              private var floatingView: View? = null
+              private lateinit var params: WindowManager.LayoutParams
+              private var isPlaying = false
+              private val serviceScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
+              private var clickJob: Job? = null
+
+              override fun onBind(intent: Intent?): IBinder? = null
+
+              override fun onCreate() {
+                  super.onCreate()
+                  windowManager = getSystemService(Context.WINDOW_SERVICE) as WindowManager
+                  startForegroundNotification()
+                  setupFloatingWidget()
+              }
+
+              private fun startForegroundNotification() {
+                  val channelId = "autoklik_overlay_channel"
+                  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                      val channel = NotificationChannel(
+                          channelId,
+                          "AutoKlik Overlay Service",
+                          NotificationManager.IMPORTANCE_LOW
+                      )
+                      val manager = getSystemService(NotificationManager::class.java)
+                      manager?.createNotificationChannel(channel)
+                  }
+
+                  val notification: Notification = NotificationCompat.Builder(this, channelId)
+                      .setContentTitle("AutoKlik Aktif")
+                      .setContentText("Panel melayang siap digunakan")
+                      .setSmallIcon(android.R.drawable.ic_dialog_info)
+                      .build()
+
+                  startForeground(1001, notification)
+              }
+
+              private fun setupFloatingWidget() {
+                  val layoutType = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                      WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
+                  } else {
+                      @Suppress("DEPRECATION")
+                      WindowManager.LayoutParams.TYPE_PHONE
+                  }
+
+                  params = WindowManager.LayoutParams(
+                      WindowManager.LayoutParams.WRAP_CONTENT,
+                      WindowManager.LayoutParams.WRAP_CONTENT,
+                      layoutType,
+                      WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+                      PixelFormat.TRANSLUCENT
+                  ).apply {
+                      gravity = Gravity.TOP or Gravity.START
+                      x = 80
+                      y = 250
+                  }
+
+                  floatingView = LayoutInflater.from(this).inflate(R.layout.layout_floating_widget, null)
+
+                  val btnPlay = floatingView?.findViewById<Button>(R.id.btnFloatingPlay)
+                  val btnClose = floatingView?.findViewById<Button>(R.id.btnFloatingClose)
+
+                  btnPlay?.setOnClickListener {
+                      val a11y = AutoClickAccessibilityService.instance
+                      if (a11y == null) {
+                          Toast.makeText(this, "Layanan Aksesibilitas belum aktif!", Toast.LENGTH_SHORT).show()
+                          return@setOnClickListener
+                      }
+
+                      isPlaying = !isPlaying
+                      if (isPlaying) {
+                          btnPlay.text = "⏸ Jeda"
+                          startClickLoop(a11y)
+                      } else {
+                          btnPlay.text = "▶ Mulai"
+                          stopClickLoop()
+                      }
+                  }
+
+                  btnClose?.setOnClickListener {
+                      stopSelf()
+                  }
+
+                  floatingView?.setOnTouchListener(object : View.OnTouchListener {
+                      private var initialX = 0
+                      private var initialY = 0
+                      private var initialTouchX = 0f
+                      private var initialTouchY = 0f
+
+                      override fun onTouch(v: View, event: MotionEvent): Boolean {
+                          when (event.action) {
+                              MotionEvent.ACTION_DOWN -> {
+                                  initialX = params.x
+                                  initialY = params.y
+                                  initialTouchX = event.rawX
+                                  initialTouchY = event.rawY
+                                  return true
+                              }
+                              MotionEvent.ACTION_MOVE -> {
+                                  params.x = initialX + (event.rawX - initialTouchX).toInt()
+                                  params.y = initialY + (event.rawY - initialTouchY).toInt()
+                                  windowManager.updateViewLayout(floatingView, params)
+                                  return true
+                              }
+                          }
+                          return false
+                      }
+                  })
+
+                  windowManager.addView(floatingView, params)
+              }
+
+              private fun startClickLoop(service: AutoClickAccessibilityService) {
+                  clickJob?.cancel()
+                  clickJob = serviceScope.launch {
+                      Toast.makeText(applicationContext, "AutoKlik Dimulai!", Toast.LENGTH_SHORT).show()
+                      while (isActive && isPlaying) {
+                          val displayMetrics = resources.displayMetrics
+                          val targetX = displayMetrics.widthPixels / 2f
+                          val targetY = displayMetrics.heightPixels / 2f
+                          service.executeTap(targetX, targetY, 50L)
+                          delay(1000L)
+                      }
+                  }
+              }
+
+              private fun stopClickLoop() {
+                  clickJob?.cancel()
+                  clickJob = null
+                  Toast.makeText(applicationContext, "AutoKlik Dijeda", Toast.LENGTH_SHORT).show()
+              }
+
+              override fun onDestroy() {
+                  super.onDestroy()
+                  stopClickLoop()
+                  serviceScope.cancel()
+                  if (floatingView != null) {
+                      try {
+                          windowManager.removeView(floatingView)
+                      } catch (e: Exception) {}
+                  }
+              }
+          }
+          EOF
+
+          # 11. AndroidManifest.xml
+          mkdir -p app/src/main
+          cat << 'EOF' > app/src/main/AndroidManifest.xml
+          <?xml version="1.0" encoding="utf-8"?>
+          <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+              package="com.autoklik.android">
+
+              <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+              <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+              <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+              <uses-permission android:name="android.permission.VIBRATE" />
+
+              <application
+                  android:allowBackup="true"
+                  android:icon="@android:drawable/sym_def_app_icon"
+                  android:label="@string/app_name"
+                  android:roundIcon="@android:drawable/sym_def_app_icon"
+                  android:supportsRtl="true"
+                  android:theme="@style/Theme.Material3.DayNight.NoActionBar">
+
+                  <activity
+                      android:name=".ui.MainActivity"
+                      android:exported="true">
+                      <intent-filter>
+                          <action android:name="android.intent.action.MAIN" />
+                          <category android:name="android.intent.category.LAUNCHER" />
+                      </intent-filter>
+                  </activity>
+
+                  <service
+                      android:name=".service.FloatingOverlayService"
+                      android:enabled="true"
+                      android:exported="false"
+                      android:foregroundServiceType="specialUse" />
+
+                  <service
+                      android:name=".service.AutoClickAccessibilityService"
+                      android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"
+                      android:exported="true">
+                      <intent-filter>
+                          <action android:name="android.accessibilityservice.AccessibilityService" />
+                      </intent-filter>
+                      <meta-data
+                          android:name="android.accessibilityservice"
+                          android:resource="@xml/accessibility_service_config" />
+                  </service>
+
+              </application>
+
+          </manifest>
+          EOF
+
+          # 12. app/build.gradle
           cat << 'EOF' > app/build.gradle
           plugins {
               id 'com.android.application'
