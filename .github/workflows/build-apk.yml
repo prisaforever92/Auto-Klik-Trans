@@ -219,131 +219,60 @@ jobs:
           mkdir -p app/src/main/res/layout
           cat << 'EOF' > app/src/main/res/layout/layout_target_point.xml
           <?xml version="1.0" encoding="utf-8"?>
-          <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:orientation="vertical"
-              android:gravity="center_horizontal">
+          <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/pointRoot"
+              android:layout_width="30dp"
+              android:layout_height="30dp"
+              android:background="@drawable/bg_target_point">
 
-              <!-- Garis Panah Atas (Swipe Up) - Tarik Ujung Panah untuk Atur Panjang/Pendek -->
-              <LinearLayout
+              <!-- Titik Bidik Tengah Presisi (Center Crosshair Dot) tepat di koordinat klik (50%, 50%) -->
+              <View
+                  android:id="@+id/viewCenterDot"
+                  android:layout_width="3dp"
+                  android:layout_height="3dp"
+                  android:layout_gravity="center"
+                  android:alpha="0.45"
+                  android:background="#38BDF8" />
+
+              <!-- Nomor Urut Titik tepat di tengah lingkaran -->
+              <TextView
+                  android:id="@+id/tvTargetNumber"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_gravity="center"
+                  android:includeFontPadding="false"
+                  android:text="1"
+                  android:textColor="#FFFFFF"
+                  android:textSize="13sp"
+                  android:textStyle="bold" />
+
+              <!-- Simbol Tipe Gerakan (Tap / Swipe / Paste / Popup) -->
+              <TextView
+                  android:id="@+id/tvTargetType"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_gravity="bottom|center_horizontal"
+                  android:layout_marginBottom="1dp"
+                  android:includeFontPadding="false"
+                  android:singleLine="true"
+                  android:text="🎯"
+                  android:textColor="#E2E8F0"
+                  android:textSize="7.5sp" />
+
+              <!-- Placeholder tersembunyi untuk kompatibilitas ID lama -->
+              <View
                   android:id="@+id/layoutArrowUp"
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:orientation="vertical"
-                  android:gravity="center_horizontal"
-                  android:paddingStart="8dp"
-                  android:paddingEnd="8dp"
-                  android:visibility="gone">
+                  android:layout_width="0dp"
+                  android:layout_height="0dp"
+                  android:visibility="gone" />
 
-                  <!-- Handle Ujung Panah Atas yang Bisa Diseret (Drag) -->
-                  <TextView
-                      android:id="@+id/tvArrowHandleUp"
-                      android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                      android:background="#E60F172A"
-                      android:paddingStart="8dp"
-                      android:paddingEnd="8dp"
-                      android:paddingTop="3dp"
-                      android:paddingBottom="3dp"
-                      android:text="▲ SERET"
-                      android:textColor="#38BDF8"
-                      android:textSize="10sp"
-                      android:textStyle="bold" />
-
-                  <!-- Batang Garis Panah Atas (Panjang sesuai tarikan jari) -->
-                  <View
-                      android:id="@+id/viewLineUp"
-                      android:layout_width="4dp"
-                      android:layout_height="140dp"
-                      android:background="#38BDF8" />
-
-                  <TextView
-                      android:id="@+id/tvSwipeDistUp"
-                      android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                      android:text="▲ 140px"
-                      android:textColor="#38BDF8"
-                      android:textSize="9sp"
-                      android:background="#D90F172A"
-                      android:paddingStart="4dp"
-                      android:paddingEnd="4dp" />
-              </LinearLayout>
-
-              <!-- Lingkaran Titik Target Utama (Bulat Sempurna 1:1) -->
-              <FrameLayout
-                  android:id="@+id/pointRoot"
-                  android:layout_width="30dp"
-                  android:layout_height="30dp"
-                  android:background="@drawable/bg_target_point">
-
-                  <TextView
-                      android:id="@+id/tvTargetNumber"
-                      android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                      android:layout_gravity="center"
-                      android:includeFontPadding="false"
-                      android:text="1"
-                      android:textColor="#FFFFFF"
-                      android:textSize="14sp"
-                      android:textStyle="bold" />
-
-                  <TextView
-                      android:id="@+id/tvTargetType"
-                      android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                      android:layout_gravity="bottom|center_horizontal"
-                      android:layout_marginBottom="1dp"
-                      android:includeFontPadding="false"
-                      android:text="🎯"
-                      android:textSize="8sp" />
-              </FrameLayout>
-
-              <!-- Garis Panah Bawah (Swipe Down) - Tarik Ujung Panah untuk Atur Panjang/Pendek -->
-              <LinearLayout
+              <View
                   android:id="@+id/layoutArrowDown"
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:orientation="vertical"
-                  android:gravity="center_horizontal"
-                  android:paddingStart="8dp"
-                  android:paddingEnd="8dp"
-                  android:visibility="gone">
+                  android:layout_width="0dp"
+                  android:layout_height="0dp"
+                  android:visibility="gone" />
 
-                  <TextView
-                      android:id="@+id/tvSwipeDistDown"
-                      android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                      android:text="▼ 140px"
-                      android:textColor="#F59E0B"
-                      android:textSize="9sp"
-                      android:background="#D90F172A"
-                      android:paddingStart="4dp"
-                      android:paddingEnd="4dp" />
-
-                  <!-- Batang Garis Panah Bawah (Panjang sesuai tarikan jari) -->
-                  <View
-                      android:id="@+id/viewLineDown"
-                      android:layout_width="4dp"
-                      android:layout_height="140dp"
-                      android:background="#F59E0B" />
-
-                  <!-- Handle Ujung Panah Bawah yang Bisa Diseret (Drag) -->
-                  <TextView
-                      android:id="@+id/tvArrowHandleDown"
-                      android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                      android:background="#E60F172A"
-                      android:paddingStart="8dp"
-                      android:paddingEnd="8dp"
-                      android:paddingTop="3dp"
-                      android:paddingBottom="3dp"
-                      android:text="▼ SERET"
-                      android:textColor="#F59E0B"
-                      android:textSize="10sp"
-                      android:textStyle="bold" />
-              </LinearLayout>
-          </LinearLayout>
+          </FrameLayout>
           EOF
 
           mkdir -p app/src/main/res/layout
@@ -1517,12 +1446,12 @@ jobs:
 
               private fun clampX(x: Float): Float {
                   val w = resources.displayMetrics.widthPixels.toFloat().coerceAtLeast(200f)
-                  return x.coerceIn(10f, w - 10f)
+                  return x.coerceIn(2f, w - 2f)
               }
 
               private fun clampY(y: Float): Float {
                   val h = resources.displayMetrics.heightPixels.toFloat().coerceAtLeast(400f)
-                  return y.coerceIn(25f, h - 25f)
+                  return y.coerceIn(2f, h - 2f)
               }
 
               @RequiresApi(Build.VERSION_CODES.N)
@@ -1610,29 +1539,11 @@ jobs:
                       }
                   }
 
-                  val safeDur = durationMs.coerceIn(180L, 1200L)
+                  val safeDur = durationMs.coerceIn(150L, 600L)
 
-                  fun buildSwipeGesture(useAntiFlingHold: Boolean): GestureDescription {
-                      if (useAntiFlingHold && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                          try {
-                              val holdY = clampY(if (safeEndY > safeStartY) safeEndY + 1f else safeEndY - 1f)
-                              val mainPath = Path().apply {
-                                  moveTo(safeStartX, safeStartY)
-                                  lineTo(safeEndX, safeEndY)
-                              }
-                              val holdPath = Path().apply {
-                                  moveTo(safeEndX, safeEndY)
-                                  lineTo(safeEndX, holdY)
-                              }
-                              // Tahap 1: Geser jari sepanjang garis panah (safeDur ms)
-                              // Tahap 2: Tahan 65ms di ujung panah agar scroll berhenti presisi 1:1 (tanpa fling liar)
-                              val stroke1 = GestureDescription.StrokeDescription(mainPath, 0L, safeDur, true)
-                              val stroke2 = stroke1.continueStroke(holdPath, safeDur, 65L, false)
-                              return GestureDescription.Builder().addStroke(stroke2).build()
-                          } catch (e: Exception) {
-                              // Fallback ke single stroke jika ROM membatasi continueStroke
-                          }
-                      }
+                  // Gunakan 1 tarikan garis murni (single continuous stroke) tanpa berhenti/menekan di ujung panah
+                  // agar jari langsung terangkat saat selesai menggeser dan TIDAK PERNAH memicu klik di ujung panah
+                  fun buildPureSwipeGesture(): GestureDescription {
                       val singlePath = Path().apply {
                           moveTo(safeStartX, safeStartY)
                           lineTo(safeEndX, safeEndY)
@@ -1643,8 +1554,7 @@ jobs:
 
                   fun dispatchSwipeAttempt(isRetry: Boolean) {
                       try {
-                          // Percobaan 1 gunakan anti-fling hold; jika retry gunakan single stroke murni
-                          val gesture = buildSwipeGesture(useAntiFlingHold = !isRetry)
+                          val gesture = buildPureSwipeGesture()
                           val dispatched = dispatchGesture(gesture, object : GestureResultCallback() {
                               override fun onCompleted(gestureDescription: GestureDescription?) {
                                   finishOnce()
@@ -1878,7 +1788,12 @@ jobs:
                   var keyParams: WindowManager.LayoutParams? = null,
                   var keyDelayMs: Long = 400L,
                   var savedKeyX: Int = -1,
-                  var savedKeyY: Int = -1
+                  var savedKeyY: Int = -1,
+                  // Koordinat layar fisik yang dikunci tepat sebelum Play dimulai (agar 100% akurat saat titik disembunyikan selama Play)
+                  var cachedScreenX: Float = -1f,
+                  var cachedScreenY: Float = -1f,
+                  var cachedKeyScreenX: Float = -1f,
+                  var cachedKeyScreenY: Float = -1f
               )
 
               private lateinit var windowManager: WindowManager
@@ -1907,6 +1822,8 @@ jobs:
               private var arePointsVisible = true
               private var isPointsLocked = false
               private var currentLoadedConfigName = ""
+              private var lastKnownInsetX = 0
+              private var lastKnownInsetY = 0
 
               // Ukuran Titik Persentase (0% = 20dp, 100% = 40dp)
               private var currentSizePercent = 50 // default 50% = 30dp
@@ -2096,6 +2013,10 @@ jobs:
                       closeConfigDialog()
                       reindexTargetPoints()
                       setTargetPointsTouchable(false)
+
+                      // Kunci koordinat fisik presisi semua titik lalu sembunyikan sementara semua bulatan & garis panah selama Play
+                      // agar 100% bebas kontak antar titik maupun di ujung panah
+                      lockCoordinatesAndSetPlayVisibility(hideForPlay = true)
 
                       layoutFullToolbar?.visibility = View.GONE
                       layoutMiniToolbar?.visibility = View.VISIBLE
@@ -2885,8 +2806,20 @@ jobs:
 
                   val pointRoot = point.view.findViewById<View>(R.id.pointRoot)
                   val tvNumber = point.view.findViewById<TextView>(R.id.tvTargetNumber)
+                  val tvType = point.view.findViewById<TextView>(R.id.tvTargetType)
+                  val viewCenterDot = point.view.findViewById<View>(R.id.viewCenterDot)
 
-                  // Pastikan bulatan nomor selalu berukuran 1:1 (sizePx x sizePx) tanpa tergeser oleh garis swipe
+                  // Jaga titik tengah (center X, Y) tetap 100% di koordinat yang sama saat ukuran ikon diubah (0% - 100%)
+                  val oldW = if (point.params.width > 0) point.params.width else sizePx
+                  val oldH = if (point.params.height > 0) point.params.height else sizePx
+                  if (oldW != sizePx || oldH != sizePx) {
+                      val centerX = point.params.x + (oldW / 2f)
+                      val centerY = point.params.y + (oldH / 2f)
+                      point.params.x = kotlin.math.round(centerX - (sizePx / 2f)).toInt()
+                      point.params.y = kotlin.math.round(centerY - (sizePx / 2f)).toInt()
+                  }
+
+                  // Pastikan bulatan nomor selalu berukuran 1:1 (sizePx x sizePx) sesuai ukuran ikon
                   pointRoot.layoutParams.width = sizePx
                   pointRoot.layoutParams.height = sizePx
                   pointRoot.requestLayout()
@@ -2894,8 +2827,16 @@ jobs:
                   point.params.width = sizePx
                   point.params.height = sizePx
 
+                  val dotSizePx = (sizeDp * 0.10f * density).toInt().coerceIn(4, 12)
+                  if (viewCenterDot != null) {
+                      viewCenterDot.layoutParams.width = dotSizePx
+                      viewCenterDot.layoutParams.height = dotSizePx
+                      viewCenterDot.requestLayout()
+                  }
+
                   tvNumber.text = point.order.toString()
-                  tvNumber.textSize = (sizeDp * 0.44f).coerceIn(9f, 17f)
+                  tvNumber.textSize = (sizeDp * 0.42f).coerceIn(8.5f, 16.5f)
+                  tvType?.textSize = (sizeDp * 0.25f).coerceIn(5.5f, 10f)
 
                   val minPx = (50f * density).toInt()
                   val maxPx = (resources.displayMetrics.heightPixels * 0.78f).toInt().coerceAtLeast(300)
@@ -3267,6 +3208,16 @@ jobs:
                       val kView = point.keyView as? LinearLayout
                       val kParams = point.keyParams
                       if (kView != null && kParams != null) {
+                          val oldKW = if (kParams.width > 0) kParams.width else sizePx
+                          val oldKH = if (kParams.height > 0) kParams.height else sizePx
+                          if (oldKW != sizePx || oldKH != sizePx) {
+                              val centerKX = kParams.x + (oldKW / 2f)
+                              val centerKY = kParams.y + (oldKH / 2f)
+                              kParams.x = kotlin.math.round(centerKX - (sizePx / 2f)).toInt()
+                              kParams.y = kotlin.math.round(centerKY - (sizePx / 2f)).toInt()
+                              point.savedKeyX = kParams.x
+                              point.savedKeyY = kParams.y
+                          }
                           kParams.width = sizePx
                           kParams.height = sizePx
                           val tvKeyNum = kView.findViewWithTag<TextView>("tvKeyNum")
@@ -3752,46 +3703,78 @@ jobs:
                   refreshAllStackBadges()
               }
 
-              // Ambil koordinat presisi titik (tetap akurat 100% meskipun titik bertumpuk atau sedang disembunyikan 🙈)
+              // Ambil koordinat presisi titik tengah ikon sesuai ukuran ikon saat ini (20dp - 40dp)
+              // Tetap akurat 100% baik saat ikon terlihat (👁️), bertumpuk, maupun sedang disembunyikan (🙈)
               private fun getExactPointCenter(point: TargetPoint): Pair<Float, Float> {
                   val sizePx = getTargetSizePx()
-                  val fallbackX = point.params.x + (sizePx / 2f)
-                  val fallbackY = point.params.y + (sizePx / 2f)
+                  val exactRadius = sizePx / 2f
 
-                  if (!arePointsVisible || point.view.visibility != View.VISIBLE) {
-                      return fallbackX to fallbackY
+                  if (arePointsVisible && point.view.visibility == View.VISIBLE) {
+                      val loc = IntArray(2)
+                      point.view.getLocationOnScreen(loc)
+                      if (loc[0] > 0 || loc[1] > 0) {
+                          // Simpan selisih inset layar (status bar / camera cutout) agar saat disembunyikan 🙈 tetap 100% akurat
+                          lastKnownInsetX = loc[0] - point.params.x
+                          lastKnownInsetY = loc[1] - point.params.y
+                          return (loc[0] + exactRadius) to (loc[1] + exactRadius)
+                      }
                   }
 
-                  val pointRoot = point.view.findViewById<View>(R.id.pointRoot) ?: return fallbackX to fallbackY
-                  val loc = IntArray(2)
-                  pointRoot.getLocationOnScreen(loc)
-                  if (loc[0] <= 0 && loc[1] <= 0) {
-                      return fallbackX to fallbackY
-                  }
-                  val w = if (pointRoot.width > 0) pointRoot.width else sizePx
-                  val h = if (pointRoot.height > 0) pointRoot.height else sizePx
-                  return (loc[0] + w / 2f) to (loc[1] + h / 2f)
+                  val fallbackX = point.params.x + lastKnownInsetX + exactRadius
+                  val fallbackY = point.params.y + lastKnownInsetY + exactRadius
+                  return fallbackX to fallbackY
               }
 
               private fun getExactKeyPinCenter(point: TargetPoint): Pair<Float, Float> {
                   val sizePx = getTargetSizePx()
+                  val exactRadius = sizePx / 2f
                   val kParams = point.keyParams
-                  val fallbackX = (kParams?.x ?: point.savedKeyX.coerceAtLeast(100)) + (sizePx / 2f)
-                  val fallbackY = (kParams?.y ?: point.savedKeyY.coerceAtLeast(500)) + (sizePx / 2f)
 
-                  val kView = point.keyView ?: return fallbackX to fallbackY
-                  if (!arePointsVisible || kView.visibility != View.VISIBLE) {
-                      return fallbackX to fallbackY
+                  val kView = point.keyView
+                  if (kView != null && arePointsVisible && kView.visibility == View.VISIBLE) {
+                      val kLoc = IntArray(2)
+                      kView.getLocationOnScreen(kLoc)
+                      if (kLoc[0] > 0 || kLoc[1] > 0) {
+                          if (kParams != null) {
+                              lastKnownInsetX = kLoc[0] - kParams.x
+                              lastKnownInsetY = kLoc[1] - kParams.y
+                          }
+                          return (kLoc[0] + exactRadius) to (kLoc[1] + exactRadius)
+                      }
                   }
 
-                  val kLoc = IntArray(2)
-                  kView.getLocationOnScreen(kLoc)
-                  if (kLoc[0] <= 0 && kLoc[1] <= 0) {
-                      return fallbackX to fallbackY
+                  val baseX = kParams?.x ?: point.savedKeyX.coerceAtLeast(100)
+                  val baseY = kParams?.y ?: point.savedKeyY.coerceAtLeast(500)
+                  return (baseX + lastKnownInsetX + exactRadius) to (baseY + lastKnownInsetY + exactRadius)
+              }
+
+              // Kunci koordinat layar fisik presisi setiap titik sebelum Play, lalu sembunyikan sementara semua overlay titik & panah
+              // agar tidak ada satu pun overlay titik/ujung panah yang saling kontak saat gestur berjalan
+              private fun lockCoordinatesAndSetPlayVisibility(hideForPlay: Boolean) {
+                  if (hideForPlay) {
+                      for (p in targetPoints) {
+                          val (cx, cy) = getExactPointCenter(p)
+                          p.cachedScreenX = cx
+                          p.cachedScreenY = cy
+                          val (kx, ky) = getExactKeyPinCenter(p)
+                          p.cachedKeyScreenX = kx
+                          p.cachedKeyScreenY = ky
+                      }
+                      for (p in targetPoints) {
+                          p.view.visibility = View.GONE
+                          p.swipeLineView?.visibility = View.GONE
+                          p.swipeHandleView?.visibility = View.GONE
+                          p.keyView?.visibility = View.GONE
+                      }
+                  } else {
+                      val vis = if (arePointsVisible) View.VISIBLE else View.GONE
+                      for (p in targetPoints) {
+                          p.view.visibility = vis
+                          p.swipeLineView?.visibility = vis
+                          p.swipeHandleView?.visibility = vis
+                          p.keyView?.visibility = vis
+                      }
                   }
-                  val w = if (kView.width > 0) kView.width else sizePx
-                  val h = if (kView.height > 0) kView.height else sizePx
-                  return (kLoc[0] + w / 2f) to (kLoc[1] + h / 2f)
               }
 
               // EKSEKUSI BERURUTAN SESUAI NO. URUT (1 -> 2 -> 3 ... -> N) UNTUK SEMUA FITUR (TAP, 2+ SWIPE, PASTE, POPUP & TITIK BERTUMPUK)
@@ -3802,10 +3785,8 @@ jobs:
                       val jitterEnabled = prefs.getBoolean("jitter_enabled", true)
                       val defaultPaste = prefs.getString("paste_text", "AutoKlik Trans") ?: ""
 
-                      // Pastikan nomor urut tersusun rapi 1..N dan seluruh overlay tembus sentuhan sebelum gestur pertama dimulai
-                      reindexTargetPoints()
-                      setTargetPointsTouchable(false)
-                      delay(150)
+                      // Pastikan seluruh overlay titik sudah disembunyikan dari layar sebelum gestur pertama dimulai
+                      delay(140)
 
                       Toast.makeText(applicationContext, "AutoKlik Berjalan (Urutan #1 s/d #${targetPoints.size})!", Toast.LENGTH_SHORT).show()
 
@@ -3820,12 +3801,12 @@ jobs:
 
                           val point = targetPoints.find { it.order == currentOrder } ?: targetPoints.getOrNull(currentOrder - 1)
                           if (point != null) {
-                              // Tampilkan status No. Urut aktif pada Mini Toolbar & nyalakan indikator Kuning Emas
+                              // Tampilkan status No. Urut aktif pada Mini Toolbar
                               tvMiniStatus?.text = "⚡ #${point.order}/$totalPoints ${getPointTypeSymbol(point)}"
-                              resetAllPointHighlights()
-                              setPointActiveHighlight(point, true)
 
-                              val (tapX, tapY) = getExactPointCenter(point)
+                              val (fallbackX, fallbackY) = getExactPointCenter(point)
+                              val tapX = if (point.cachedScreenX > 0f) point.cachedScreenX else fallbackX
+                              val tapY = if (point.cachedScreenY > 0f) point.cachedScreenY else fallbackY
                               val screenH = resources.displayMetrics.heightPixels.toFloat()
 
                               // Tunggu aksi (Tap / Swipe Up / Swipe Down / Paste / Popup) selesai sepenuhnya sebelum lanjut ke jeda & titik berikutnya
@@ -3836,13 +3817,13 @@ jobs:
                                       }
                                       when (point.type) {
                                           "swipe_up" -> {
-                                              val endY = (tapY - point.swipeDistancePx).coerceAtLeast(30f)
-                                              service.executeSwipe(tapX, tapY, tapX, endY, 350L, done)
+                                              val endY = (tapY - point.swipeDistancePx).coerceAtLeast(15f)
+                                              service.executeSwipe(tapX, tapY, tapX, endY, 220L, done)
                                           }
                                           "swipe_down" -> {
-                                              val maxScreenY = (screenH - 35f).coerceAtLeast(200f)
+                                              val maxScreenY = (screenH - 15f).coerceAtLeast(200f)
                                               val endY = (tapY + point.swipeDistancePx).coerceAtMost(maxScreenY)
-                                              service.executeSwipe(tapX, tapY, tapX, endY, 350L, done)
+                                              service.executeSwipe(tapX, tapY, tapX, endY, 220L, done)
                                           }
                                           "paste" -> {
                                               val text = if (point.pasteText.isNotBlank()) point.pasteText else defaultPaste
@@ -3850,7 +3831,9 @@ jobs:
                                           }
                                           "popup" -> {
                                               if (point.keyView != null || point.savedKeyX >= 0) {
-                                                  val (keyTapX, keyTapY) = getExactKeyPinCenter(point)
+                                                  val (fkX, fkY) = getExactKeyPinCenter(point)
+                                                  val keyTapX = if (point.cachedKeyScreenX > 0f) point.cachedKeyScreenX else fkX
+                                                  val keyTapY = if (point.cachedKeyScreenY > 0f) point.cachedKeyScreenY else fkY
                                                   service.executePopup(tapX, tapY, keyTapX, keyTapY, point.keyDelayMs, done)
                                               } else {
                                                   service.executeTap(tapX, tapY, point.durationMs, done)
@@ -3866,7 +3849,6 @@ jobs:
                               // Jeda setelah titik ini selesai beroperasi (ms atau detik)
                               var waitTime = point.delayMs.coerceAtLeast(50L)
                               if (jitterEnabled) {
-                                  // Jitter ringan (±10% maksimal ±120ms) agar urutan tetap responsif dan tidak melenceng
                                   val maxJitter = (waitTime * 0.10f).toLong().coerceAtMost(120L)
                                   if (maxJitter > 5L) {
                                       val delta = Random.nextLong(-maxJitter, maxJitter + 1)
@@ -3874,7 +3856,6 @@ jobs:
                                   }
                               }
                               delay(waitTime)
-                              setPointActiveHighlight(point, false)
 
                               // Lanjut ke No. Urut berikutnya (atau lompat Sub-Loop jika diaktifkan pengguna)
                               if (point.jumpEnabled && cycle >= point.jumpAfterCycle && point.jumpToPoint in 1..totalPoints) {
@@ -3898,6 +3879,7 @@ jobs:
                   clickJob = null
 
                   resetAllPointHighlights()
+                  lockCoordinatesAndSetPlayVisibility(hideForPlay = false)
                   setTargetPointsTouchable(!isPointsLocked)
 
                   layoutMiniToolbar?.visibility = View.GONE
@@ -3908,7 +3890,7 @@ jobs:
                       } catch (e: Exception) {}
                   }
 
-                  Toast.makeText(applicationContext, "AutoKlik Dihentikan ⏹", Toast.LENGTH_SHORT).show()
+                  Toast.makeText(applicationContext, "AutoKlik Dihentikan ⏹ (Titik Ditampilkan Kembali)", Toast.LENGTH_SHORT).show()
               }
 
               override fun onDestroy() {
