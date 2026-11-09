@@ -529,8 +529,17 @@ jobs:
                           android:id="@+id/rbTypePaste"
                           android:layout_width="wrap_content"
                           android:layout_height="32dp"
-                          android:text="📋 Paste (Tempel Teks)"
+                          android:text="📋 Paste (Tap Form - Paste Teks)"
                           android:textColor="#F8FAFC"
+                          android:textSize="12sp" />
+
+                      <RadioButton
+                          android:id="@+id/rbTypePopup"
+                          android:layout_width="wrap_content"
+                          android:layout_height="32dp"
+                          android:text="⌨️ Popup (Tap Form + Pin Huruf Keyboard)"
+                          android:textColor="#C084FC"
+                          android:textStyle="bold"
                           android:textSize="12sp" />
                   </RadioGroup>
 
@@ -769,7 +778,7 @@ jobs:
                           android:textSize="10sp" />
                   </LinearLayout>
 
-                  <!-- FIELD TEKS PASTE -->
+                  <!-- FIELD TEKS PASTE (TAP FORM - PASTE TEKS) -->
                   <LinearLayout
                       android:id="@+id/layoutDialogPasteFields"
                       android:layout_width="match_parent"
@@ -783,7 +792,7 @@ jobs:
                       <TextView
                           android:layout_width="wrap_content"
                           android:layout_height="wrap_content"
-                          android:text="Teks / Huruf Pencari Sugesti Form:"
+                          android:text="📋 Teks untuk Di-Paste ke Form:"
                           android:textColor="#38BDF8"
                           android:textSize="12sp"
                           android:textStyle="bold" />
@@ -794,7 +803,7 @@ jobs:
                           android:layout_height="38dp"
                           android:layout_marginTop="4dp"
                           android:background="#1E293B"
-                          android:hint="Contoh: ketik a atau Merak..."
+                          android:hint="Ketik teks yang akan ditempel..."
                           android:padding="8dp"
                           android:textColor="#F8FAFC"
                           android:textColorHint="#64748B"
@@ -805,18 +814,67 @@ jobs:
                           android:layout_width="wrap_content"
                           android:layout_height="wrap_content"
                           android:layout_marginTop="4dp"
-                          android:text="Fokuskan kolom form &amp; tempel teks (Memicu Pop-up Sugesti)"
+                          android:text="Tap form terlebih dahulu lalu Paste teks"
                           android:textColor="#CBD5E1"
                           android:textSize="11sp"
                           android:checked="true" />
+                  </LinearLayout>
+
+                  <!-- FITUR BARU: POPUP (TAP FORM + PIN HURUF KEYBOARD SENDIRI) -->
+                  <LinearLayout
+                      android:id="@+id/layoutDialogPopupFields"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:orientation="vertical"
+                      android:background="#1E1B4B"
+                      android:padding="10dp"
+                      android:layout_marginTop="6dp"
+                      android:visibility="gone">
 
                       <TextView
                           android:layout_width="match_parent"
                           android:layout_height="wrap_content"
-                          android:layout_marginTop="6dp"
-                          android:text="💡 Cara Pakai Sugesti: Titik ini akan mengetikkan huruf untuk memunculkan pop-up dropdown sugesti di form Anda. Pasang titik nomor berikutnya tepat di posisi item sugesti yang ingin Anda pilih!"
-                          android:textColor="#94A3B8"
-                          android:textSize="10sp" />
+                          android:text="⌨️ Mode Popup Sugesti (Titik Form + Pin Keyboard)"
+                          android:textColor="#C084FC"
+                          android:textSize="12sp"
+                          android:textStyle="bold" />
+
+                      <TextView
+                          android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:layout_marginTop="4dp"
+                          android:text="1. Letakkan Titik Utama ini di atas Kotak Form.\n2. Setelah klik Simpan, akan muncul Pin Ungu (⌨️ KEY) di layar — geser Pin ⌨️ tersebut tepat ke atas tombol huruf di Keyboard HP Anda (misal huruf A).\n3. Saat dijalankan, titik ini otomatis: Klik Form ➔ Tunggu Keyboard ➔ Pencet Huruf Keyboard ➔ Popup Sugesti Keluar!"
+                          android:textColor="#E2E8F0"
+                          android:textSize="11sp" />
+
+                      <LinearLayout
+                          android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:layout_marginTop="8dp"
+                          android:orientation="horizontal"
+                          android:gravity="center_vertical">
+
+                          <TextView
+                              android:layout_width="0dp"
+                              android:layout_height="wrap_content"
+                              android:layout_weight="1"
+                              android:text="Jeda Tunggu Keyboard Naik (ms):"
+                              android:textColor="#C084FC"
+                              android:textSize="11.5sp"
+                              android:textStyle="bold" />
+
+                          <EditText
+                              android:id="@+id/etPopupKeyDelay"
+                              android:layout_width="80dp"
+                              android:layout_height="36dp"
+                              android:background="#0F172A"
+                              android:gravity="center"
+                              android:inputType="number"
+                              android:text="400"
+                              android:textColor="#FACC15"
+                              android:textSize="13sp"
+                              android:textStyle="bold" />
+                      </LinearLayout>
                   </LinearLayout>
 
                   <!-- TOMBOL SIMPAN & TUTUP -->
@@ -1454,16 +1512,37 @@ jobs:
                   }
 
                   if (autoTapToFocus) {
-                      // Tahap 1: Ketuk fisik pada form target untuk memancing Keyboard keluar & mengaktifkan kursor
+                      // Ketuk fisik pada form target lalu tempel teks (Paste)
                       executeTap(x, y, 65L) {
                           serviceScope.launch {
-                              // Tahap 2: Tunggu 350ms hingga Keyboard muncul dan form siap menerima huruf
-                              delay(350)
+                              delay(300)
                               performTypeAndSuggest()
                           }
                       }
                   } else {
                       performTypeAndSuggest()
+                  }
+              }
+
+              @RequiresApi(Build.VERSION_CODES.N)
+              fun executePopup(
+                  formX: Float,
+                  formY: Float,
+                  keyX: Float,
+                  keyY: Float,
+                  keyDelayMs: Long = 400L,
+                  callback: (() -> Unit)? = null
+              ) {
+                  // Tahap 1: Ketuk Kotak Form (Titik Utama) untuk mengaktifkan kursor & memunculkan Keyboard HP
+                  executeTap(formX, formY, 60L) {
+                      serviceScope.launch {
+                          // Tahap 2: Tunggu hingga Keyboard HP naik sepenuhnya (default 400ms)
+                          delay(keyDelayMs.coerceAtLeast(150L))
+                          // Tahap 3: Ketuk Pin Huruf Keyboard (⌨️) secara fisik agar Popup Sugesti keluar
+                          executeTap(keyX, keyY, 60L) {
+                              callback?.invoke()
+                          }
+                      }
                   }
               }
           }
@@ -1506,7 +1585,7 @@ jobs:
                   val order: Int,
                   val view: View,
                   val params: WindowManager.LayoutParams,
-                  var type: String = "tap", // "tap", "swipe_up", "swipe_down", "paste"
+                  var type: String = "tap", // "tap", "swipe_up", "swipe_down", "paste", "popup"
                   var delayValue: Double = 500.0,
                   var delayUnit: String = "ms", // "ms" atau "s"
                   var delayMs: Long = 500L,
@@ -1516,7 +1595,13 @@ jobs:
                   var jumpToPoint: Int = 7,
                   var jumpAfterCycle: Int = 1,
                   var pasteText: String = "",
-                  var autoTapPaste: Boolean = true
+                  var autoTapPaste: Boolean = true,
+                  // Fitur Baru "Popup" (Punya Titik Form + Pin Keyboard ⌨️ sendiri)
+                  var keyView: View? = null,
+                  var keyParams: WindowManager.LayoutParams? = null,
+                  var keyDelayMs: Long = 400L,
+                  var savedKeyX: Int = -1,
+                  var savedKeyY: Int = -1
               )
 
               private lateinit var windowManager: WindowManager
@@ -1646,11 +1731,13 @@ jobs:
                       removeLastTargetPoint()
                   }
 
-                  // 👁️ Minimize / Sembunyikan Titik Target
+                  // 👁️ Minimize / Sembunyikan Titik Target (beserta Pin Keyboard ⌨️ jika ada)
                   btnVisibility?.setOnClickListener {
                       arePointsVisible = !arePointsVisible
+                      val vis = if (arePointsVisible) View.VISIBLE else View.GONE
                       for (p in targetPoints) {
-                          p.view.visibility = if (arePointsVisible) View.VISIBLE else View.GONE
+                          p.view.visibility = vis
+                          p.keyView?.visibility = vis
                       }
                       btnVisibility.text = if (arePointsVisible) "👁️" else "🙈"
                       Toast.makeText(this, if (arePointsVisible) "Titik target ditampilkan" else "Titik target disembunyikan (Minimize)", Toast.LENGTH_SHORT).show()
@@ -1912,6 +1999,9 @@ jobs:
                               put("jumpAfterCycle", p.jumpAfterCycle)
                               put("pasteText", p.pasteText)
                               put("autoTapPaste", p.autoTapPaste)
+                              put("keyDelayMs", p.keyDelayMs)
+                              put("keyX", p.keyParams?.x ?: p.savedKeyX)
+                              put("keyY", p.keyParams?.y ?: p.savedKeyY)
                           }
                           pointsArray.put(obj)
                       }
@@ -2180,11 +2270,16 @@ jobs:
                           return
                       }
 
-                      // Hapus titik lama dari layar
+                      // Hapus titik lama beserta Pin Keyboard (jika ada) dari layar
                       for (point in targetPoints) {
                           try {
                               windowManager.removeView(point.view)
                           } catch (e: Exception) {}
+                          if (point.keyView != null) {
+                              try {
+                                  windowManager.removeView(point.keyView)
+                              } catch (e: Exception) {}
+                          }
                       }
                       targetPoints.clear()
 
@@ -2337,7 +2432,10 @@ jobs:
                       jumpToPoint = savedObj?.optInt("jumpToPoint", 7) ?: 7,
                       jumpAfterCycle = savedObj?.optInt("jumpAfterCycle", 1) ?: 1,
                       pasteText = savedObj?.optString("pasteText", "") ?: "",
-                      autoTapPaste = savedObj?.optBoolean("autoTapPaste", true) ?: true
+                      autoTapPaste = savedObj?.optBoolean("autoTapPaste", true) ?: true,
+                      keyDelayMs = savedObj?.optLong("keyDelayMs", 400L) ?: 400L,
+                      savedKeyX = savedObj?.optInt("keyX", -1) ?: -1,
+                      savedKeyY = savedObj?.optInt("keyY", -1) ?: -1
                   )
 
                   if (targetPoint.jumpEnabled) {
@@ -2522,6 +2620,11 @@ jobs:
                           layoutArrowDown.visibility = View.GONE
                           tvType.text = "📋"
                       }
+                      "popup" -> {
+                          layoutArrowUp.visibility = View.GONE
+                          layoutArrowDown.visibility = View.GONE
+                          tvType.text = "⌨️"
+                      }
                       else -> {
                           layoutArrowUp.visibility = View.GONE
                           layoutArrowDown.visibility = View.GONE
@@ -2536,6 +2639,148 @@ jobs:
                   try {
                       windowManager.updateViewLayout(point.view, point.params)
                   } catch (e: Exception) {}
+
+                  // Sinkronisasi Pin Keyboard (⌨️) untuk fitur "Popup"
+                  syncPopupKeyPin(point)
+              }
+
+              // MEMBUAT / MEMPERBARUI / MENGHAPUS PIN HURUF KEYBOARD (⌨️) KHUSUS FITUR "POPUP"
+              private fun syncPopupKeyPin(point: TargetPoint) {
+                  if (point.type != "popup") {
+                      if (point.keyView != null) {
+                          try {
+                              windowManager.removeView(point.keyView)
+                          } catch (e: Exception) {}
+                          point.keyView = null
+                          point.keyParams = null
+                      }
+                      return
+                  }
+
+                  val density = resources.displayMetrics.density
+                  val sizeDp = getTargetSizeDp()
+                  val sizePx = (sizeDp * density).toInt()
+
+                  if (point.keyView == null) {
+                      val layoutType = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                          WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
+                      } else {
+                          @Suppress("DEPRECATION")
+                          WindowManager.LayoutParams.TYPE_PHONE
+                      }
+
+                      val defaultKeyX = if (point.savedKeyX >= 0) point.savedKeyX else (70 + ((point.order - 1) % 5) * 90)
+                      val defaultKeyY = if (point.savedKeyY >= 0) point.savedKeyY else (resources.displayMetrics.heightPixels * 0.73f).toInt()
+
+                      val kParams = WindowManager.LayoutParams(
+                          sizePx,
+                          sizePx,
+                          layoutType,
+                          WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+                          PixelFormat.TRANSLUCENT
+                      ).apply {
+                          gravity = Gravity.TOP or Gravity.START
+                          x = defaultKeyX
+                          y = defaultKeyY
+                      }
+
+                      val pinContainer = LinearLayout(this).apply {
+                          orientation = LinearLayout.VERTICAL
+                          gravity = Gravity.CENTER
+                          background = GradientDrawable().apply {
+                              shape = GradientDrawable.OVAL
+                              setColor(Color.parseColor("#6D28D9")) // Ungu khas Pin Keyboard
+                              setStroke((2.2f * density).toInt(), Color.parseColor("#FACC15")) // Garis tepi Kuning Emas
+                          }
+                      }
+
+                      val tvKeyNum = TextView(this).apply {
+                          tag = "tvKeyNum"
+                          text = "⌨️${point.order}"
+                          setTextColor(Color.WHITE)
+                          textSize = (sizeDp * 0.34f).coerceIn(8f, 13f)
+                          setTypeface(typeface, android.graphics.Typeface.BOLD)
+                          gravity = Gravity.CENTER
+                      }
+
+                      val tvKeySub = TextView(this).apply {
+                          tag = "tvKeySub"
+                          text = "KEY"
+                          setTextColor(Color.parseColor("#FACC15"))
+                          textSize = (sizeDp * 0.24f).coerceIn(6f, 9f)
+                          setTypeface(typeface, android.graphics.Typeface.BOLD)
+                          gravity = Gravity.CENTER
+                      }
+
+                      pinContainer.addView(tvKeyNum)
+                      pinContainer.addView(tvKeySub)
+
+                      // Drag & Drop Pin Keyboard (⌨️) ke atas tombol huruf di Keyboard HP
+                      pinContainer.setOnTouchListener(object : View.OnTouchListener {
+                          private var initialX = 0
+                          private var initialY = 0
+                          private var initialTouchX = 0f
+                          private var initialTouchY = 0f
+                          private var touchStartTime = 0L
+
+                          override fun onTouch(v: View, event: MotionEvent): Boolean {
+                              when (event.action) {
+                                  MotionEvent.ACTION_DOWN -> {
+                                      initialX = kParams.x
+                                      initialY = kParams.y
+                                      initialTouchX = event.rawX
+                                      initialTouchY = event.rawY
+                                      touchStartTime = System.currentTimeMillis()
+                                      return true
+                                  }
+                                  MotionEvent.ACTION_MOVE -> {
+                                      kParams.x = initialX + (event.rawX - initialTouchX).toInt()
+                                      kParams.y = initialY + (event.rawY - initialTouchY).toInt()
+                                      point.savedKeyX = kParams.x
+                                      point.savedKeyY = kParams.y
+                                      try {
+                                          windowManager.updateViewLayout(pinContainer, kParams)
+                                      } catch (e: Exception) {}
+                                      return true
+                                  }
+                                  MotionEvent.ACTION_UP -> {
+                                      val diff = System.currentTimeMillis() - touchStartTime
+                                      val moved = Math.abs(event.rawX - initialTouchX) > 12 || Math.abs(event.rawY - initialTouchY) > 12
+                                      if (!moved && diff < 350) {
+                                          Toast.makeText(
+                                              this@FloatingOverlayService,
+                                              "⌨️ Pin Keyboard Titik #${point.order}: Geser pin ini tepat ke atas huruf pada Keyboard HP Anda!",
+                                              Toast.LENGTH_SHORT
+                                          ).show()
+                                      }
+                                      return true
+                                  }
+                              }
+                              return false
+                          }
+                      })
+
+                      pinContainer.visibility = if (arePointsVisible) View.VISIBLE else View.GONE
+                      windowManager.addView(pinContainer, kParams)
+                      point.keyView = pinContainer
+                      point.keyParams = kParams
+                      point.savedKeyX = kParams.x
+                      point.savedKeyY = kParams.y
+                  } else {
+                      val kView = point.keyView as? LinearLayout
+                      val kParams = point.keyParams
+                      if (kView != null && kParams != null) {
+                          kParams.width = sizePx
+                          kParams.height = sizePx
+                          val tvKeyNum = kView.findViewWithTag<TextView>("tvKeyNum")
+                          val tvKeySub = kView.findViewWithTag<TextView>("tvKeySub")
+                          tvKeyNum?.textSize = (sizeDp * 0.34f).coerceIn(8f, 13f)
+                          tvKeySub?.textSize = (sizeDp * 0.24f).coerceIn(6f, 9f)
+                          try {
+                              windowManager.updateViewLayout(kView, kParams)
+                          } catch (e: Exception) {}
+                      }
+                  }
               }
 
               private fun updateAllPointsVisuals() {
@@ -2573,6 +2818,7 @@ jobs:
                   val rbSwipeUp = dialogView.findViewById<RadioButton>(R.id.rbTypeSwipeUp)
                   val rbSwipeDown = dialogView.findViewById<RadioButton>(R.id.rbTypeSwipeDown)
                   val rbPaste = dialogView.findViewById<RadioButton>(R.id.rbTypePaste)
+                  val rbPopup = dialogView.findViewById<RadioButton>(R.id.rbTypePopup)
 
                   val layoutSwipe = dialogView.findViewById<LinearLayout>(R.id.layoutSwipeSettings)
                   val etSwipeDistance = dialogView.findViewById<EditText>(R.id.etSwipeDistance)
@@ -2591,6 +2837,10 @@ jobs:
                   val layoutPaste = dialogView.findViewById<LinearLayout>(R.id.layoutDialogPasteFields)
                   val etPasteText = dialogView.findViewById<EditText>(R.id.etDialogPasteText)
                   val cbAutoTap = dialogView.findViewById<CheckBox>(R.id.cbDialogAutoTap)
+
+                  val layoutPopup = dialogView.findViewById<LinearLayout>(R.id.layoutDialogPopupFields)
+                  val etPopupKeyDelay = dialogView.findViewById<EditText>(R.id.etPopupKeyDelay)
+
                   val btnSave = dialogView.findViewById<Button>(R.id.btnDialogSave)
                   val btnClose = dialogView.findViewById<Button>(R.id.btnDialogClose)
 
@@ -2631,9 +2881,10 @@ jobs:
                       layoutSubLoop.visibility = if (isChecked) View.VISIBLE else View.GONE
                   }
 
-                  // Paste state
+                  // Paste & Popup state
                   etPasteText.setText(point.pasteText)
                   cbAutoTap.isChecked = point.autoTapPaste
+                  etPopupKeyDelay.setText(point.keyDelayMs.toString())
 
                   // Type state
                   when (point.type) {
@@ -2641,27 +2892,38 @@ jobs:
                           rbSwipeUp.isChecked = true
                           layoutSwipe.visibility = View.VISIBLE
                           layoutPaste.visibility = View.GONE
+                          layoutPopup.visibility = View.GONE
                       }
                       "swipe_down" -> {
                           rbSwipeDown.isChecked = true
                           layoutSwipe.visibility = View.VISIBLE
                           layoutPaste.visibility = View.GONE
+                          layoutPopup.visibility = View.GONE
                       }
                       "paste" -> {
                           rbPaste.isChecked = true
                           layoutSwipe.visibility = View.GONE
                           layoutPaste.visibility = View.VISIBLE
+                          layoutPopup.visibility = View.GONE
+                      }
+                      "popup" -> {
+                          rbPopup.isChecked = true
+                          layoutSwipe.visibility = View.GONE
+                          layoutPaste.visibility = View.GONE
+                          layoutPopup.visibility = View.VISIBLE
                       }
                       else -> {
                           rbTap.isChecked = true
                           layoutSwipe.visibility = View.GONE
                           layoutPaste.visibility = View.GONE
+                          layoutPopup.visibility = View.GONE
                       }
                   }
 
                   rgType.setOnCheckedChangeListener { _, checkedId ->
                       layoutSwipe.visibility = if (checkedId == R.id.rbTypeSwipeUp || checkedId == R.id.rbTypeSwipeDown) View.VISIBLE else View.GONE
                       layoutPaste.visibility = if (checkedId == R.id.rbTypePaste) View.VISIBLE else View.GONE
+                      layoutPopup.visibility = if (checkedId == R.id.rbTypePopup) View.VISIBLE else View.GONE
                   }
 
                   btnSave.setOnClickListener {
@@ -2670,6 +2932,7 @@ jobs:
                           R.id.rbTypeSwipeUp -> "swipe_up"
                           R.id.rbTypeSwipeDown -> "swipe_down"
                           R.id.rbTypePaste -> "paste"
+                          R.id.rbTypePopup -> "popup"
                           else -> "tap"
                       }
 
@@ -2695,11 +2958,16 @@ jobs:
 
                       point.pasteText = etPasteText.text.toString()
                       point.autoTapPaste = cbAutoTap.isChecked
+                      point.keyDelayMs = etPopupKeyDelay.text.toString().toLongOrNull()?.coerceAtLeast(150L) ?: 400L
 
                       updatePointVisual(point)
                       closePointSettingsDialog()
                       val unitLabel = if (isSec) "${point.delayValue} detik" else "${point.delayMs} ms"
-                      Toast.makeText(this, "Titik #${point.order} disimpan (Jeda: $unitLabel) ✔", Toast.LENGTH_SHORT).show()
+                      if (point.type == "popup") {
+                          Toast.makeText(this, "⌨️ Mode Popup Aktif! Geser Pin Ungu (⌨️${point.order}) ke huruf di Keyboard HP Anda.", Toast.LENGTH_LONG).show()
+                      } else {
+                          Toast.makeText(this, "Titik #${point.order} disimpan (Jeda: $unitLabel) ✔", Toast.LENGTH_SHORT).show()
+                      }
                   }
 
                   btnClose.setOnClickListener {
@@ -2726,34 +2994,49 @@ jobs:
                       val last = targetPoints.removeAt(targetPoints.size - 1)
                       try {
                           windowManager.removeView(last.view)
-                          Toast.makeText(this, "Titik ${last.order} dihapus", Toast.LENGTH_SHORT).show()
                       } catch (e: Exception) {}
+                      if (last.keyView != null) {
+                          try {
+                              windowManager.removeView(last.keyView)
+                          } catch (e: Exception) {}
+                      }
+                      Toast.makeText(this, "Titik ${last.order} dihapus", Toast.LENGTH_SHORT).show()
                   } else {
                       Toast.makeText(this, "Tidak ada titik untuk dihapus", Toast.LENGTH_SHORT).show()
                   }
               }
 
-              // Mengatur apakah bulatan titik menembus sentuhan ke form di bawahnya saat Play berjalan
+              // Mengatur apakah bulatan titik & Pin Keyboard menembus sentuhan ke layar di bawahnya saat Play berjalan
               private fun setTargetPointsTouchable(touchable: Boolean) {
+                  val flags = if (touchable) {
+                      WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+                  } else {
+                      WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+                  }
                   for (p in targetPoints) {
-                      p.params.flags = if (touchable) {
-                          WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
-                      } else {
-                          WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
-                      }
+                      p.params.flags = flags
                       try {
                           windowManager.updateViewLayout(p.view, p.params)
                       } catch (e: Exception) {}
+
+                      val kView = p.keyView
+                      val kParams = p.keyParams
+                      if (kView != null && kParams != null) {
+                          kParams.flags = flags
+                          try {
+                              windowManager.updateViewLayout(kView, kParams)
+                          } catch (e: Exception) {}
+                      }
                   }
               }
 
-              // EKSEKUSI DENGAN KOORDINAT PRESISI & PANJANG GARIS PANAH SWIPE
+              // EKSEKUSI DENGAN KOORDINAT PRESISI & PANJANG GARIS PANAH SWIPE / POPUP KEYBOARD
               private fun startClickExecution(service: AutoClickAccessibilityService) {
                   clickJob?.cancel()
                   clickJob = serviceScope.launch {
                       val prefs = getSharedPreferences("autoklik_prefs", Context.MODE_PRIVATE)
                       val jitterEnabled = prefs.getBoolean("jitter_enabled", true)
-                      val defaultPaste = prefs.getString("paste_text", "a") ?: "a"
+                      val defaultPaste = prefs.getString("paste_text", "AutoKlik Trans") ?: ""
 
                       Toast.makeText(applicationContext, "AutoKlik Berjalan!", Toast.LENGTH_SHORT).show()
 
@@ -2770,8 +3053,8 @@ jobs:
                               val tapX = loc[0] + (pointRoot.width / 2f)
                               val tapY = loc[1] + (pointRoot.height / 2f)
 
-                              // Tunggu aksi (Tap / Swipe / Paste + Keyboard + Ketik) selesai sebelum menghitung jeda titik
-                              withTimeoutOrNull(2500L) {
+                              // Tunggu aksi (Tap / Swipe / Paste / Popup) selesai sebelum menghitung jeda titik
+                              withTimeoutOrNull(3500L) {
                                   suspendCancellableCoroutine<Unit> { cont ->
                                       val done = {
                                           if (cont.isActive) cont.resume(Unit)
@@ -2789,6 +3072,18 @@ jobs:
                                           "paste" -> {
                                               val text = if (point.pasteText.isNotBlank()) point.pasteText else defaultPaste
                                               service.executePaste(tapX, tapY, text, point.autoTapPaste, done)
+                                          }
+                                          "popup" -> {
+                                              val kView = point.keyView
+                                              if (kView != null) {
+                                                  val kLoc = IntArray(2)
+                                                  kView.getLocationOnScreen(kLoc)
+                                                  val keyTapX = kLoc[0] + (kView.width / 2f)
+                                                  val keyTapY = kLoc[1] + (kView.height / 2f)
+                                                  service.executePopup(tapX, tapY, keyTapX, keyTapY, point.keyDelayMs, done)
+                                              } else {
+                                                  service.executeTap(tapX, tapY, point.durationMs, done)
+                                              }
                                           }
                                           else -> {
                                               service.executeTap(tapX, tapY, point.durationMs, done)
@@ -2851,6 +3146,11 @@ jobs:
                       try {
                           windowManager.removeView(point.view)
                       } catch (e: Exception) {}
+                      if (point.keyView != null) {
+                          try {
+                              windowManager.removeView(point.keyView)
+                          } catch (e: Exception) {}
+                      }
                   }
                   targetPoints.clear()
 
