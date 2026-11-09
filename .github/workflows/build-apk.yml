@@ -484,6 +484,107 @@ jobs:
                       android:textSize="16sp"
                       android:textStyle="bold" />
 
+                  <!-- BARIS PINDAH TITIK CEPAT, ATUR NO. URUT & SAMAKAN POSISI (MEMUDAHKAN TITIK BERTUMPUK) -->
+                  <LinearLayout
+                      android:id="@+id/layoutMultiPointHelper"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:layout_marginTop="6dp"
+                      android:background="#131F33"
+                      android:padding="8dp"
+                      android:orientation="vertical">
+
+                      <TextView
+                          android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:text="🔄 Pilih / Pindah Edit Titik (Otomatis Tersimpan Saat Pindah):"
+                          android:textColor="#94A3B8"
+                          android:textSize="10.5sp" />
+
+                      <HorizontalScrollView
+                          android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:layout_marginTop="4dp"
+                          android:scrollbars="none">
+
+                          <LinearLayout
+                              android:id="@+id/layoutQuickSwitchPoints"
+                              android:layout_width="wrap_content"
+                              android:layout_height="wrap_content"
+                              android:orientation="horizontal" />
+                      </HorizontalScrollView>
+
+                      <!-- Baris Ubah No. Urut Eksekusi Titik -->
+                      <LinearLayout
+                          android:id="@+id/layoutReorderRow"
+                          android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:layout_marginTop="6dp"
+                          android:gravity="center_vertical"
+                          android:orientation="horizontal">
+
+                          <TextView
+                              android:layout_width="0dp"
+                              android:layout_height="wrap_content"
+                              android:layout_weight="1"
+                              android:text="🔢 Ubah No. Urut Titik Ini:"
+                              android:textColor="#FACC15"
+                              android:textSize="10.5sp"
+                              android:textStyle="bold" />
+
+                          <Button
+                              android:id="@+id/btnMoveOrderPrev"
+                              android:layout_width="wrap_content"
+                              android:layout_height="28dp"
+                              android:backgroundTint="#334155"
+                              android:minWidth="0dp"
+                              android:paddingStart="8dp"
+                              android:paddingEnd="8dp"
+                              android:paddingTop="0dp"
+                              android:paddingBottom="0dp"
+                              android:text="⬅️ Maju"
+                              android:textColor="#FFFFFF"
+                              android:textSize="10sp" />
+
+                          <Button
+                              android:id="@+id/btnMoveOrderNext"
+                              android:layout_width="wrap_content"
+                              android:layout_height="28dp"
+                              android:layout_marginStart="4dp"
+                              android:backgroundTint="#334155"
+                              android:minWidth="0dp"
+                              android:paddingStart="8dp"
+                              android:paddingEnd="8dp"
+                              android:paddingTop="0dp"
+                              android:paddingBottom="0dp"
+                              android:text="Mundur ➡️"
+                              android:textColor="#FFFFFF"
+                              android:textSize="10sp" />
+                      </LinearLayout>
+
+                      <TextView
+                          android:id="@+id/tvSnapPositionLabel"
+                          android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:layout_marginTop="6dp"
+                          android:text="📍 Tempel Posisi Titik Ini Tepat ke Koordinat Titik Lain:"
+                          android:textColor="#38BDF8"
+                          android:textSize="10.5sp" />
+
+                      <HorizontalScrollView
+                          android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:layout_marginTop="4dp"
+                          android:scrollbars="none">
+
+                          <LinearLayout
+                              android:id="@+id/layoutSnapPositionPoints"
+                              android:layout_width="wrap_content"
+                              android:layout_height="wrap_content"
+                              android:orientation="horizontal" />
+                      </HorizontalScrollView>
+                  </LinearLayout>
+
                   <!-- PILIHAN TIPE GERAKAN (FITUR 1 & 13) -->
                   <TextView
                       android:layout_width="wrap_content"
@@ -557,7 +658,7 @@ jobs:
                       <TextView
                           android:layout_width="match_parent"
                           android:layout_height="wrap_content"
-                          android:text="💡 Cara Atur Panjang/Pendek Swipe: Setelah klik Simpan, seret langsung ujung panah (▲ SERET / ▼ SERET) di layar HP Anda untuk memanjangkan atau memendekkan garis swipe!"
+                          android:text="💡 Cara Atur Panjang/Pendek Swipe: Setelah klik Simpan, seret langsung ujung panah (▲# SERET / ▼# SERET) di layar HP Anda! Garis swipe tembus sentuhan sehingga tidak mengganggu titik lain."
                           android:textColor="#38BDF8"
                           android:textSize="11sp"
                           android:textStyle="bold" />
@@ -941,23 +1042,24 @@ jobs:
                   <Button
                       android:id="@+id/btnFloatingPlay"
                       android:layout_width="wrap_content"
-                      android:layout_height="34dp"
-                      android:text="▶ Mulai"
-                      android:textSize="11sp"
+                      android:layout_height="33dp"
+                      android:text="▶"
+                      android:textSize="12sp"
+                      android:textStyle="bold"
                       android:textColor="#FFFFFF"
                       android:backgroundTint="#10B981"
                       android:minWidth="0dp"
-                      android:paddingStart="7dp"
-                      android:paddingEnd="7dp" />
+                      android:paddingStart="8dp"
+                      android:paddingEnd="8dp" />
 
                   <!-- Tombol Tambah Titik (+) -->
                   <Button
                       android:id="@+id/btnFloatingAdd"
-                      android:layout_width="32dp"
-                      android:layout_height="34dp"
-                      android:layout_marginStart="3dp"
+                      android:layout_width="29dp"
+                      android:layout_height="33dp"
+                      android:layout_marginStart="2dp"
                       android:text="➕"
-                      android:textSize="12sp"
+                      android:textSize="11sp"
                       android:textColor="#FFFFFF"
                       android:backgroundTint="#0284C7"
                       android:minWidth="0dp"
@@ -966,24 +1068,37 @@ jobs:
                   <!-- Tombol Kurangi Titik (-) -->
                   <Button
                       android:id="@+id/btnFloatingRemove"
-                      android:layout_width="32dp"
-                      android:layout_height="34dp"
+                      android:layout_width="29dp"
+                      android:layout_height="33dp"
                       android:layout_marginStart="2dp"
                       android:text="➖"
-                      android:textSize="12sp"
+                      android:textSize="11sp"
                       android:textColor="#FFFFFF"
                       android:backgroundTint="#D97706"
+                      android:minWidth="0dp"
+                      android:padding="0dp" />
+
+                  <!-- Tombol Kunci Posisi Titik (🔓 / 🔒) Agar Tidak Tersenggol -->
+                  <Button
+                      android:id="@+id/btnFloatingLock"
+                      android:layout_width="29dp"
+                      android:layout_height="33dp"
+                      android:layout_marginStart="2dp"
+                      android:text="🔓"
+                      android:textSize="11sp"
+                      android:textColor="#FFFFFF"
+                      android:backgroundTint="#64748B"
                       android:minWidth="0dp"
                       android:padding="0dp" />
 
                   <!-- Tombol Minimize / Sembunyikan Titik (👁️) -->
                   <Button
                       android:id="@+id/btnFloatingVisibility"
-                      android:layout_width="32dp"
-                      android:layout_height="34dp"
+                      android:layout_width="29dp"
+                      android:layout_height="33dp"
                       android:layout_marginStart="2dp"
                       android:text="👁️"
-                      android:textSize="12sp"
+                      android:textSize="11sp"
                       android:textColor="#FFFFFF"
                       android:backgroundTint="#475569"
                       android:minWidth="0dp"
@@ -992,11 +1107,11 @@ jobs:
                   <!-- PENGATUR UKURAN PERSENTASE 0-100% (20dp-40dp) (📐) -->
                   <Button
                       android:id="@+id/btnFloatingSize"
-                      android:layout_width="32dp"
-                      android:layout_height="34dp"
+                      android:layout_width="29dp"
+                      android:layout_height="33dp"
                       android:layout_marginStart="2dp"
                       android:text="📐"
-                      android:textSize="12sp"
+                      android:textSize="11sp"
                       android:textColor="#FFFFFF"
                       android:backgroundTint="#0D9488"
                       android:minWidth="0dp"
@@ -1005,11 +1120,11 @@ jobs:
                   <!-- TOMBOL SAVE KONFIGURASI PADA PANEL MELAYANG (💾) -->
                   <Button
                       android:id="@+id/btnFloatingSave"
-                      android:layout_width="32dp"
-                      android:layout_height="34dp"
+                      android:layout_width="29dp"
+                      android:layout_height="33dp"
                       android:layout_marginStart="2dp"
                       android:text="💾"
-                      android:textSize="12sp"
+                      android:textSize="11sp"
                       android:textColor="#FFFFFF"
                       android:backgroundTint="#059669"
                       android:minWidth="0dp"
@@ -1018,11 +1133,11 @@ jobs:
                   <!-- TOMBOL LOAD SETTING KONFIGURASI PADA PANEL MELAYANG (📂) -->
                   <Button
                       android:id="@+id/btnFloatingLoad"
-                      android:layout_width="32dp"
-                      android:layout_height="34dp"
+                      android:layout_width="29dp"
+                      android:layout_height="33dp"
                       android:layout_marginStart="2dp"
                       android:text="📂"
-                      android:textSize="12sp"
+                      android:textSize="11sp"
                       android:textColor="#FFFFFF"
                       android:backgroundTint="#2563EB"
                       android:minWidth="0dp"
@@ -1031,11 +1146,11 @@ jobs:
                   <!-- Tombol Pengaturan (⚙) -->
                   <Button
                       android:id="@+id/btnFloatingSettings"
-                      android:layout_width="32dp"
-                      android:layout_height="34dp"
+                      android:layout_width="29dp"
+                      android:layout_height="33dp"
                       android:layout_marginStart="2dp"
                       android:text="⚙"
-                      android:textSize="12sp"
+                      android:textSize="11sp"
                       android:textColor="#FFFFFF"
                       android:backgroundTint="#7C3AED"
                       android:minWidth="0dp"
@@ -1044,11 +1159,11 @@ jobs:
                   <!-- Tombol Tutup (✕) -->
                   <Button
                       android:id="@+id/btnFloatingClose"
-                      android:layout_width="32dp"
-                      android:layout_height="34dp"
+                      android:layout_width="29dp"
+                      android:layout_height="33dp"
                       android:layout_marginStart="2dp"
                       android:text="✕"
-                      android:textSize="12sp"
+                      android:textSize="11sp"
                       android:textColor="#FFFFFF"
                       android:backgroundTint="#EF4444"
                       android:minWidth="0dp"
@@ -1056,7 +1171,7 @@ jobs:
 
               </LinearLayout>
 
-              <!-- PANEL MELAYANG MENGECIL SAAT PLAY (HANYA TOMBOL STOP) -->
+              <!-- PANEL MELAYANG MENGECIL SAAT PLAY (INDIKATOR NO. URUT AKTIF + TOMBOL STOP) -->
               <LinearLayout
                   android:id="@+id/layoutMiniToolbar"
                   android:layout_width="wrap_content"
@@ -1076,6 +1191,17 @@ jobs:
                       android:textSize="17sp"
                       android:paddingStart="4dp"
                       android:paddingEnd="4dp" />
+
+                  <TextView
+                      android:id="@+id/tvMiniStatus"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:text="⚡ #1"
+                      android:textColor="#FACC15"
+                      android:textSize="11.5sp"
+                      android:textStyle="bold"
+                      android:paddingStart="4dp"
+                      android:paddingEnd="6dp" />
 
                   <!-- Tombol STOP Tunggal Saat Berjalan -->
                   <Button
@@ -1360,6 +1486,8 @@ jobs:
           import android.view.accessibility.AccessibilityNodeInfo
           import androidx.annotation.RequiresApi
           import kotlinx.coroutines.*
+          import java.util.concurrent.atomic.AtomicBoolean
+          import kotlin.math.abs
 
           class AutoClickAccessibilityService : AccessibilityService() {
 
@@ -1387,20 +1515,68 @@ jobs:
                   serviceScope.cancel()
               }
 
-              @RequiresApi(Build.VERSION_CODES.N)
-              fun executeTap(x: Float, y: Float, durationMs: Long = 50L, callback: (() -> Unit)? = null) {
-                  val path = Path().apply { moveTo(x, y) }
-                  val stroke = GestureDescription.StrokeDescription(path, 0L, durationMs)
-                  val gesture = GestureDescription.Builder().addStroke(stroke).build()
+              private fun clampX(x: Float): Float {
+                  val w = resources.displayMetrics.widthPixels.toFloat().coerceAtLeast(200f)
+                  return x.coerceIn(10f, w - 10f)
+              }
 
-                  dispatchGesture(gesture, object : GestureResultCallback() {
-                      override fun onCompleted(gestureDescription: GestureDescription?) {
+              private fun clampY(y: Float): Float {
+                  val h = resources.displayMetrics.heightPixels.toFloat().coerceAtLeast(400f)
+                  return y.coerceIn(25f, h - 25f)
+              }
+
+              @RequiresApi(Build.VERSION_CODES.N)
+              fun executeTap(x: Float, y: Float, durationMs: Long = 55L, callback: (() -> Unit)? = null) {
+                  val completed = AtomicBoolean(false)
+                  val finishOnce = {
+                      if (completed.compareAndSet(false, true)) {
                           callback?.invoke()
                       }
-                      override fun onCancelled(gestureDescription: GestureDescription?) {
-                          callback?.invoke()
+                  }
+
+                  val safeX = clampX(x)
+                  val safeY = clampY(y)
+                  val safeDur = durationMs.coerceIn(35L, 500L)
+
+                  fun dispatchAttempt(isRetry: Boolean) {
+                      try {
+                          val path = Path().apply { moveTo(safeX, safeY) }
+                          val stroke = GestureDescription.StrokeDescription(path, 0L, safeDur)
+                          val gesture = GestureDescription.Builder().addStroke(stroke).build()
+
+                          val dispatched = dispatchGesture(gesture, object : GestureResultCallback() {
+                              override fun onCompleted(gestureDescription: GestureDescription?) {
+                                  finishOnce()
+                              }
+
+                              override fun onCancelled(gestureDescription: GestureDescription?) {
+                                  if (!isRetry) {
+                                      serviceScope.launch {
+                                          delay(65)
+                                          dispatchAttempt(true)
+                                      }
+                                  } else {
+                                      finishOnce()
+                                  }
+                              }
+                          }, null)
+
+                          if (!dispatched) {
+                              if (!isRetry) {
+                                  serviceScope.launch {
+                                      delay(65)
+                                      dispatchAttempt(true)
+                                  }
+                              } else {
+                                  finishOnce()
+                              }
+                          }
+                      } catch (e: Exception) {
+                          finishOnce()
                       }
-                  }, null)
+                  }
+
+                  dispatchAttempt(false)
               }
 
               @RequiresApi(Build.VERSION_CODES.N)
@@ -1409,21 +1585,106 @@ jobs:
                   startY: Float,
                   endX: Float,
                   endY: Float,
-                  durationMs: Long = 300L,
+                  durationMs: Long = 350L,
                   callback: (() -> Unit)? = null
               ) {
-                  val path = Path().apply {
-                      moveTo(startX, startY)
-                      lineTo(endX, endY)
-                  }
-                  val stroke = GestureDescription.StrokeDescription(path, 0L, durationMs)
-                  val gesture = GestureDescription.Builder().addStroke(stroke).build()
-
-                  dispatchGesture(gesture, object : GestureResultCallback() {
-                      override fun onCompleted(gestureDescription: GestureDescription?) {
+                  val completed = AtomicBoolean(false)
+                  val finishOnce = {
+                      if (completed.compareAndSet(false, true)) {
                           callback?.invoke()
                       }
-                  }, null)
+                  }
+
+                  val safeStartX = clampX(startX)
+                  val safeEndX = clampX(endX)
+                  val safeStartY = clampY(startY)
+                  var safeEndY = clampY(endY)
+
+                  // Pastikan jarak swipe minimal 25px agar Path valid di semua perangkat
+                  if (abs(safeEndY - safeStartY) < 25f && abs(safeEndX - safeStartX) < 25f) {
+                      val h = resources.displayMetrics.heightPixels.toFloat().coerceAtLeast(400f)
+                      safeEndY = if (endY <= startY) {
+                          (safeStartY - 120f).coerceAtLeast(25f)
+                      } else {
+                          (safeStartY + 120f).coerceAtMost(h - 25f)
+                      }
+                  }
+
+                  val safeDur = durationMs.coerceIn(180L, 1200L)
+
+                  fun buildSwipeGesture(useAntiFlingHold: Boolean): GestureDescription {
+                      if (useAntiFlingHold && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                          try {
+                              val holdY = clampY(if (safeEndY > safeStartY) safeEndY + 1f else safeEndY - 1f)
+                              val mainPath = Path().apply {
+                                  moveTo(safeStartX, safeStartY)
+                                  lineTo(safeEndX, safeEndY)
+                              }
+                              val holdPath = Path().apply {
+                                  moveTo(safeEndX, safeEndY)
+                                  lineTo(safeEndX, holdY)
+                              }
+                              // Tahap 1: Geser jari sepanjang garis panah (safeDur ms)
+                              // Tahap 2: Tahan 65ms di ujung panah agar scroll berhenti presisi 1:1 (tanpa fling liar)
+                              val stroke1 = GestureDescription.StrokeDescription(mainPath, 0L, safeDur, true)
+                              val stroke2 = stroke1.continueStroke(holdPath, safeDur, 65L, false)
+                              return GestureDescription.Builder().addStroke(stroke2).build()
+                          } catch (e: Exception) {
+                              // Fallback ke single stroke jika ROM membatasi continueStroke
+                          }
+                      }
+                      val singlePath = Path().apply {
+                          moveTo(safeStartX, safeStartY)
+                          lineTo(safeEndX, safeEndY)
+                      }
+                      val stroke = GestureDescription.StrokeDescription(singlePath, 0L, safeDur)
+                      return GestureDescription.Builder().addStroke(stroke).build()
+                  }
+
+                  fun dispatchSwipeAttempt(isRetry: Boolean) {
+                      try {
+                          // Percobaan 1 gunakan anti-fling hold; jika retry gunakan single stroke murni
+                          val gesture = buildSwipeGesture(useAntiFlingHold = !isRetry)
+                          val dispatched = dispatchGesture(gesture, object : GestureResultCallback() {
+                              override fun onCompleted(gestureDescription: GestureDescription?) {
+                                  finishOnce()
+                              }
+
+                              override fun onCancelled(gestureDescription: GestureDescription?) {
+                                  if (!isRetry) {
+                                      serviceScope.launch {
+                                          delay(85)
+                                          dispatchSwipeAttempt(true)
+                                      }
+                                  } else {
+                                      finishOnce()
+                                  }
+                              }
+                          }, null)
+
+                          if (!dispatched) {
+                              if (!isRetry) {
+                                  serviceScope.launch {
+                                      delay(85)
+                                      dispatchSwipeAttempt(true)
+                                  }
+                              } else {
+                                  finishOnce()
+                              }
+                          }
+                      } catch (e: Exception) {
+                          if (!isRetry) {
+                              serviceScope.launch {
+                                  delay(85)
+                                  dispatchSwipeAttempt(true)
+                              }
+                          } else {
+                              finishOnce()
+                          }
+                      }
+                  }
+
+                  dispatchSwipeAttempt(false)
               }
 
               private fun findEditableNode(root: AccessibilityNodeInfo?, targetX: Int, targetY: Int): AccessibilityNodeInfo? {
@@ -1468,6 +1729,13 @@ jobs:
                   autoTapToFocus: Boolean = true,
                   callback: (() -> Unit)? = null
               ) {
+                  val completed = AtomicBoolean(false)
+                  val finishOnce = {
+                      if (completed.compareAndSet(false, true)) {
+                          callback?.invoke()
+                      }
+                  }
+
                   val performTypeAndSuggest = {
                       serviceScope.launch {
                           try {
@@ -1479,12 +1747,10 @@ jobs:
                               val targetNode = findEditableNode(rootNode, x.toInt(), y.toInt())
 
                               if (targetNode != null) {
-                                  // Pastikan node fokus & aktif
                                   targetNode.performAction(AccessibilityNodeInfo.ACTION_FOCUS)
                                   targetNode.performAction(AccessibilityNodeInfo.ACTION_CLICK)
                                   delay(80)
 
-                                  // Kosongkan dulu lalu ketik/tempel teks (misal huruf "a") agar event input form terpancing
                                   val pasted = targetNode.performAction(AccessibilityNodeInfo.ACTION_PASTE)
                                   if (!pasted) {
                                       val setArgs = Bundle().apply {
@@ -1496,7 +1762,6 @@ jobs:
                                       targetNode.performAction(AccessibilityNodeInfo.ACTION_SET_TEXT, setArgs)
                                   }
 
-                                  // Pindahkan kursor ke ujung huruf (misal setelah huruf "a") untuk memicu popup sugesti form
                                   val selArgs = Bundle().apply {
                                       putInt(AccessibilityNodeInfo.ACTION_ARGUMENT_SELECTION_START_INT, textToPaste.length)
                                       putInt(AccessibilityNodeInfo.ACTION_ARGUMENT_SELECTION_END_INT, textToPaste.length)
@@ -1506,13 +1771,12 @@ jobs:
                           } catch (e: Exception) {
                               // Abaikan jika node sudah tertutup
                           } finally {
-                              callback?.invoke()
+                              finishOnce()
                           }
                       }
                   }
 
                   if (autoTapToFocus) {
-                      // Ketuk fisik pada form target lalu tempel teks (Paste)
                       executeTap(x, y, 65L) {
                           serviceScope.launch {
                               delay(300)
@@ -1533,6 +1797,13 @@ jobs:
                   keyDelayMs: Long = 400L,
                   callback: (() -> Unit)? = null
               ) {
+                  val completed = AtomicBoolean(false)
+                  val finishOnce = {
+                      if (completed.compareAndSet(false, true)) {
+                          callback?.invoke()
+                      }
+                  }
+
                   // Tahap 1: Ketuk Kotak Form (Titik Utama) untuk mengaktifkan kursor & memunculkan Keyboard HP
                   executeTap(formX, formY, 60L) {
                       serviceScope.launch {
@@ -1540,7 +1811,7 @@ jobs:
                           delay(keyDelayMs.coerceAtLeast(150L))
                           // Tahap 3: Ketuk Pin Huruf Keyboard (⌨️) secara fisik agar Popup Sugesti keluar
                           executeTap(keyX, keyY, 60L) {
-                              callback?.invoke()
+                              finishOnce()
                           }
                       }
                   }
@@ -1576,27 +1847,33 @@ jobs:
           import org.json.JSONArray
           import org.json.JSONObject
           import kotlin.coroutines.resume
+          import kotlin.math.abs
           import kotlin.random.Random
 
           class FloatingOverlayService : Service() {
 
               // Model Titik Lengkap
               data class TargetPoint(
-                  val order: Int,
+                  var order: Int,
                   val view: View,
                   val params: WindowManager.LayoutParams,
                   var type: String = "tap", // "tap", "swipe_up", "swipe_down", "paste", "popup"
                   var delayValue: Double = 500.0,
                   var delayUnit: String = "ms", // "ms" atau "s"
                   var delayMs: Long = 500L,
-                  var durationMs: Long = 50L,
+                  var durationMs: Long = 55L,
                   var swipeDistancePx: Float = 300f, // Panjang garis/panah swipe langsung di layar (px)
                   var jumpEnabled: Boolean = false,   // Sub-Loop pada titik
-                  var jumpToPoint: Int = 7,
+                  var jumpToPoint: Int = 1,
                   var jumpAfterCycle: Int = 1,
                   var pasteText: String = "",
                   var autoTapPaste: Boolean = true,
-                  // Fitur Baru "Popup" (Punya Titik Form + Pin Keyboard ⌨️ sendiri)
+                  // Companion Overlay Mandiri untuk Fitur Swipe (Garis Tembus Sentuhan + Handle Ujung Panah)
+                  var swipeLineView: View? = null,
+                  var swipeLineParams: WindowManager.LayoutParams? = null,
+                  var swipeHandleView: View? = null,
+                  var swipeHandleParams: WindowManager.LayoutParams? = null,
+                  // Companion Overlay Mandiri untuk Fitur "Popup" (Pin Huruf Keyboard ⌨️)
                   var keyView: View? = null,
                   var keyParams: WindowManager.LayoutParams? = null,
                   var keyDelayMs: Long = 400L,
@@ -1612,6 +1889,7 @@ jobs:
               // Sub-views toolbar
               private var layoutFullToolbar: View? = null
               private var layoutMiniToolbar: View? = null
+              private var tvMiniStatus: TextView? = null
 
               // Dialog Pop-up Per-Titik
               private var currentDialogView: View? = null
@@ -1625,10 +1903,12 @@ jobs:
               private var currentConfigDialogView: View? = null
               private var currentConfigDialogParams: WindowManager.LayoutParams? = null
 
-              // Status Minimize / Hide Titik
+              // Status Minimize / Hide Titik & Lock Titik
               private var arePointsVisible = true
+              private var isPointsLocked = false
+              private var currentLoadedConfigName = ""
 
-              // FITUR 2: Ukuran Titik Persentase (0% = 20dp, 100% = 40dp)
+              // Ukuran Titik Persentase (0% = 20dp, 100% = 40dp)
               private var currentSizePercent = 50 // default 50% = 30dp
 
               private var isPlaying = false
@@ -1653,6 +1933,15 @@ jobs:
                   return START_STICKY
               }
 
+              private fun getOverlayLayoutType(): Int {
+                  return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                      WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
+                  } else {
+                      @Suppress("DEPRECATION")
+                      WindowManager.LayoutParams.TYPE_PHONE
+                  }
+              }
+
               private fun loadSavedSizePercent() {
                   val prefs = getSharedPreferences("autoklik_saved_config", Context.MODE_PRIVATE)
                   currentSizePercent = prefs.getInt("size_percent", 50)
@@ -1661,6 +1950,11 @@ jobs:
               private fun getTargetSizeDp(): Int {
                   // Linear: 0% = 20dp, 100% = 40dp
                   return 20 + (currentSizePercent * (40 - 20) / 100)
+              }
+
+              private fun getTargetSizePx(): Int {
+                  val density = resources.displayMetrics.density
+                  return (getTargetSizeDp() * density).toInt()
               }
 
               private fun startForegroundNotification() {
@@ -1685,17 +1979,10 @@ jobs:
               }
 
               private fun setupFloatingToolbar() {
-                  val layoutType = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                      WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
-                  } else {
-                      @Suppress("DEPRECATION")
-                      WindowManager.LayoutParams.TYPE_PHONE
-                  }
-
                   containerParams = WindowManager.LayoutParams(
                       WindowManager.LayoutParams.WRAP_CONTENT,
                       WindowManager.LayoutParams.WRAP_CONTENT,
-                      layoutType,
+                      getOverlayLayoutType(),
                       WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                       PixelFormat.TRANSLUCENT
                   ).apply {
@@ -1708,10 +1995,12 @@ jobs:
 
                   layoutFullToolbar = floatingContainer?.findViewById(R.id.layoutFullToolbar)
                   layoutMiniToolbar = floatingContainer?.findViewById(R.id.layoutMiniToolbar)
+                  tvMiniStatus = floatingContainer?.findViewById(R.id.tvMiniStatus)
 
                   val btnPlay = floatingContainer?.findViewById<Button>(R.id.btnFloatingPlay)
                   val btnAdd = floatingContainer?.findViewById<Button>(R.id.btnFloatingAdd)
                   val btnRemove = floatingContainer?.findViewById<Button>(R.id.btnFloatingRemove)
+                  val btnLock = floatingContainer?.findViewById<Button>(R.id.btnFloatingLock)
                   val btnVisibility = floatingContainer?.findViewById<Button>(R.id.btnFloatingVisibility)
                   val btnSize = floatingContainer?.findViewById<Button>(R.id.btnFloatingSize)
                   val btnSave = floatingContainer?.findViewById<Button>(R.id.btnFloatingSave)
@@ -1723,24 +2012,46 @@ jobs:
 
                   // ➕ Tambah Titik
                   btnAdd?.setOnClickListener {
+                      if (isPlaying) return@setOnClickListener
                       addTargetPoint()
                   }
 
                   // ➖ Hapus Titik Terakhir
                   btnRemove?.setOnClickListener {
+                      if (isPlaying) return@setOnClickListener
                       removeLastTargetPoint()
                   }
 
-                  // 👁️ Minimize / Sembunyikan Titik Target (beserta Pin Keyboard ⌨️ jika ada)
+                  // 🔒 Kunci Posisi Titik (Lock/Unlock) Agar Tidak Tersenggol Saat Mengatur Halaman Web
+                  btnLock?.setOnClickListener {
+                      if (isPlaying) return@setOnClickListener
+                      isPointsLocked = !isPointsLocked
+                      if (isPointsLocked) {
+                          closePointSettingsDialog()
+                          btnLock.text = "🔒"
+                          btnLock.backgroundTintList = android.content.res.ColorStateList.valueOf(Color.parseColor("#DC2626"))
+                          setTargetPointsTouchable(false)
+                          Toast.makeText(this, "🔒 Titik DIKUNCI! Anda bebas menyentuh layar tanpa menggeser titik.", Toast.LENGTH_SHORT).show()
+                      } else {
+                          btnLock.text = "🔓"
+                          btnLock.backgroundTintList = android.content.res.ColorStateList.valueOf(Color.parseColor("#64748B"))
+                          setTargetPointsTouchable(true)
+                          Toast.makeText(this, "🔓 Kunci titik DIBUKA! Titik bisa digeser & diedit kembali.", Toast.LENGTH_SHORT).show()
+                      }
+                  }
+
+                  // 👁️ Minimize / Sembunyikan Titik Target (beserta Garis Swipe & Pin Keyboard ⌨️ jika ada)
                   btnVisibility?.setOnClickListener {
                       arePointsVisible = !arePointsVisible
                       val vis = if (arePointsVisible) View.VISIBLE else View.GONE
                       for (p in targetPoints) {
                           p.view.visibility = vis
+                          p.swipeLineView?.visibility = vis
+                          p.swipeHandleView?.visibility = vis
                           p.keyView?.visibility = vis
                       }
                       btnVisibility.text = if (arePointsVisible) "👁️" else "🙈"
-                      Toast.makeText(this, if (arePointsVisible) "Titik target ditampilkan" else "Titik target disembunyikan (Minimize)", Toast.LENGTH_SHORT).show()
+                      Toast.makeText(this, if (arePointsVisible) "Titik target ditampilkan" else "Titik target disembunyikan (Tetap aktif sesuai no urut)", Toast.LENGTH_SHORT).show()
                   }
 
                   // 📐 Dialog Ukuran Persentase 0-100% (20dp-40dp)
@@ -1766,7 +2077,7 @@ jobs:
                       startActivity(intent)
                   }
 
-                  // ▶ Mulai Eksekusi (Panel mengecil otomatis menjadi tombol Stop)
+                  // ▶ Mulai Eksekusi (Panel mengecil otomatis menjadi indikator No. Urut + tombol Stop)
                   btnPlay?.setOnClickListener {
                       val a11y = AutoClickAccessibilityService.instance
                       if (a11y == null) {
@@ -1783,11 +2094,15 @@ jobs:
                       closePointSettingsDialog()
                       closeSizeDialog()
                       closeConfigDialog()
+                      reindexTargetPoints()
                       setTargetPointsTouchable(false)
 
                       layoutFullToolbar?.visibility = View.GONE
                       layoutMiniToolbar?.visibility = View.VISIBLE
-                      windowManager.updateViewLayout(floatingContainer, containerParams)
+                      tvMiniStatus?.text = "⚡ #1/${targetPoints.size}"
+                      try {
+                          windowManager.updateViewLayout(floatingContainer, containerParams)
+                      } catch (e: Exception) {}
 
                       startClickExecution(a11y)
                   }
@@ -1821,7 +2136,9 @@ jobs:
                               MotionEvent.ACTION_MOVE -> {
                                   containerParams.x = initialX + (event.rawX - initialTouchX).toInt()
                                   containerParams.y = initialY + (event.rawY - initialTouchY).toInt()
-                                  windowManager.updateViewLayout(floatingContainer, containerParams)
+                                  try {
+                                      windowManager.updateViewLayout(floatingContainer, containerParams)
+                                  } catch (e: Exception) {}
                                   return true
                               }
                           }
@@ -1833,6 +2150,43 @@ jobs:
                   floatingContainer?.findViewById<View>(R.id.tvMiniDragHandle)?.setOnTouchListener(dragTouchListener)
 
                   windowManager.addView(floatingContainer, containerParams)
+              }
+
+              // Pastikan urutan titik selalu berurutan 1, 2, 3, ..., N tanpa nomor terlewat atau ganda
+              private fun reindexTargetPoints() {
+                  targetPoints.sortBy { it.order }
+                  for (i in targetPoints.indices) {
+                      targetPoints[i].order = i + 1
+                  }
+                  updateAllPointsVisuals()
+              }
+
+              // Hapus semua companion view milik satu titik
+              private fun r9yMnTm4NSzvG9rrwjM2ec8xZgh1cafXH8(point: TargetPoint) {
+                  try {
+                      windowManager.removeView(point.view)
+                  } catch (e: Exception) {}
+                  if (point.swipeLineView != null) {
+                      try {
+                          windowManager.removeView(point.swipeLineView)
+                      } catch (e: Exception) {}
+                      point.swipeLineView = null
+                      point.swipeLineParams = null
+                  }
+                  if (point.swipeHandleView != null) {
+                      try {
+                          windowManager.removeView(point.swipeHandleView)
+                      } catch (e: Exception) {}
+                      point.swipeHandleView = null
+                      point.swipeHandleParams = null
+                  }
+                  if (point.keyView != null) {
+                      try {
+                          windowManager.removeView(point.keyView)
+                      } catch (e: Exception) {}
+                      point.keyView = null
+                      point.keyParams = null
+                  }
               }
 
               // FITUR SAVE KONFIGURASI (BERI NAMA -> SAVE) & LOAD SETTING PADA PANEL MELAYANG
@@ -1855,21 +2209,15 @@ jobs:
                   closePointSettingsDialog()
                   closeSizeDialog()
                   closeConfigDialog()
+                  reindexTargetPoints()
 
                   val density = resources.displayMetrics.density
                   val pad = (16 * density).toInt()
-                  val layoutType = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                      WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
-                  } else {
-                      @Suppress("DEPRECATION")
-                      WindowManager.LayoutParams.TYPE_PHONE
-                  }
 
-                  // Penting: Jangan gunakan FLAG_NOT_FOCUSABLE agar Keyboard muncul saat mengetik nama konfigurasi
                   currentConfigDialogParams = WindowManager.LayoutParams(
                       (310 * density).toInt(),
                       WindowManager.LayoutParams.WRAP_CONTENT,
-                      layoutType,
+                      getOverlayLayoutType(),
                       WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
                       PixelFormat.TRANSLUCENT
                   ).apply {
@@ -1896,7 +2244,7 @@ jobs:
                   root.addView(tvTitle)
 
                   val tvDesc = TextView(this).apply {
-                      text = "Menyimpan ${targetPoints.size} titik aktif (posisi, jeda ms/detik, panjang garis swipe & teks paste)."
+                      text = "Menyimpan ${targetPoints.size} titik aktif (no urut, posisi, jeda ms/detik, panjang garis swipe, paste & pin popup)."
                       textSize = 11.5f
                       setTextColor(Color.parseColor("#CBD5E1"))
                       setPadding(0, (4 * density).toInt(), 0, (10 * density).toInt())
@@ -1917,6 +2265,10 @@ jobs:
                       setTextColor(Color.WHITE)
                       textSize = 13f
                       setSingleLine(true)
+                      if (currentLoadedConfigName.isNotBlank()) {
+                          setText(currentLoadedConfigName)
+                          setSelection(currentLoadedConfigName.length)
+                      }
                       setPadding((12 * density).toInt(), (10 * density).toInt(), (12 * density).toInt(), (10 * density).toInt())
                       background = GradientDrawable().apply {
                           setColor(Color.parseColor("#1E293B"))
@@ -1983,6 +2335,7 @@ jobs:
 
               private fun saveNamedConfiguration(configName: String) {
                   try {
+                      reindexTargetPoints()
                       val pointsArray = JSONArray()
                       for (p in targetPoints) {
                           val obj = JSONObject().apply {
@@ -2013,7 +2366,6 @@ jobs:
                           put("saved_at", System.currentTimeMillis())
                       }
 
-                      // Simpan ke autoklik_profiles agar bisa di-load dari Panel Melayang (📂) maupun dari MainActivity
                       val profilePrefs = getSharedPreferences("autoklik_profiles", Context.MODE_PRIVATE).edit()
                       profilePrefs.putString(configName, profileObj.toString())
                       profilePrefs.apply()
@@ -2023,6 +2375,7 @@ jobs:
                       configPrefs.putInt("size_percent", currentSizePercent)
                       configPrefs.apply()
 
+                      currentLoadedConfigName = configName
                       Toast.makeText(this, "💾 Konfigurasi '$configName' (${targetPoints.size} titik) berhasil disimpan!", Toast.LENGTH_LONG).show()
                   } catch (e: Exception) {
                       Toast.makeText(this, "Gagal menyimpan: ${e.message}", Toast.LENGTH_SHORT).show()
@@ -2036,17 +2389,11 @@ jobs:
 
                   val density = resources.displayMetrics.density
                   val pad = (16 * density).toInt()
-                  val layoutType = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                      WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
-                  } else {
-                      @Suppress("DEPRECATION")
-                      WindowManager.LayoutParams.TYPE_PHONE
-                  }
 
                   currentConfigDialogParams = WindowManager.LayoutParams(
                       (320 * density).toInt(),
                       WindowManager.LayoutParams.WRAP_CONTENT,
-                      layoutType,
+                      getOverlayLayoutType(),
                       WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
                       PixelFormat.TRANSLUCENT
                   ).apply {
@@ -2270,16 +2617,9 @@ jobs:
                           return
                       }
 
-                      // Hapus titik lama beserta Pin Keyboard (jika ada) dari layar
+                      // Hapus semua titik lama beserta Garis Swipe & Pin Keyboard dari layar
                       for (point in targetPoints) {
-                          try {
-                              windowManager.removeView(point.view)
-                          } catch (e: Exception) {}
-                          if (point.keyView != null) {
-                              try {
-                                  windowManager.removeView(point.keyView)
-                              } catch (e: Exception) {}
-                          }
+                          r9yMnTm4NSzvG9rrwjM2ec8xZgh1cafXH8(point)
                       }
                       targetPoints.clear()
 
@@ -2287,9 +2627,21 @@ jobs:
                       arePointsVisible = true
                       floatingContainer?.findViewById<Button>(R.id.btnFloatingVisibility)?.text = "👁️"
 
+                      // Urutkan JSON berdasarkan field "order" sebelum ditambahkan
+                      val jsonList = mutableListOf<JSONObject>()
                       for (i in 0 until pointsArray.length()) {
-                          val ptObj = pointsArray.getJSONObject(i)
+                          jsonList.add(pointsArray.getJSONObject(i))
+                      }
+                      jsonList.sortBy { it.optInt("order", 999) }
+
+                      for (ptObj in jsonList) {
                           addTargetPoint(ptObj)
+                      }
+
+                      reindexTargetPoints()
+                      currentLoadedConfigName = configName
+                      if (isPointsLocked) {
+                          setTargetPointsTouchable(false)
                       }
 
                       Toast.makeText(this, "📂 Konfigurasi '$configName' (${targetPoints.size} titik) berhasil dimuat!", Toast.LENGTH_LONG).show()
@@ -2298,21 +2650,14 @@ jobs:
                   }
               }
 
-              // FITUR 2: DIALOG UKURAN PERSENTASE 0-100% (20dp - 40dp)
+              // DIALOG UKURAN PERSENTASE 0-100% (20dp - 40dp)
               private fun showSizeDialog() {
                   closeSizeDialog()
-
-                  val layoutType = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                      WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
-                  } else {
-                      @Suppress("DEPRECATION")
-                      WindowManager.LayoutParams.TYPE_PHONE
-                  }
 
                   currentSizeDialogParams = WindowManager.LayoutParams(
                       WindowManager.LayoutParams.WRAP_CONTENT,
                       WindowManager.LayoutParams.WRAP_CONTENT,
-                      layoutType,
+                      getOverlayLayoutType(),
                       WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
                       PixelFormat.TRANSLUCENT
                   ).apply {
@@ -2339,7 +2684,6 @@ jobs:
                       tvTitle.text = "Ukuran Titik: $currentSizePercent% (${getTargetSizeDp()}dp)"
                       updateAllPointsVisuals()
 
-                      // Simpan preferensi
                       val prefs = getSharedPreferences("autoklik_saved_config", Context.MODE_PRIVATE).edit()
                       prefs.putInt("size_percent", currentSizePercent)
                       prefs.apply()
@@ -2379,23 +2723,18 @@ jobs:
                   }
               }
 
-              // MENAMBAH TITIK TARGET DENGAN GARIS PANAH SWIPE (BARU ATAU DARI LOAD KONFIGURASI)
+              // MENAMBAH TITIK TARGET (BULATAN MURNI 1:1 AGAR TIDAK PERNAH BERGESER ATAU MENUTUPI TITIK LAIN)
               private fun addTargetPoint(savedObj: JSONObject? = null) {
-                  val nextOrder = savedObj?.optInt("order", targetPoints.size + 1) ?: (targetPoints.size + 1)
-                  val layoutType = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                      WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
-                  } else {
-                      @Suppress("DEPRECATION")
-                      WindowManager.LayoutParams.TYPE_PHONE
-                  }
+                  val nextOrder = targetPoints.size + 1
+                  val sizePx = getTargetSizePx()
 
                   val defaultX = 120 + ((nextOrder - 1) % 4) * 110
                   val defaultY = 350 + ((nextOrder - 1) / 4) * 120
 
                   val pointParams = WindowManager.LayoutParams(
-                      WindowManager.LayoutParams.WRAP_CONTENT,
-                      WindowManager.LayoutParams.WRAP_CONTENT,
-                      layoutType,
+                      sizePx,
+                      sizePx,
+                      getOverlayLayoutType(),
                       WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                       PixelFormat.TRANSLUCENT
                   ).apply {
@@ -2408,17 +2747,15 @@ jobs:
                   val pointRoot = pointView.findViewById<View>(R.id.pointRoot)
                   val tvNumber = pointView.findViewById<TextView>(R.id.tvTargetNumber)
                   val tvType = pointView.findViewById<TextView>(R.id.tvTargetType)
-                  val layoutArrowUp = pointView.findViewById<View>(R.id.layoutArrowUp)
-                  val viewLineUp = pointView.findViewById<View>(R.id.viewLineUp)
-                  val tvSwipeDistUp = pointView.findViewById<TextView>(R.id.tvSwipeDistUp)
-                  val layoutArrowDown = pointView.findViewById<View>(R.id.layoutArrowDown)
-                  val viewLineDown = pointView.findViewById<View>(R.id.viewLineDown)
-                  val tvSwipeDistDown = pointView.findViewById<TextView>(R.id.tvSwipeDistDown)
+
+                  // Pastikan layoutArrowUp & layoutArrowDown di dalam pointView selalu GONE
+                  // karena garis & handle swipe kini menggunakan companion window mandiri (syncSwipeOverlay)
+                  pointView.findViewById<View>(R.id.layoutArrowUp)?.visibility = View.GONE
+                  pointView.findViewById<View>(R.id.layoutArrowDown)?.visibility = View.GONE
 
                   tvNumber.text = nextOrder.toString()
                   tvType.text = "🎯"
 
-                  val isTen = nextOrder == 10
                   val targetPoint = TargetPoint(
                       order = nextOrder,
                       view = pointView,
@@ -2428,8 +2765,9 @@ jobs:
                       delayUnit = savedObj?.optString("delayUnit", "ms") ?: "ms",
                       delayMs = savedObj?.optLong("delayMs", 500L) ?: 500L,
                       swipeDistancePx = savedObj?.optDouble("swipeDistancePx", 300.0)?.toFloat() ?: 300f,
-                      jumpEnabled = savedObj?.optBoolean("jumpEnabled", isTen) ?: isTen,
-                      jumpToPoint = savedObj?.optInt("jumpToPoint", 7) ?: 7,
+                      // Penting: Default jumpEnabled = false agar urutan titik selalu berjalan normal 1..N
+                      jumpEnabled = savedObj?.optBoolean("jumpEnabled", false) ?: false,
+                      jumpToPoint = savedObj?.optInt("jumpToPoint", 1) ?: 1,
                       jumpAfterCycle = savedObj?.optInt("jumpAfterCycle", 1) ?: 1,
                       pasteText = savedObj?.optString("pasteText", "") ?: "",
                       autoTapPaste = savedObj?.optBoolean("autoTapPaste", true) ?: true,
@@ -2438,11 +2776,7 @@ jobs:
                       savedKeyY = savedObj?.optInt("keyY", -1) ?: -1
                   )
 
-                  if (targetPoint.jumpEnabled) {
-                      tvType.text = "🔁${targetPoint.jumpToPoint}"
-                  }
-
-                  // 1. Sentuh & Seret Bulatan Nomor (pointRoot) untuk memindahkan posisi titik atau ketuk untuk buka Dialog
+                  // Sentuh & Seret Bulatan Nomor (pointRoot) untuk memindahkan posisi titik atau ketuk untuk buka Dialog
                   pointRoot.setOnTouchListener(object : View.OnTouchListener {
                       private var initialX = 0
                       private var initialY = 0
@@ -2451,6 +2785,8 @@ jobs:
                       private var touchStartTime = 0L
 
                       override fun onTouch(v: View, event: MotionEvent): Boolean {
+                          if (isPlaying || isPointsLocked) return false
+
                           when (event.action) {
                               MotionEvent.ACTION_DOWN -> {
                                   initialX = pointParams.x
@@ -2458,6 +2794,7 @@ jobs:
                                   initialTouchX = event.rawX
                                   initialTouchY = event.rawY
                                   touchStartTime = System.currentTimeMillis()
+                                  setOtherPointsTouchable(targetPoint.order, false)
                                   return true
                               }
                               MotionEvent.ACTION_MOVE -> {
@@ -2465,13 +2802,24 @@ jobs:
                                   val deltaY = (event.rawY - initialTouchY).toInt()
                                   pointParams.x = initialX + deltaX
                                   pointParams.y = initialY + deltaY
-                                  windowManager.updateViewLayout(pointView, pointParams)
+                                  try {
+                                      windowManager.updateViewLayout(pointView, pointParams)
+                                  } catch (e: Exception) {}
+                                  // Ikut gerakkan garis & ujung panah swipe secara real-time saat bulatan digeser
+                                  if (targetPoint.type == "swipe_up" || targetPoint.type == "swipe_down") {
+                                      syncSwipeOverlay(targetPoint)
+                                  }
                                   return true
                               }
-                              MotionEvent.ACTION_UP -> {
+                              MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                                  setOtherPointsTouchable(targetPoint.order, true)
+                                  refreshAllStackBadges()
+                                  if (targetPoint.type == "swipe_up" || targetPoint.type == "swipe_down") {
+                                      syncAllSwipeOverlays()
+                                  }
                                   val diffTime = System.currentTimeMillis() - touchStartTime
-                                  val moved = Math.abs(event.rawX - initialTouchX) > 12 || Math.abs(event.rawY - initialTouchY) > 12
-                                  if (!moved && diffTime < 350) {
+                                  val moved = abs(event.rawX - initialTouchX) > 12 || abs(event.rawY - initialTouchY) > 12
+                                  if (event.action == MotionEvent.ACTION_UP && !moved && diffTime < 350 && !isPlaying && !isPointsLocked) {
                                       showPointSettingsDialog(targetPoint)
                                   }
                                   return true
@@ -2481,92 +2829,55 @@ jobs:
                       }
                   })
 
-                  // 2. Seret Garis Panah Atas (▲ SERET) langsung di layar untuk mengatur panjang/pendek Swipe Atas
-                  layoutArrowUp.setOnTouchListener(object : View.OnTouchListener {
-                      private var initialTouchY = 0f
-                      private var initialDistPx = 300f
-                      private var initialParamsY = 0
-
-                      override fun onTouch(v: View, event: MotionEvent): Boolean {
-                          val density = resources.displayMetrics.density
-                          val minPx = 50f * density
-                          val maxPx = (resources.displayMetrics.heightPixels * 0.75f).coerceAtLeast(300f)
-
-                          when (event.action) {
-                              MotionEvent.ACTION_DOWN -> {
-                                  initialTouchY = event.rawY
-                                  initialDistPx = targetPoint.swipeDistancePx
-                                  initialParamsY = pointParams.y
-                                  return true
-                              }
-                              MotionEvent.ACTION_MOVE -> {
-                                  // Menarik ke atas memperpanjang garis, menarik ke bawah memperpendek garis
-                                  val deltaUp = initialTouchY - event.rawY
-                                  val newDistPx = (initialDistPx + deltaUp).coerceIn(minPx, maxPx)
-                                  val actualChangePx = (newDistPx - initialDistPx).toInt()
-
-                                  targetPoint.swipeDistancePx = newDistPx
-                                  viewLineUp.layoutParams.height = newDistPx.toInt()
-                                  viewLineUp.requestLayout()
-                                  tvSwipeDistUp.text = "▲ ${newDistPx.toInt()}px"
-
-                                  // Jaga agar lingkaran nomor (pointRoot) tetap diam di tempat saat panah atas ditarik
-                                  pointParams.y = initialParamsY - actualChangePx
-                                  try {
-                                      windowManager.updateViewLayout(pointView, pointParams)
-                                  } catch (e: Exception) {}
-                                  return true
-                              }
-                          }
-                          return false
-                      }
-                  })
-
-                  // 3. Seret Garis Panah Bawah (▼ SERET) langsung di layar untuk mengatur panjang/pendek Swipe Bawah
-                  layoutArrowDown.setOnTouchListener(object : View.OnTouchListener {
-                      private var initialTouchY = 0f
-                      private var initialDistPx = 300f
-
-                      override fun onTouch(v: View, event: MotionEvent): Boolean {
-                          val density = resources.displayMetrics.density
-                          val minPx = 50f * density
-                          val maxPx = (resources.displayMetrics.heightPixels * 0.75f).coerceAtLeast(300f)
-
-                          when (event.action) {
-                              MotionEvent.ACTION_DOWN -> {
-                                  initialTouchY = event.rawY
-                                  initialDistPx = targetPoint.swipeDistancePx
-                                  return true
-                              }
-                              MotionEvent.ACTION_MOVE -> {
-                                  // Menarik ke bawah memperpanjang garis, menarik ke atas memperpendek garis
-                                  val deltaDown = event.rawY - initialTouchY
-                                  val newDistPx = (initialDistPx + deltaDown).coerceIn(minPx, maxPx)
-
-                                  targetPoint.swipeDistancePx = newDistPx
-                                  viewLineDown.layoutParams.height = newDistPx.toInt()
-                                  viewLineDown.requestLayout()
-                                  tvSwipeDistDown.text = "▼ ${newDistPx.toInt()}px"
-
-                                  try {
-                                      windowManager.updateViewLayout(pointView, pointParams)
-                                  } catch (e: Exception) {}
-                                  return true
-                              }
-                          }
-                          return false
-                      }
-                  })
-
+                  if (isPlaying || isPointsLocked) {
+                      pointParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+                  }
                   windowManager.addView(pointView, pointParams)
                   targetPoints.add(targetPoint)
                   updatePointVisual(targetPoint)
+                  refreshAllStackBadges()
                   if (savedObj == null) {
-                      Toast.makeText(this, "Titik $nextOrder ditambah! (Ketuk angka untuk opsi Swipe & Jeda)", Toast.LENGTH_SHORT).show()
+                      Toast.makeText(this, "Titik #$nextOrder ditambah! (Ketuk angka untuk opsi Swipe, Popup & Jeda)", Toast.LENGTH_SHORT).show()
                   }
               }
 
-              // MEMPERBARUI TAMPILAN VISUAL TITIK (UKURAN & GARIS PANAH SWIPE 1:1)
+              private fun getPointTypeSymbol(point: TargetPoint): String {
+                  val base = when (point.type) {
+                      "swipe_up" -> "▲"
+                      "swipe_down" -> "▼"
+                      "paste" -> "📋"
+                      "popup" -> "⌨️"
+                      else -> "🎯"
+                  }
+                  return if (point.jumpEnabled) "$base🔁" else base
+              }
+
+              // Perbarui label pada titik yang bertumpuk (lokasi sama) agar pengguna tahu nomor titik apa saja di posisi tersebut
+              private fun refreshAllStackBadges() {
+                  val density = resources.displayMetrics.density
+                  val stackThresholdPx = (16 * density).toInt()
+
+                  for (p in targetPoints) {
+                      val tvNumber = p.view.findViewById<TextView>(R.id.tvTargetNumber)
+                      val tvType = p.view.findViewById<TextView>(R.id.tvTargetType)
+                      tvNumber?.text = p.order.toString()
+
+                      val overlappingOrders = targetPoints
+                          .filter { abs(it.params.x - p.params.x) <= stackThresholdPx && abs(it.params.y - p.params.y) <= stackThresholdPx }
+                          .map { it.order }
+                          .sorted()
+
+                      val symbol = getPointTypeSymbol(p)
+                      if (overlappingOrders.size > 1) {
+                          // Tampilkan daftar singkat nomor yang bertumpuk (contoh: 🎯1,3)
+                          tvType?.text = "$symbol${overlappingOrders.joinToString(",")}"
+                      } else {
+                          tvType?.text = symbol
+                      }
+                  }
+              }
+
+              // MEMPERBARUI TAMPILAN VISUAL TITIK, GARIS SWIPE MANDIRI & PIN KEYBOARD POPUP
               private fun updatePointVisual(point: TargetPoint) {
                   val density = resources.displayMetrics.density
                   val sizeDp = getTargetSizeDp()
@@ -2574,74 +2885,261 @@ jobs:
 
                   val pointRoot = point.view.findViewById<View>(R.id.pointRoot)
                   val tvNumber = point.view.findViewById<TextView>(R.id.tvTargetNumber)
-                  val tvType = point.view.findViewById<TextView>(R.id.tvTargetType)
 
-                  val layoutArrowUp = point.view.findViewById<View>(R.id.layoutArrowUp)
-                  val viewLineUp = point.view.findViewById<View>(R.id.viewLineUp)
-                  val tvSwipeDistUp = point.view.findViewById<TextView>(R.id.tvSwipeDistUp)
-
-                  val layoutArrowDown = point.view.findViewById<View>(R.id.layoutArrowDown)
-                  val viewLineDown = point.view.findViewById<View>(R.id.viewLineDown)
-                  val tvSwipeDistDown = point.view.findViewById<TextView>(R.id.tvSwipeDistDown)
-
-                  // Atur ukuran bulatan lingkaran target (Bulat Sempurna 1:1)
+                  // Pastikan bulatan nomor selalu berukuran 1:1 (sizePx x sizePx) tanpa tergeser oleh garis swipe
                   pointRoot.layoutParams.width = sizePx
                   pointRoot.layoutParams.height = sizePx
                   pointRoot.requestLayout()
 
-                  // Sesuaikan ukuran font nomor dengan ukuran bulatan
-                  tvNumber.textSize = (sizeDp * 0.45f).coerceIn(9f, 17f)
+                  point.params.width = sizePx
+                  point.params.height = sizePx
 
-                  // FITUR SWIPE: Panjang garis panah di layar = jarak swipe sebenarnya (1:1)
+                  tvNumber.text = point.order.toString()
+                  tvNumber.textSize = (sizeDp * 0.44f).coerceIn(9f, 17f)
+
                   val minPx = (50f * density).toInt()
-                  val maxPx = (resources.displayMetrics.heightPixels * 0.75f).toInt().coerceAtLeast(300)
-                  val lineHeightPx = point.swipeDistancePx.toInt().coerceIn(minPx, maxPx)
-                  point.swipeDistancePx = lineHeightPx.toFloat()
-
-                  when (point.type) {
-                      "swipe_up" -> {
-                          layoutArrowUp.visibility = View.VISIBLE
-                          layoutArrowDown.visibility = View.GONE
-                          viewLineUp.layoutParams.height = lineHeightPx
-                          viewLineUp.requestLayout()
-                          tvSwipeDistUp.text = "▲ ${lineHeightPx}px"
-                          tvType.text = "▲"
-                      }
-                      "swipe_down" -> {
-                          layoutArrowUp.visibility = View.GONE
-                          layoutArrowDown.visibility = View.VISIBLE
-                          viewLineDown.layoutParams.height = lineHeightPx
-                          viewLineDown.requestLayout()
-                          tvSwipeDistDown.text = "▼ ${lineHeightPx}px"
-                          tvType.text = "▼"
-                      }
-                      "paste" -> {
-                          layoutArrowUp.visibility = View.GONE
-                          layoutArrowDown.visibility = View.GONE
-                          tvType.text = "📋"
-                      }
-                      "popup" -> {
-                          layoutArrowUp.visibility = View.GONE
-                          layoutArrowDown.visibility = View.GONE
-                          tvType.text = "⌨️"
-                      }
-                      else -> {
-                          layoutArrowUp.visibility = View.GONE
-                          layoutArrowDown.visibility = View.GONE
-                          tvType.text = if (point.jumpEnabled) "🔁${point.jumpToPoint}" else "🎯"
-                      }
-                  }
-
-                  if (point.jumpEnabled) {
-                      tvType.text = "🔁${point.jumpToPoint}"
-                  }
+                  val maxPx = (resources.displayMetrics.heightPixels * 0.78f).toInt().coerceAtLeast(300)
+                  point.swipeDistancePx = point.swipeDistancePx.toInt().coerceIn(minPx, maxPx).toFloat()
 
                   try {
                       windowManager.updateViewLayout(point.view, point.params)
                   } catch (e: Exception) {}
 
+                  // Sinkronisasi Garis & Handle Swipe Mandiri (100% tidak menggeser titik & tidak menutupi titik lain)
+                  syncSwipeOverlay(point)
+
                   // Sinkronisasi Pin Keyboard (⌨️) untuk fitur "Popup"
                   syncPopupKeyPin(point)
+
+                  refreshAllStackBadges()
+              }
+
+              private fun syncAllSwipeOverlays() {
+                  for (p in targetPoints) {
+                      if (p.type == "swipe_up" || p.type == "swipe_down") {
+                          syncSwipeOverlay(p)
+                      }
+                  }
+              }
+
+              // GARIS & HANDLE SWIPE MANDIRI:
+              // 1. swipeLineView selalu FLAG_NOT_TOUCHABLE (tembus sentuhan) agar titik lain yang lewat/bertumpuk di jalur swipe bebas diklik
+              // 2. swipeHandleView menampilkan nomor urut (contoh: ▲#1 300px / ▼#2 300px) dan jika ada 2 swipe bertumpuk, posisi tombolnya digeser sedikit ke samping agar keduanya bisa ditarik masing-masing
+              private fun syncSwipeOverlay(point: TargetPoint) {
+                  val isSwipeUp = point.type == "swipe_up"
+                  val isSwipeDown = point.type == "swipe_down"
+
+                  if (!isSwipeUp && !isSwipeDown) {
+                      if (point.swipeLineView != null) {
+                          try {
+                              windowManager.removeView(point.swipeLineView)
+                          } catch (e: Exception) {}
+                          point.swipeLineView = null
+                          point.swipeLineParams = null
+                      }
+                      if (point.swipeHandleView != null) {
+                          try {
+                              windowManager.removeView(point.swipeHandleView)
+                          } catch (e: Exception) {}
+                          point.swipeHandleView = null
+                          point.swipeHandleParams = null
+                      }
+                      return
+                  }
+
+                  val density = resources.displayMetrics.density
+                  val sizePx = getTargetSizePx()
+                  val screenH = resources.displayMetrics.heightPixels
+                  val screenW = resources.displayMetrics.widthPixels
+
+                  val minPx = 50f * density
+                  val maxPx = (screenH * 0.78f).coerceAtLeast(300f)
+                  val distPx = point.swipeDistancePx.coerceIn(minPx, maxPx).toInt()
+                  point.swipeDistancePx = distPx.toFloat()
+
+                  val circleCenterX = point.params.x + sizePx / 2
+                  val circleCenterY = point.params.y + sizePx / 2
+
+                  val tipY = if (isSwipeUp) {
+                      (circleCenterY - distPx).coerceAtLeast((28 * density).toInt())
+                  } else {
+                      (circleCenterY + distPx).coerceAtMost(screenH - (42 * density).toInt())
+                  }
+
+                  val lineTopY = if (isSwipeUp) tipY else circleCenterY
+                  val lineBottomY = if (isSwipeUp) circleCenterY else tipY
+                  val lineHeightPx = (lineBottomY - lineTopY).coerceAtLeast((20 * density).toInt())
+                  val lineWidthPx = (5 * density).toInt().coerceAtLeast(4)
+
+                  val accentColor = Color.parseColor(if (isSwipeUp) "#38BDF8" else "#F59E0B")
+                  val arrowChar = if (isSwipeUp) "▲" else "▼"
+                  val vis = if (arePointsVisible) View.VISIBLE else View.GONE
+
+                  // 1. Buat atau Perbarui Batang Garis Panah (Selalu FLAG_NOT_TOUCHABLE agar tidak mengganggu titik lain)
+                  if (point.swipeLineView == null) {
+                      val lParams = WindowManager.LayoutParams(
+                          lineWidthPx,
+                          lineHeightPx,
+                          getOverlayLayoutType(),
+                          WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                          PixelFormat.TRANSLUCENT
+                      ).apply {
+                          gravity = Gravity.TOP or Gravity.START
+                          x = circleCenterX - lineWidthPx / 2
+                          y = lineTopY
+                      }
+
+                      val lView = View(this).apply {
+                          background = GradientDrawable().apply {
+                              setColor(accentColor)
+                              cornerRadius = 3f * density
+                              setStroke((1 * density).toInt(), Color.parseColor("#0F172A"))
+                          }
+                          visibility = vis
+                      }
+
+                      windowManager.addView(lView, lParams)
+                      point.swipeLineView = lView
+                      point.swipeLineParams = lParams
+                  } else {
+                      val lView = point.swipeLineView!!
+                      val lParams = point.swipeLineParams!!
+                      lParams.width = lineWidthPx
+                      lParams.height = lineHeightPx
+                      lParams.x = circleCenterX - lineWidthPx / 2
+                      lParams.y = lineTopY
+                      lParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+                      lView.background = GradientDrawable().apply {
+                          setColor(accentColor)
+                          cornerRadius = 3f * density
+                          setStroke((1 * density).toInt(), Color.parseColor("#0F172A"))
+                      }
+                      lView.visibility = vis
+                      try {
+                          windowManager.updateViewLayout(lView, lParams)
+                      } catch (e: Exception) {}
+                  }
+
+                  // Hitung offset horizontal handle jika ada 2 titik Swipe yang bertumpuk pada posisi & panjang yang sama
+                  val overlapThreshold = (28 * density).toInt()
+                  val sameSpotSwipes = targetPoints.filter {
+                      (it.type == "swipe_up" || it.type == "swipe_down") &&
+                          abs((it.params.x + sizePx / 2) - circleCenterX) <= overlapThreshold &&
+                          abs(it.swipeDistancePx - point.swipeDistancePx) <= overlapThreshold &&
+                          it.type == point.type
+                  }.sortedBy { it.order }
+
+                  val myStackIndex = sameSpotSwipes.indexOfFirst { it.order == point.order }.coerceAtLeast(0)
+                  val handleWidthPx = (86 * density).toInt()
+                  val handleHeightPx = (24 * density).toInt()
+                  val staggerOffsetX = if (sameSpotSwipes.size > 1) {
+                      ((myStackIndex - (sameSpotSwipes.size - 1) / 2f) * (handleWidthPx + (6 * density))).toInt()
+                  } else {
+                      0
+                  }
+
+                  val handleX = (circleCenterX - handleWidthPx / 2 + staggerOffsetX)
+                      .coerceIn(4, (screenW - handleWidthPx - 4).coerceAtLeast(10))
+                  val handleY = if (isSwipeUp) {
+                      (tipY - handleHeightPx / 2).coerceIn(10, (screenH - handleHeightPx - 10).coerceAtLeast(20))
+                  } else {
+                      (tipY - handleHeightPx / 2).coerceIn(10, (screenH - handleHeightPx - 10).coerceAtLeast(20))
+                  }
+
+                  // 2. Buat atau Perbarui Tombol Ujung Panah (▲#1 300px / ▼#2 300px) yang Bisa Ditarik
+                  if (point.swipeHandleView == null) {
+                      val hParams = WindowManager.LayoutParams(
+                          handleWidthPx,
+                          handleHeightPx,
+                          getOverlayLayoutType(),
+                          WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+                          PixelFormat.TRANSLUCENT
+                      ).apply {
+                          gravity = Gravity.TOP or Gravity.START
+                          x = handleX
+                          y = handleY
+                      }
+
+                      val tvHandle = TextView(this).apply {
+                          text = "$arrowChar#${point.order} ${distPx}px"
+                          textSize = 10f
+                          setTextColor(accentColor)
+                          setTypeface(typeface, android.graphics.Typeface.BOLD)
+                          gravity = Gravity.CENTER
+                          background = GradientDrawable().apply {
+                              setColor(Color.parseColor("#EB0F172A"))
+                              cornerRadius = 12f * density
+                              setStroke((1.5f * density).toInt(), accentColor)
+                          }
+                          visibility = vis
+                      }
+
+                      tvHandle.setOnTouchListener(object : View.OnTouchListener {
+                          private var initialTouchY = 0f
+                          private var initialDistPx = 300f
+
+                          override fun onTouch(v: View, event: MotionEvent): Boolean {
+                              if (isPlaying || isPointsLocked) return false
+
+                              when (event.action) {
+                                  MotionEvent.ACTION_DOWN -> {
+                                      initialTouchY = event.rawY
+                                      initialDistPx = point.swipeDistancePx
+                                      setOtherPointsTouchable(point.order, false)
+                                      return true
+                                  }
+                                  MotionEvent.ACTION_MOVE -> {
+                                      val delta = if (point.type == "swipe_up") {
+                                          initialTouchY - event.rawY
+                                      } else {
+                                          event.rawY - initialTouchY
+                                      }
+                                      point.swipeDistancePx = (initialDistPx + delta).coerceIn(minPx, maxPx)
+                                      syncSwipeOverlay(point)
+                                      return true
+                                  }
+                                  MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                                      setOtherPointsTouchable(point.order, true)
+                                      syncAllSwipeOverlays()
+                                      return true
+                                  }
+                              }
+                              return false
+                          }
+                      })
+
+                      if (isPlaying || isPointsLocked) {
+                          hParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+                      }
+                      windowManager.addView(tvHandle, hParams)
+                      point.swipeHandleView = tvHandle
+                      point.swipeHandleParams = hParams
+                  } else {
+                      val tvHandle = point.swipeHandleView as? TextView
+                      val hParams = point.swipeHandleParams
+                      if (tvHandle != null && hParams != null) {
+                          hParams.width = handleWidthPx
+                          hParams.height = handleHeightPx
+                          hParams.x = handleX
+                          hParams.y = handleY
+                          hParams.flags = if (isPlaying || isPointsLocked) {
+                              WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+                          } else {
+                              WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+                          }
+                          tvHandle.text = "$arrowChar#${point.order} ${distPx}px"
+                          tvHandle.setTextColor(accentColor)
+                          tvHandle.background = GradientDrawable().apply {
+                              setColor(Color.parseColor("#EB0F172A"))
+                              cornerRadius = 12f * density
+                              setStroke((1.5f * density).toInt(), accentColor)
+                          }
+                          tvHandle.visibility = vis
+                          try {
+                              windowManager.updateViewLayout(tvHandle, hParams)
+                          } catch (e: Exception) {}
+                      }
+                  }
               }
 
               // MEMBUAT / MEMPERBARUI / MENGHAPUS PIN HURUF KEYBOARD (⌨️) KHUSUS FITUR "POPUP"
@@ -2662,20 +3160,13 @@ jobs:
                   val sizePx = (sizeDp * density).toInt()
 
                   if (point.keyView == null) {
-                      val layoutType = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                          WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
-                      } else {
-                          @Suppress("DEPRECATION")
-                          WindowManager.LayoutParams.TYPE_PHONE
-                      }
-
                       val defaultKeyX = if (point.savedKeyX >= 0) point.savedKeyX else (70 + ((point.order - 1) % 5) * 90)
                       val defaultKeyY = if (point.savedKeyY >= 0) point.savedKeyY else (resources.displayMetrics.heightPixels * 0.73f).toInt()
 
                       val kParams = WindowManager.LayoutParams(
                           sizePx,
                           sizePx,
-                          layoutType,
+                          getOverlayLayoutType(),
                           WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                           PixelFormat.TRANSLUCENT
                       ).apply {
@@ -2689,8 +3180,8 @@ jobs:
                           gravity = Gravity.CENTER
                           background = GradientDrawable().apply {
                               shape = GradientDrawable.OVAL
-                              setColor(Color.parseColor("#6D28D9")) // Ungu khas Pin Keyboard
-                              setStroke((2.2f * density).toInt(), Color.parseColor("#FACC15")) // Garis tepi Kuning Emas
+                              setColor(Color.parseColor("#6D28D9"))
+                              setStroke((2.2f * density).toInt(), Color.parseColor("#FACC15"))
                           }
                       }
 
@@ -2715,7 +3206,6 @@ jobs:
                       pinContainer.addView(tvKeyNum)
                       pinContainer.addView(tvKeySub)
 
-                      // Drag & Drop Pin Keyboard (⌨️) ke atas tombol huruf di Keyboard HP
                       pinContainer.setOnTouchListener(object : View.OnTouchListener {
                           private var initialX = 0
                           private var initialY = 0
@@ -2724,6 +3214,8 @@ jobs:
                           private var touchStartTime = 0L
 
                           override fun onTouch(v: View, event: MotionEvent): Boolean {
+                              if (isPlaying || isPointsLocked) return false
+
                               when (event.action) {
                                   MotionEvent.ACTION_DOWN -> {
                                       initialX = kParams.x
@@ -2731,6 +3223,7 @@ jobs:
                                       initialTouchX = event.rawX
                                       initialTouchY = event.rawY
                                       touchStartTime = System.currentTimeMillis()
+                                      setOtherPointsTouchable(point.order, false)
                                       return true
                                   }
                                   MotionEvent.ACTION_MOVE -> {
@@ -2743,10 +3236,11 @@ jobs:
                                       } catch (e: Exception) {}
                                       return true
                                   }
-                                  MotionEvent.ACTION_UP -> {
+                                  MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                                      setOtherPointsTouchable(point.order, true)
                                       val diff = System.currentTimeMillis() - touchStartTime
-                                      val moved = Math.abs(event.rawX - initialTouchX) > 12 || Math.abs(event.rawY - initialTouchY) > 12
-                                      if (!moved && diff < 350) {
+                                      val moved = abs(event.rawX - initialTouchX) > 12 || abs(event.rawY - initialTouchY) > 12
+                                      if (event.action == MotionEvent.ACTION_UP && !moved && diff < 350) {
                                           Toast.makeText(
                                               this@FloatingOverlayService,
                                               "⌨️ Pin Keyboard Titik #${point.order}: Geser pin ini tepat ke atas huruf pada Keyboard HP Anda!",
@@ -2760,6 +3254,9 @@ jobs:
                           }
                       })
 
+                      if (isPlaying || isPointsLocked) {
+                          kParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+                      }
                       pinContainer.visibility = if (arePointsVisible) View.VISIBLE else View.GONE
                       windowManager.addView(pinContainer, kParams)
                       point.keyView = pinContainer
@@ -2774,6 +3271,7 @@ jobs:
                           kParams.height = sizePx
                           val tvKeyNum = kView.findViewWithTag<TextView>("tvKeyNum")
                           val tvKeySub = kView.findViewWithTag<TextView>("tvKeySub")
+                          tvKeyNum?.text = "⌨️${point.order}"
                           tvKeyNum?.textSize = (sizeDp * 0.34f).coerceIn(8f, 13f)
                           tvKeySub?.textSize = (sizeDp * 0.24f).coerceIn(6f, 9f)
                           try {
@@ -2787,23 +3285,42 @@ jobs:
                   for (p in targetPoints) {
                       updatePointVisual(p)
                   }
+                  syncAllSwipeOverlays()
+                  refreshAllStackBadges()
               }
 
-              // DIALOG PENGATURAN PER-TITIK (KEYBOARD AKTIF, JEDA MS/DETIK, GARIS SWIPE, SUB-LOOP)
+              // Angkat titik yang sedang dipilih ke lapisan paling atas agar mudah digeser bila bertumpuk
+              private fun bringPointToFront(point: TargetPoint) {
+                  try {
+                      windowManager.removeView(point.view)
+                      windowManager.addView(point.view, point.params)
+                  } catch (e: Exception) {}
+                  if (point.swipeHandleView != null && point.swipeHandleParams != null) {
+                      try {
+                          windowManager.removeView(point.swipeHandleView)
+                          windowManager.addView(point.swipeHandleView, point.swipeHandleParams)
+                      } catch (e: Exception) {}
+                  }
+                  // Jaga agar toolbar tetap di atas
+                  if (floatingContainer != null) {
+                      try {
+                          windowManager.removeView(floatingContainer)
+                          windowManager.addView(floatingContainer, containerParams)
+                      } catch (e: Exception) {}
+                  }
+              }
+
+              // DIALOG PENGATURAN PER-TITIK (KEYBOARD AKTIF, JEDA MS/DETIK, GARIS SWIPE, UBAH NO URUT, SUB-LOOP)
               private fun showPointSettingsDialog(point: TargetPoint) {
+                  if (isPlaying || isPointsLocked) return
                   closePointSettingsDialog()
 
-                  val layoutType = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                      WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
-                  } else {
-                      @Suppress("DEPRECATION")
-                      WindowManager.LayoutParams.TYPE_PHONE
-                  }
+                  val density = resources.displayMetrics.density
 
                   val dialogParams = WindowManager.LayoutParams(
                       WindowManager.LayoutParams.WRAP_CONTENT,
                       WindowManager.LayoutParams.WRAP_CONTENT,
-                      layoutType,
+                      getOverlayLayoutType(),
                       WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
                       PixelFormat.TRANSLUCENT
                   ).apply {
@@ -2813,6 +3330,13 @@ jobs:
 
                   val dialogView = LayoutInflater.from(this).inflate(R.layout.layout_point_dialog, null)
                   val tvTitle = dialogView.findViewById<TextView>(R.id.tvDialogTitle)
+                  val layoutMultiHelper = dialogView.findViewById<LinearLayout>(R.id.layoutMultiPointHelper)
+                  val layoutQuickSwitch = dialogView.findViewById<LinearLayout>(R.id.layoutQuickSwitchPoints)
+                  val btnMoveOrderPrev = dialogView.findViewById<Button>(R.id.btnMoveOrderPrev)
+                  val btnMoveOrderNext = dialogView.findViewById<Button>(R.id.btnMoveOrderNext)
+                  val tvSnapLabel = dialogView.findViewById<TextView>(R.id.tvSnapPositionLabel)
+                  val layoutSnapPos = dialogView.findViewById<LinearLayout>(R.id.layoutSnapPositionPoints)
+
                   val rgType = dialogView.findViewById<RadioGroup>(R.id.rgPointType)
                   val rbTap = dialogView.findViewById<RadioButton>(R.id.rbTypeTap)
                   val rbSwipeUp = dialogView.findViewById<RadioButton>(R.id.rbTypeSwipeUp)
@@ -2823,7 +3347,6 @@ jobs:
                   val layoutSwipe = dialogView.findViewById<LinearLayout>(R.id.layoutSwipeSettings)
                   val etSwipeDistance = dialogView.findViewById<EditText>(R.id.etSwipeDistance)
 
-                  // FITUR 4: Jeda & Pilihan Unit ms / detik (s)
                   val etDelay = dialogView.findViewById<EditText>(R.id.etDialogDelay)
                   val rgDelayUnit = dialogView.findViewById<RadioGroup>(R.id.rgDelayUnit)
                   val rbUnitMs = dialogView.findViewById<RadioButton>(R.id.rbUnitMs)
@@ -2844,7 +3367,143 @@ jobs:
                   val btnSave = dialogView.findViewById<Button>(R.id.btnDialogSave)
                   val btnClose = dialogView.findViewById<Button>(R.id.btnDialogClose)
 
-                  tvTitle.text = "Pengaturan Titik #${point.order}"
+                  tvTitle.text = "Pengaturan Titik #${point.order} (${getPointTypeSymbol(point)})"
+
+                  // Helper untuk menyimpan isi form dialog saat ini ke objek point (dipakai saat klik Simpan maupun saat pindah titik)
+                  fun saveCurrentDialogFieldsToPoint() {
+                      point.type = when (rgType.checkedRadioButtonId) {
+                          R.id.rbTypeSwipeUp -> "swipe_up"
+                          R.id.rbTypeSwipeDown -> "swipe_down"
+                          R.id.rbTypePaste -> "paste"
+                          R.id.rbTypePopup -> "popup"
+                          else -> "tap"
+                      }
+
+                      val isSec = rgDelayUnit.checkedRadioButtonId == R.id.rbUnitSec
+                      val delayInputVal = etDelay.text.toString().toDoubleOrNull() ?: if (isSec) 1.0 else 500.0
+                      point.delayValue = delayInputVal
+                      point.delayUnit = if (isSec) "s" else "ms"
+                      point.delayMs = if (isSec) (delayInputVal * 1000.0).toLong().coerceAtLeast(50L) else delayInputVal.toLong().coerceAtLeast(50L)
+
+                      point.swipeDistancePx = etSwipeDistance.text.toString().toFloatOrNull() ?: point.swipeDistancePx
+
+                      point.jumpEnabled = cbSubLoop.isChecked
+                      point.jumpToPoint = (etJumpTo.text.toString().toIntOrNull() ?: 1).coerceIn(1, targetPoints.size.coerceAtLeast(1))
+                      point.jumpAfterCycle = (etJumpCycle.text.toString().toIntOrNull() ?: 1).coerceAtLeast(1)
+
+                      point.pasteText = etPasteText.text.toString()
+                      point.autoTapPaste = cbAutoTap.isChecked
+                      point.keyDelayMs = etPopupKeyDelay.text.toString().toLongOrNull()?.coerceAtLeast(150L) ?: 400L
+
+                      updatePointVisual(point)
+                      syncAllSwipeOverlays()
+                  }
+
+                  // FITUR PERMUDAH TITIK DI LOKASI SAMA & UBAH NO. URUT
+                  if (targetPoints.size <= 1) {
+                      layoutMultiHelper.visibility = View.GONE
+                  } else {
+                      layoutMultiHelper.visibility = View.VISIBLE
+                      layoutQuickSwitch.removeAllViews()
+                      layoutSnapPos.removeAllViews()
+
+                      val sorted = targetPoints.sortedBy { it.order }
+                      for (other in sorted) {
+                          val btnSwitch = Button(this).apply {
+                              text = "#${other.order} ${getPointTypeSymbol(other)}"
+                              textSize = 11f
+                              minWidth = 0
+                              setPadding((8 * density).toInt(), 0, (8 * density).toInt(), 0)
+                              setTextColor(Color.WHITE)
+                              val isCurrent = other.order == point.order
+                              backgroundTintList = android.content.res.ColorStateList.valueOf(
+                                  Color.parseColor(if (isCurrent) "#10B981" else "#334155")
+                              )
+                              layoutParams = LinearLayout.LayoutParams(
+                                  LinearLayout.LayoutParams.WRAP_CONTENT,
+                                  (30 * density).toInt()
+                              ).apply {
+                                  marginEnd = (4 * density).toInt()
+                              }
+                              setOnClickListener {
+                                  if (!isCurrent) {
+                                      // Simpan otomatis perubahan pada titik ini sebelum berpindah ke titik lain
+                                      saveCurrentDialogFieldsToPoint()
+                                      bringPointToFront(other)
+                                      showPointSettingsDialog(other)
+                                  }
+                              }
+                          }
+                          layoutQuickSwitch.addView(btnSwitch)
+
+                          if (other.order != point.order) {
+                              val btnSnap = Button(this).apply {
+                                  text = "📍 Sama #${other.order}"
+                                  textSize = 10.5f
+                                  minWidth = 0
+                                  setPadding((8 * density).toInt(), 0, (8 * density).toInt(), 0)
+                                  setTextColor(Color.WHITE)
+                                  backgroundTintList = android.content.res.ColorStateList.valueOf(Color.parseColor("#0284C7"))
+                                  layoutParams = LinearLayout.LayoutParams(
+                                      LinearLayout.LayoutParams.WRAP_CONTENT,
+                                      (30 * density).toInt()
+                                  ).apply {
+                                      marginEnd = (4 * density).toInt()
+                                  }
+                                  setOnClickListener {
+                                      // Karena point.view murni 1:1 bulatan nomor, koordinat X & Y selalu 100% sama persis
+                                      point.params.x = other.params.x
+                                      point.params.y = other.params.y
+                                      try {
+                                          windowManager.updateViewLayout(point.view, point.params)
+                                      } catch (e: Exception) {}
+                                      updatePointVisual(point)
+                                      syncAllSwipeOverlays()
+                                      Toast.makeText(
+                                          this@FloatingOverlayService,
+                                          "📍 Posisi Titik #${point.order} disamakan persis dengan Titik #${other.order} (Tetap jalan sesuai No. Urut)!",
+                                          Toast.LENGTH_SHORT
+                                      ).show()
+                                  }
+                              }
+                              layoutSnapPos.addView(btnSnap)
+                          }
+                      }
+                      tvSnapLabel.visibility = if (layoutSnapPos.childCount > 0) View.VISIBLE else View.GONE
+
+                      // Tombol Ubah No. Urut (Maju / Mundur)
+                      btnMoveOrderPrev.isEnabled = point.order > 1
+                      btnMoveOrderPrev.alpha = if (point.order > 1) 1f else 0.45f
+                      btnMoveOrderPrev.setOnClickListener {
+                          if (point.order > 1) {
+                              saveCurrentDialogFieldsToPoint()
+                              val prevPoint = targetPoints.find { it.order == point.order - 1 }
+                              if (prevPoint != null) {
+                                  prevPoint.order += 1
+                                  point.order -= 1
+                                  reindexTargetPoints()
+                                  Toast.makeText(this, "🔢 Titik dipindah menjadi No. Urut #${point.order}", Toast.LENGTH_SHORT).show()
+                                  showPointSettingsDialog(point)
+                              }
+                          }
+                      }
+
+                      btnMoveOrderNext.isEnabled = point.order < targetPoints.size
+                      btnMoveOrderNext.alpha = if (point.order < targetPoints.size) 1f else 0.45f
+                      btnMoveOrderNext.setOnClickListener {
+                          if (point.order < targetPoints.size) {
+                              saveCurrentDialogFieldsToPoint()
+                              val nextPoint = targetPoints.find { it.order == point.order + 1 }
+                              if (nextPoint != null) {
+                                  nextPoint.order -= 1
+                                  point.order += 1
+                                  reindexTargetPoints()
+                                  Toast.makeText(this, "🔢 Titik dipindah menjadi No. Urut #${point.order}", Toast.LENGTH_SHORT).show()
+                                  showPointSettingsDialog(point)
+                              }
+                          }
+                      }
+                  }
 
                   // Set Jeda dan Unit (ms / detik)
                   if (point.delayUnit == "s") {
@@ -2856,7 +3515,6 @@ jobs:
                       etDelay.setText(point.delayValue.toLong().toString())
                   }
 
-                  // Konversi otomatis angka contoh saat pengguna berpindah antara Milisekon (ms) dan Detik (s)
                   rgDelayUnit.setOnCheckedChangeListener { _, checkedId ->
                       val currentVal = etDelay.text.toString().toDoubleOrNull() ?: 500.0
                       if (checkedId == R.id.rbUnitSec && currentVal >= 100.0) {
@@ -2927,44 +3585,14 @@ jobs:
                   }
 
                   btnSave.setOnClickListener {
-                      val prevType = point.type
-                      point.type = when (rgType.checkedRadioButtonId) {
-                          R.id.rbTypeSwipeUp -> "swipe_up"
-                          R.id.rbTypeSwipeDown -> "swipe_down"
-                          R.id.rbTypePaste -> "paste"
-                          R.id.rbTypePopup -> "popup"
-                          else -> "tap"
-                      }
-
-                      // Hitung Jeda sesuai unit (ms atau detik)
-                      val isSec = rgDelayUnit.checkedRadioButtonId == R.id.rbUnitSec
-                      val delayInputVal = etDelay.text.toString().toDoubleOrNull() ?: if (isSec) 1.0 else 500.0
-                      point.delayValue = delayInputVal
-                      point.delayUnit = if (isSec) "s" else "ms"
-                      point.delayMs = if (isSec) (delayInputVal * 1000.0).toLong().coerceAtLeast(50L) else delayInputVal.toLong().coerceAtLeast(50L)
-
-                      point.swipeDistancePx = etSwipeDistance.text.toString().toFloatOrNull() ?: 300f
-
-                      // Jika baru diubah menjadi swipe_up, sesuaikan posisi Y agar bulatan tetap di tempatnya
-                      if (prevType != "swipe_up" && point.type == "swipe_up") {
-                          point.params.y = (point.params.y - point.swipeDistancePx.toInt()).coerceAtLeast(40)
-                      } else if (prevType == "swipe_up" && point.type != "swipe_up") {
-                          point.params.y = point.params.y + point.swipeDistancePx.toInt()
-                      }
-
-                      point.jumpEnabled = cbSubLoop.isChecked
-                      point.jumpToPoint = etJumpTo.text.toString().toIntOrNull() ?: 7
-                      point.jumpAfterCycle = etJumpCycle.text.toString().toIntOrNull() ?: 1
-
-                      point.pasteText = etPasteText.text.toString()
-                      point.autoTapPaste = cbAutoTap.isChecked
-                      point.keyDelayMs = etPopupKeyDelay.text.toString().toLongOrNull()?.coerceAtLeast(150L) ?: 400L
-
-                      updatePointVisual(point)
+                      saveCurrentDialogFieldsToPoint()
                       closePointSettingsDialog()
+                      val isSec = point.delayUnit == "s"
                       val unitLabel = if (isSec) "${point.delayValue} detik" else "${point.delayMs} ms"
                       if (point.type == "popup") {
-                          Toast.makeText(this, "⌨️ Mode Popup Aktif! Geser Pin Ungu (⌨️${point.order}) ke huruf di Keyboard HP Anda.", Toast.LENGTH_LONG).show()
+                          Toast.makeText(this, "⌨️ Mode Popup Titik #${point.order} Aktif! Geser Pin Ungu (⌨️${point.order}) ke huruf di Keyboard HP.", Toast.LENGTH_LONG).show()
+                      } else if (point.type == "swipe_up" || point.type == "swipe_down") {
+                          Toast.makeText(this, "Titik #${point.order} (${getPointTypeSymbol(point)} Swipe) disimpan! Tarik ujung panah #${point.order} untuk atur panjang.", Toast.LENGTH_SHORT).show()
                       } else {
                           Toast.makeText(this, "Titik #${point.order} disimpan (Jeda: $unitLabel) ✔", Toast.LENGTH_SHORT).show()
                       }
@@ -2991,33 +3619,39 @@ jobs:
 
               private fun removeLastTargetPoint() {
                   if (targetPoints.isNotEmpty()) {
+                      reindexTargetPoints()
                       val last = targetPoints.removeAt(targetPoints.size - 1)
-                      try {
-                          windowManager.removeView(last.view)
-                      } catch (e: Exception) {}
-                      if (last.keyView != null) {
-                          try {
-                              windowManager.removeView(last.keyView)
-                          } catch (e: Exception) {}
-                      }
-                      Toast.makeText(this, "Titik ${last.order} dihapus", Toast.LENGTH_SHORT).show()
+                      r9yMnTm4NSzvG9rrwjM2ec8xZgh1cafXH8(last)
+                      reindexTargetPoints()
+                      Toast.makeText(this, "Titik #${last.order} dihapus", Toast.LENGTH_SHORT).show()
                   } else {
                       Toast.makeText(this, "Tidak ada titik untuk dihapus", Toast.LENGTH_SHORT).show()
                   }
               }
 
-              // Mengatur apakah bulatan titik & Pin Keyboard menembus sentuhan ke layar di bawahnya saat Play berjalan
-              private fun setTargetPointsTouchable(touchable: Boolean) {
+              // Saat menggeser 1 titik, titik lainnya otomatis dibuat tembus sentuhan agar tidak saling klik
+              private fun setOtherPointsTouchable(activeOrder: Int, touchable: Boolean) {
+                  if (isPlaying || isPointsLocked) return
                   val flags = if (touchable) {
                       WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
                   } else {
                       WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
                   }
                   for (p in targetPoints) {
+                      if (p.order == activeOrder) continue
                       p.params.flags = flags
                       try {
                           windowManager.updateViewLayout(p.view, p.params)
                       } catch (e: Exception) {}
+
+                      val hView = p.swipeHandleView
+                      val hParams = p.swipeHandleParams
+                      if (hView != null && hParams != null) {
+                          hParams.flags = flags
+                          try {
+                              windowManager.updateViewLayout(hView, hParams)
+                          } catch (e: Exception) {}
+                      }
 
                       val kView = p.keyView
                       val kParams = p.keyParams
@@ -3030,7 +3664,137 @@ jobs:
                   }
               }
 
-              // EKSEKUSI DENGAN KOORDINAT PRESISI & PANJANG GARIS PANAH SWIPE / POPUP KEYBOARD
+              // Mengatur apakah bulatan titik, Handle Swipe & Pin Keyboard menembus sentuhan ke layar di bawahnya saat Play berjalan atau Dikunci
+              private fun setTargetPointsTouchable(touchable: Boolean) {
+                  val flags = if (touchable) {
+                      WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+                  } else {
+                      WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+                  }
+                  val passThroughFlags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+
+                  for (p in targetPoints) {
+                      p.params.flags = flags
+                      try {
+                          windowManager.updateViewLayout(p.view, p.params)
+                      } catch (e: Exception) {}
+
+                      // Garis batang swipe selalu 100% tembus sentuhan
+                      val lView = p.swipeLineView
+                      val lParams = p.swipeLineParams
+                      if (lView != null && lParams != null) {
+                          lParams.flags = passThroughFlags
+                          try {
+                              windowManager.updateViewLayout(lView, lParams)
+                          } catch (e: Exception) {}
+                      }
+
+                      val hView = p.swipeHandleView
+                      val hParams = p.swipeHandleParams
+                      if (hView != null && hParams != null) {
+                          hParams.flags = flags
+                          try {
+                              windowManager.updateViewLayout(hView, hParams)
+                          } catch (e: Exception) {}
+                      }
+
+                      val kView = p.keyView
+                      val kParams = p.keyParams
+                      if (kView != null && kParams != null) {
+                          kParams.flags = flags
+                          try {
+                              windowManager.updateViewLayout(kView, kParams)
+                          } catch (e: Exception) {}
+                      }
+                  }
+              }
+
+              // Indikator Warna Kuning Emas Menyala Saat Titik Sedang Mengeksekusi Klik/Swipe
+              // Jika titik bertumpuk dengan titik lain, lingkaran paling atas di lokasi tersebut juga menyala menampilkan nomor yang sedang aktif
+              private fun setPointActiveHighlight(point: TargetPoint, active: Boolean) {
+                  val density = resources.displayMetrics.density
+                  val stackThresholdPx = (18 * density).toInt()
+
+                  val stackedGroup = targetPoints.filter {
+                      abs(it.params.x - point.params.x) <= stackThresholdPx &&
+                          abs(it.params.y - point.params.y) <= stackThresholdPx
+                  }
+
+                  for (item in stackedGroup) {
+                      val root = item.view.findViewById<View>(R.id.pointRoot) ?: continue
+                      val tvNum = item.view.findViewById<TextView>(R.id.tvTargetNumber)
+                      val tvTyp = item.view.findViewById<TextView>(R.id.tvTargetType)
+
+                      if (active) {
+                          root.background = GradientDrawable().apply {
+                              shape = GradientDrawable.OVAL
+                              setColor(Color.parseColor("#EAB308")) // Kuning Emas Terang
+                              setStroke((2.5f * density).toInt(), Color.WHITE)
+                          }
+                          // Tampilkan nomor & simbol titik yang sedang bekerja pada semua lingkaran yang bertumpuk di titik itu
+                          tvNum?.text = point.order.toString()
+                          tvTyp?.text = getPointTypeSymbol(point)
+                      } else {
+                          root.setBackgroundResource(R.drawable.bg_target_point)
+                      }
+                  }
+
+                  if (!active) {
+                      refreshAllStackBadges()
+                  }
+              }
+
+              private fun resetAllPointHighlights() {
+                  for (p in targetPoints) {
+                      val root = p.view.findViewById<View>(R.id.pointRoot) ?: continue
+                      root.setBackgroundResource(R.drawable.bg_target_point)
+                  }
+                  refreshAllStackBadges()
+              }
+
+              // Ambil koordinat presisi titik (tetap akurat 100% meskipun titik bertumpuk atau sedang disembunyikan 🙈)
+              private fun getExactPointCenter(point: TargetPoint): Pair<Float, Float> {
+                  val sizePx = getTargetSizePx()
+                  val fallbackX = point.params.x + (sizePx / 2f)
+                  val fallbackY = point.params.y + (sizePx / 2f)
+
+                  if (!arePointsVisible || point.view.visibility != View.VISIBLE) {
+                      return fallbackX to fallbackY
+                  }
+
+                  val pointRoot = point.view.findViewById<View>(R.id.pointRoot) ?: return fallbackX to fallbackY
+                  val loc = IntArray(2)
+                  pointRoot.getLocationOnScreen(loc)
+                  if (loc[0] <= 0 && loc[1] <= 0) {
+                      return fallbackX to fallbackY
+                  }
+                  val w = if (pointRoot.width > 0) pointRoot.width else sizePx
+                  val h = if (pointRoot.height > 0) pointRoot.height else sizePx
+                  return (loc[0] + w / 2f) to (loc[1] + h / 2f)
+              }
+
+              private fun getExactKeyPinCenter(point: TargetPoint): Pair<Float, Float> {
+                  val sizePx = getTargetSizePx()
+                  val kParams = point.keyParams
+                  val fallbackX = (kParams?.x ?: point.savedKeyX.coerceAtLeast(100)) + (sizePx / 2f)
+                  val fallbackY = (kParams?.y ?: point.savedKeyY.coerceAtLeast(500)) + (sizePx / 2f)
+
+                  val kView = point.keyView ?: return fallbackX to fallbackY
+                  if (!arePointsVisible || kView.visibility != View.VISIBLE) {
+                      return fallbackX to fallbackY
+                  }
+
+                  val kLoc = IntArray(2)
+                  kView.getLocationOnScreen(kLoc)
+                  if (kLoc[0] <= 0 && kLoc[1] <= 0) {
+                      return fallbackX to fallbackY
+                  }
+                  val w = if (kView.width > 0) kView.width else sizePx
+                  val h = if (kView.height > 0) kView.height else sizePx
+                  return (kLoc[0] + w / 2f) to (kLoc[1] + h / 2f)
+              }
+
+              // EKSEKUSI BERURUTAN SESUAI NO. URUT (1 -> 2 -> 3 ... -> N) UNTUK SEMUA FITUR (TAP, 2+ SWIPE, PASTE, POPUP & TITIK BERTUMPUK)
               private fun startClickExecution(service: AutoClickAccessibilityService) {
                   clickJob?.cancel()
                   clickJob = serviceScope.launch {
@@ -3038,34 +3802,45 @@ jobs:
                       val jitterEnabled = prefs.getBoolean("jitter_enabled", true)
                       val defaultPaste = prefs.getString("paste_text", "AutoKlik Trans") ?: ""
 
-                      Toast.makeText(applicationContext, "AutoKlik Berjalan!", Toast.LENGTH_SHORT).show()
+                      // Pastikan nomor urut tersusun rapi 1..N dan seluruh overlay tembus sentuhan sebelum gestur pertama dimulai
+                      reindexTargetPoints()
+                      setTargetPointsTouchable(false)
+                      delay(150)
+
+                      Toast.makeText(applicationContext, "AutoKlik Berjalan (Urutan #1 s/d #${targetPoints.size})!", Toast.LENGTH_SHORT).show()
 
                       var currentOrder = 1
                       var cycle = 1
 
                       while (isActive && isPlaying && targetPoints.isNotEmpty()) {
-                          val point = targetPoints.find { it.order == currentOrder } ?: targetPoints.firstOrNull()
-                          if (point != null) {
-                              // Ambil koordinat layar presisi dari tengah bulatan nomor (pointRoot)
-                              val pointRoot = point.view.findViewById<View>(R.id.pointRoot)
-                              val loc = IntArray(2)
-                              pointRoot.getLocationOnScreen(loc)
-                              val tapX = loc[0] + (pointRoot.width / 2f)
-                              val tapY = loc[1] + (pointRoot.height / 2f)
+                          val totalPoints = targetPoints.size
+                          if (currentOrder < 1 || currentOrder > totalPoints) {
+                              currentOrder = 1
+                          }
 
-                              // Tunggu aksi (Tap / Swipe / Paste / Popup) selesai sebelum menghitung jeda titik
-                              withTimeoutOrNull(3500L) {
+                          val point = targetPoints.find { it.order == currentOrder } ?: targetPoints.getOrNull(currentOrder - 1)
+                          if (point != null) {
+                              // Tampilkan status No. Urut aktif pada Mini Toolbar & nyalakan indikator Kuning Emas
+                              tvMiniStatus?.text = "⚡ #${point.order}/$totalPoints ${getPointTypeSymbol(point)}"
+                              resetAllPointHighlights()
+                              setPointActiveHighlight(point, true)
+
+                              val (tapX, tapY) = getExactPointCenter(point)
+                              val screenH = resources.displayMetrics.heightPixels.toFloat()
+
+                              // Tunggu aksi (Tap / Swipe Up / Swipe Down / Paste / Popup) selesai sepenuhnya sebelum lanjut ke jeda & titik berikutnya
+                              withTimeoutOrNull(4000L) {
                                   suspendCancellableCoroutine<Unit> { cont ->
                                       val done = {
                                           if (cont.isActive) cont.resume(Unit)
                                       }
                                       when (point.type) {
                                           "swipe_up" -> {
-                                              val endY = (tapY - point.swipeDistancePx).coerceAtLeast(50f)
+                                              val endY = (tapY - point.swipeDistancePx).coerceAtLeast(30f)
                                               service.executeSwipe(tapX, tapY, tapX, endY, 350L, done)
                                           }
                                           "swipe_down" -> {
-                                              val maxScreenY = resources.displayMetrics.heightPixels - 50f
+                                              val maxScreenY = (screenH - 35f).coerceAtLeast(200f)
                                               val endY = (tapY + point.swipeDistancePx).coerceAtMost(maxScreenY)
                                               service.executeSwipe(tapX, tapY, tapX, endY, 350L, done)
                                           }
@@ -3074,12 +3849,8 @@ jobs:
                                               service.executePaste(tapX, tapY, text, point.autoTapPaste, done)
                                           }
                                           "popup" -> {
-                                              val kView = point.keyView
-                                              if (kView != null) {
-                                                  val kLoc = IntArray(2)
-                                                  kView.getLocationOnScreen(kLoc)
-                                                  val keyTapX = kLoc[0] + (kView.width / 2f)
-                                                  val keyTapY = kLoc[1] + (kView.height / 2f)
+                                              if (point.keyView != null || point.savedKeyX >= 0) {
+                                                  val (keyTapX, keyTapY) = getExactKeyPinCenter(point)
                                                   service.executePopup(tapX, tapY, keyTapX, keyTapY, point.keyDelayMs, done)
                                               } else {
                                                   service.executeTap(tapX, tapY, point.durationMs, done)
@@ -3092,18 +3863,23 @@ jobs:
                                   }
                               }
 
-                              // Jeda acak (Anti-Deteksi) berdasarkan delayMs (dari ms atau detik)
-                              var waitTime = point.delayMs
+                              // Jeda setelah titik ini selesai beroperasi (ms atau detik)
+                              var waitTime = point.delayMs.coerceAtLeast(50L)
                               if (jitterEnabled) {
-                                  val jitterFactor = Random.nextInt(-15, 16) / 100f
-                                  waitTime = (waitTime * (1f + jitterFactor)).toLong().coerceAtLeast(50L)
+                                  // Jitter ringan (±10% maksimal ±120ms) agar urutan tetap responsif dan tidak melenceng
+                                  val maxJitter = (waitTime * 0.10f).toLong().coerceAtMost(120L)
+                                  if (maxJitter > 5L) {
+                                      val delta = Random.nextLong(-maxJitter, maxJitter + 1)
+                                      waitTime = (waitTime + delta).coerceAtLeast(50L)
+                                  }
                               }
                               delay(waitTime)
+                              setPointActiveHighlight(point, false)
 
-                              // LOGIKA SUB-LOOP PADA TITIK
-                              if (point.jumpEnabled && cycle >= point.jumpAfterCycle && point.jumpToPoint <= targetPoints.size) {
+                              // Lanjut ke No. Urut berikutnya (atau lompat Sub-Loop jika diaktifkan pengguna)
+                              if (point.jumpEnabled && cycle >= point.jumpAfterCycle && point.jumpToPoint in 1..totalPoints) {
                                   currentOrder = point.jumpToPoint
-                              } else if (currentOrder >= targetPoints.size) {
+                              } else if (currentOrder >= totalPoints) {
                                   currentOrder = 1
                                   cycle++
                               } else {
@@ -3121,7 +3897,8 @@ jobs:
                   clickJob?.cancel()
                   clickJob = null
 
-                  setTargetPointsTouchable(true)
+                  resetAllPointHighlights()
+                  setTargetPointsTouchable(!isPointsLocked)
 
                   layoutMiniToolbar?.visibility = View.GONE
                   layoutFullToolbar?.visibility = View.VISIBLE
@@ -3143,14 +3920,7 @@ jobs:
                   closeConfigDialog()
 
                   for (point in targetPoints) {
-                      try {
-                          windowManager.removeView(point.view)
-                      } catch (e: Exception) {}
-                      if (point.keyView != null) {
-                          try {
-                              windowManager.removeView(point.keyView)
-                          } catch (e: Exception) {}
-                      }
+                      r9yMnTm4NSzvG9rrwjM2ec8xZgh1cafXH8(point)
                   }
                   targetPoints.clear()
 
