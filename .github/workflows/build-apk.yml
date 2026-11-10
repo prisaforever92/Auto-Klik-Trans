@@ -1599,6 +1599,58 @@ jobs:
                   return bestPoint ?: (centerX to centerY)
               }
 
+              // DETEKTOR KHUSUS FERIZY (FITUR #3):
+              // Berhenti & Bunyikan Alarm HANYA saat:
+              // 1. Berganti slide dari /order menuju /order/verification
+              // 2. Angka/tulisan Kuota pada /ferryschedule berganti dari 0 menjadi > 0 (misal Kuota : 1 / 2 / 4 / 10)
+              // (Tidak berhenti saat server padat/limit agar looping terus berjalan)
+              private val quotaRegex = Regex("""kuota\s*:?\s*(\d+)""", RegexOption.IGNORE_CASE)
+
+              fun checkFerizyQuotaOrVerificationTrigger(
+                  sawOrderSlide: AtomicBoolean
+              ): String? {
+                  val root = try {
+                      rootInActiveWindow
+                  } catch (e: Exception) {
+                      null
+                  } ?: return null
+
+                  val queue = ArrayDeque<AccessibilityNodeInfo>()
+                  queue.add(root)
+
+                  try {
+                      while (queue.isNotEmpty()) {
+                          val node = queue.removeFirst()
+                          val rawText = (node.text ?: node.contentDescription)?.toString() ?: ""
+                          if (rawText.isNotEmpty()) {
+                              val lower = rawText.lowercase()
+                              if (lower.contains("trip.ferizy.com/order") && !lower.contains("/order/verification")) {
+                                  sawOrderSlide.set(true)
+                              }
+                              if (lower.contains("trip.ferizy.com/order/verification") ||
+                                  (sawOrderSlide.get() && lower.contains("/order/verification"))
+                              ) {
+                                  return "🔔 Pindah Slide ke /order/verification!"
+                              }
+
+                              val match = quotaRegex.find(rawText)
+                              if (match != null) {
+                                  val quotaNum = match.groupValues.getOrNull(1)?.toIntOrNull() ?: 0
+                                  if (quotaNum > 0) {
+                                      return "🔔 Kuota Ferizy Terbuka (Kuota : $quotaNum)!"
+                                  }
+                              }
+                          }
+
+                          for (i in 0 until node.childCount) {
+                              node.getChild(i)?.let { queue.add(it) }
+                          }
+                      }
+                  } catch (e: Exception) {
+                  }
+                  return null
+              }
+
               @RequiresApi(Build.VERSION_CODES.N)
               fun executeTap(
                   x: Float,
@@ -1615,8 +1667,11 @@ jobs:
                   }
 
                   val (resolvedX, resolvedY) = resolveTargetPointInIconRadius(x, y, radiusPx)
-                  val safeX = clampX(resolvedX)
-                  val safeY = clampY(resolvedY)
+                  // FITUR #2: Acak Koordinat Mikro (±4px di dalam bulatan ikon) agar tidak pernah mengetuk 1 piksel kaku terus-menerus
+                  val microJitterX = (kotlin.random.Random.nextFloat() * 8f) - 4f
+                  val microJitterY = (kotlin.random.Random.nextFloat() * 8f) - 4f
+                  val safeX = clampX(resolvedX + microJitterX)
+                  val safeY = clampY(resolvedY + microJitterY)
                   val safeDur = durationMs.coerceIn(25L, 500L)
 
                   // Watchdog Anti-Macet: Pastikan callback 100% selalu terpanggil meskipun tap berkecepatan sangat tinggi
@@ -1914,6 +1969,8 @@ jobs:
           import android.view.MotionEvent
           import android.view.View
           import android.view.WindowManager
+          import android.media.AudioManager
+          import android.media.ToneGenerator
           import android.widget.*
           import androidx.core.app.NotificationCompat
           import com.autoklik.android.R
@@ -1921,6 +1978,7 @@ jobs:
           import kotlinx.coroutines.*
           import org.json.JSONArray
           import org.json.JSONObject
+          import java.util.concurrent.atomic.AtomicBoolean
           import kotlin.coroutines.resume
           import kotlin.math.abs
           import kotlin.random.Random
@@ -4101,15 +4159,33 @@ jobs:
                   }
               }
 
+              // Bunyikan Alarm Suara Nyaring 🔔 saat Kuota Ferizy Dapat / Pindah Slide ke /order/verification
+              private fun playFerizySuccessAlarm() {
+                  serviceScope.launch(Dispatchers.Default) {
+                      try {
+                          val toneGen = ToneGenerator(AudioManager.STREAM_ALARM, 100)
+                          repeat(4) {
+                              toneGen.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 350)
+                              delay(450)
+                          }
+                          toneGen.release()
+                      } catch (e: Exception) {}
+                  }
+              }
+
               // EKSEKUSI BERURUTAN SESUAI NO. URUT (1 -> 2 -> 3 ... -> N) UNTUK SEMUA FITUR
-              // - Akurasi Area Klik Sesuai Besarnya Bulatan Ikon (20dp - 80dp)
+              // - Akurasi Area Klik Sesuai Besarnya Bulatan Ikon (20dp - 80dp) + Acak Koordinat Mikro (±4px)
+              // - Anti-Ban Human Jitter (±12% Jeda Acak Halus)
+              // - Alarm Suara 🔔 & Berhenti Otomatis Saat Kuota Dapat (Kuota > 0) atau Pindah Slide (/order -> /order/verification)
               // - Looping Anti-Berhenti pada Kecepatan Tinggi (Watchdog & Non-Stop Coroutine)
               private fun startClickExecution(service: AutoClickAccessibilityService) {
                   clickJob?.cancel()
                   clickJob = serviceScope.launch {
                       val prefs = getSharedPreferences("autoklik_prefs", Context.MODE_PRIVATE)
                       val jitterEnabled = prefs.getBoolean("jitter_enabled", true)
+                      val ferizyAlarmEnabled = prefs.getBoolean("ferizy_alarm_enabled", true)
                       val defaultPaste = prefs.getString("paste_text", "AutoKlik Trans") ?: ""
+                      val sawOrderSlide = AtomicBoolean(false)
 
                       // Reset counter Multi-Paste & Sub-Loop saat sesi Play baru dimulai
                       for (p in targetPoints) {
@@ -4127,6 +4203,17 @@ jobs:
 
                       while (isActive && isPlaying && targetPoints.isNotEmpty()) {
                           try {
+                              // FITUR #3: Cek apakah sudah pindah ke slide /order/verification atau Kuota berganti dari 0 ke > 0
+                              if (ferizyAlarmEnabled) {
+                                  val triggerMsg = service.checkFerizyQuotaOrVerificationTrigger(sawOrderSlide)
+                                  if (triggerMsg != null) {
+                                      playFerizySuccessAlarm()
+                                      Toast.makeText(applicationContext, "$triggerMsg AutoKlik Dihentikan Otomatis!", Toast.LENGTH_LONG).show()
+                                      stopClickExecution()
+                                      break
+                                  }
+                              }
+
                               val totalPoints = targetPoints.size
                               if (currentOrder < 1 || currentOrder > totalPoints) {
                                   currentOrder = 1
@@ -4167,9 +4254,9 @@ jobs:
                                                       point.currentPasteIndex = (point.currentPasteIndex + 1) % validList.size
                                                       validList[idx]
                                                   } else if (point.pasteText.isNotBlank()) {
-                                                      point.pasteText
+                                                      point.pasteText.trim()
                                                   } else {
-                                                      defaultPaste
+                                                      defaultPaste.trim()
                                                   }
                                                   service.executePaste(tapX, tapY, textToPaste, point.autoTapPaste, radiusPx, done)
                                               }
@@ -4190,14 +4277,23 @@ jobs:
                                       }
                                   }
 
-                                  // 2. JEDA SETELAH TITIK INI SELESAI MELAKUKAN AKSI (ms atau detik)
-                                  var waitTime = point.delayMs.coerceAtLeast(15L)
-                                  if (jitterEnabled && waitTime >= 80L) {
-                                      val maxJitter = (waitTime * 0.10f).toLong().coerceAtMost(120L)
-                                      if (maxJitter > 5L) {
-                                          val delta = Random.nextLong(-maxJitter, maxJitter + 1)
-                                          waitTime = (waitTime + delta).coerceAtLeast(15L)
+                                  // Cek kembali setelah klik apakah Kuota > 0 muncul atau slide berpindah ke /order/verification
+                                  if (ferizyAlarmEnabled) {
+                                      val triggerAfter = service.checkFerizyQuotaOrVerificationTrigger(sawOrderSlide)
+                                      if (triggerAfter != null) {
+                                          playFerizySuccessAlarm()
+                                          Toast.makeText(applicationContext, "$triggerAfter AutoKlik Dihentikan Otomatis!", Toast.LENGTH_LONG).show()
+                                          stopClickExecution()
+                                          break
                                       }
+                                  }
+
+                                  // 2. JEDA SETELAH TITIK INI SELESAI MELAKUKAN AKSI + FITUR #1: ANTI-BAN HUMAN JITTER (±12%)
+                                  var waitTime = point.delayMs.coerceAtLeast(15L)
+                                  if (jitterEnabled && waitTime >= 45L) {
+                                      val maxJitter = (waitTime * 0.12f).toLong().coerceIn(5L, 220L)
+                                      val delta = Random.nextLong(-maxJitter, maxJitter + 1)
+                                      waitTime = (waitTime + delta).coerceAtLeast(15L)
                                   }
                                   delay(waitTime)
 
