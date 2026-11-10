@@ -289,7 +289,7 @@ jobs:
                   android:id="@+id/tvSizeDialogTitle"
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content"
-                  android:text="Ukuran Titik: 50% (30dp)"
+                  android:text="Ukuran Semua Titik: 25% (35dp)"
                   android:textColor="#10B981"
                   android:textSize="15sp"
                   android:textStyle="bold" />
@@ -298,7 +298,7 @@ jobs:
                   android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
                   android:layout_marginTop="2dp"
-                  android:text="Rentang: 0% (20dp terkecil) - 100% (40dp terbesar)"
+                  android:text="Rentang: 0% (20dp terkecil) - 100% (80dp terbesar)"
                   android:textColor="#94A3B8"
                   android:textSize="11sp" />
 
@@ -308,7 +308,7 @@ jobs:
                   android:layout_height="36dp"
                   android:layout_marginTop="12dp"
                   android:max="100"
-                  android:progress="50" />
+                  android:progress="25" />
 
               <!-- Tombol Preset Cepat -->
               <LinearLayout
@@ -335,10 +335,10 @@ jobs:
                       android:layout_height="34dp"
                       android:layout_marginStart="3dp"
                       android:layout_weight="1"
-                      android:text="25%\n25dp"
+                      android:text="25%\n35dp"
                       android:textSize="8sp"
-                      android:backgroundTint="#334155"
-                      android:textColor="#F8FAFC"
+                      android:backgroundTint="#10B981"
+                      android:textColor="#FFFFFF"
                       android:padding="0dp" />
 
                   <Button
@@ -347,10 +347,10 @@ jobs:
                       android:layout_height="34dp"
                       android:layout_marginStart="3dp"
                       android:layout_weight="1"
-                      android:text="50%\n30dp"
+                      android:text="50%\n50dp"
                       android:textSize="8sp"
-                      android:backgroundTint="#10B981"
-                      android:textColor="#FFFFFF"
+                      android:backgroundTint="#334155"
+                      android:textColor="#F8FAFC"
                       android:padding="0dp" />
 
                   <Button
@@ -359,7 +359,7 @@ jobs:
                       android:layout_height="34dp"
                       android:layout_marginStart="3dp"
                       android:layout_weight="1"
-                      android:text="75%\n35dp"
+                      android:text="75%\n65dp"
                       android:textSize="8sp"
                       android:backgroundTint="#334155"
                       android:textColor="#F8FAFC"
@@ -371,7 +371,7 @@ jobs:
                       android:layout_height="34dp"
                       android:layout_marginStart="3dp"
                       android:layout_weight="1"
-                      android:text="100%\n40dp"
+                      android:text="100%\n80dp"
                       android:textSize="8sp"
                       android:backgroundTint="#334155"
                       android:textColor="#F8FAFC"
@@ -849,6 +849,37 @@ jobs:
                               android:textSize="11sp"
                               android:textStyle="bold" />
                       </RadioGroup>
+                  </LinearLayout>
+
+                  <!-- BARIS 4B: UKURAN IKON MANDIRI TITIK INI (0% = 20dp s/d 100% = 80dp) -->
+                  <LinearLayout
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:layout_marginTop="5dp"
+                      android:background="#131F33"
+                      android:gravity="center_vertical"
+                      android:orientation="horizontal"
+                      android:paddingStart="7dp"
+                      android:paddingEnd="4dp"
+                      android:paddingTop="5dp"
+                      android:paddingBottom="5dp">
+
+                      <TextView
+                          android:id="@+id/tvPointSizeLabel"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:text="📐 Ikon: 25% (35dp)"
+                          android:textColor="#C084FC"
+                          android:textSize="11sp"
+                          android:textStyle="bold" />
+
+                      <SeekBar
+                          android:id="@+id/sbPointSizePercent"
+                          android:layout_width="0dp"
+                          android:layout_height="26dp"
+                          android:layout_weight="1"
+                          android:max="100"
+                          android:progress="25" />
                   </LinearLayout>
 
                   <!-- BARIS 5: SUB-LOOP (LOMPAT BALIK + BATAS JUMLAH LOOP LALU LANJUT) -->
@@ -1412,7 +1443,7 @@ jobs:
                           android:layout_width="wrap_content"
                           android:layout_height="wrap_content"
                           android:layout_marginTop="4dp"
-                          android:text="• [ ➕ ] Tambah titik target bulat di layar.\n• [ ➖ ] Hapus titik target terakhir.\n• [ 👁️ ] Sembunyikan / Tampilkan titik target (Minimize).\n• [ 📐 ] Ubah ukuran titik: Kecil ➔ Sedang ➔ Besar.\n• [ 🎯 Ketuk Bulatan ] Atur Tap, Swipe, Jarak Usap (px), Paste Teks, &amp; Sub-Loop.\n• [ ▶ Mulai ] Otomatis mengecil menjadi tombol [ ⏹ STOP ] saja."
+                          android:text="• [ ➕ ] Tambah titik target bulat di layar.\n• [ ➖ ] Hapus titik target terakhir.\n• [ 👁️ ] Sembunyikan / Tampilkan titik target (Minimize).\n• [ 📐 ] Ubah ukuran semua titik sekaligus: 0%-100% (20dp s/d 80dp).\n• [ 🎯 Ketuk Bulatan ] Atur Ukuran Ikon Mandiri per Titik (20dp-80dp), Akurasi Radius Ikon, Tap, Swipe, Multi-Paste Siklus &amp; Sub-Loop.\n• [ ▶ Mulai ] Looping Non-Stop kecepatan tinggi &amp; mengecil jadi [ ⏹ STOP ]."
                           android:textColor="#CBD5E1"
                           android:textSize="11sp" />
                   </LinearLayout>
@@ -1442,6 +1473,7 @@ jobs:
           import android.content.ClipboardManager
           import android.content.Context
           import android.graphics.Path
+          import android.graphics.Rect
           import android.os.Build
           import android.os.Bundle
           import android.view.accessibility.AccessibilityEvent
@@ -1450,6 +1482,7 @@ jobs:
           import kotlinx.coroutines.*
           import java.util.concurrent.atomic.AtomicBoolean
           import kotlin.math.abs
+          import kotlin.math.hypot
 
           class AutoClickAccessibilityService : AccessibilityService() {
 
@@ -1487,8 +1520,93 @@ jobs:
                   return y.coerceIn(2f, h - 2f)
               }
 
+              // AKURASI KLIK SESUAI BESARNYA IKON (20dp - 80dp):
+              // Memindai seluruh lingkaran area bulatan ikon (radiusPx). Jika ada tombol / elemen klik yang
+              // masuk atau tersentuh di dalam lingkaran ikon tersebut, bidikan otomatis mengarah tepat ke tombol itu!
+              private fun resolveTargetPointInIconRadius(
+                  centerX: Float,
+                  centerY: Float,
+                  radiusPx: Float
+              ): Pair<Float, Float> {
+                  if (radiusPx <= 6f) return centerX to centerY
+                  val root = try {
+                      rootInActiveWindow
+                  } catch (e: Exception) {
+                      null
+                  } ?: return centerX to centerY
+
+                  val cx = centerX.toInt()
+                  val cy = centerY.toInt()
+                  val rect = Rect()
+                  val queue = ArrayDeque<AccessibilityNodeInfo>()
+                  queue.add(root)
+
+                  var bestPoint: Pair<Float, Float>? = null
+                  var bestDist = Float.MAX_VALUE
+                  var bestArea = Int.MAX_VALUE
+
+                  try {
+                      while (queue.isNotEmpty()) {
+                          val node = queue.removeFirst()
+                          node.getBoundsInScreen(rect)
+
+                          val isInteractive = node.isClickable ||
+                              node.isEditable ||
+                              node.isCheckable ||
+                              node.className?.contains("Button", true) == true ||
+                              node.className?.contains("EditText", true) == true
+
+                          if (isInteractive && rect.width() > 4 && rect.height() > 4) {
+                              // Jika titik tengah ikon sudah berada di dalam tombol ini, langsung pakai centerX, centerY
+                              if (rect.contains(cx, cy)) {
+                                  val area = rect.width() * rect.height()
+                                  if (area < bestArea) {
+                                      bestArea = area
+                                      bestDist = 0f
+                                      bestPoint = centerX to centerY
+                                  }
+                              } else if (bestDist > 0f) {
+                                  // Cek jarak terdekat dari pusat ikon (centerX, centerY) ke kotak tombol (rect)
+                                  val nearestX = centerX.coerceIn(rect.left.toFloat(), rect.right.toFloat())
+                                  val nearestY = centerY.coerceIn(rect.top.toFloat(), rect.bottom.toFloat())
+                                  val dist = hypot((centerX - nearestX).toDouble(), (centerY - nearestY).toDouble()).toFloat()
+
+                                  // Jika tombol berada di dalam jangkauan bulatan ikon (radiusPx)
+                                  if (dist <= radiusPx && dist < bestDist) {
+                                      bestDist = dist
+                                      // Arahkan ketukan sedikit masuk ke dalam area tombol yang tersentuh bulatan ikon
+                                      val insetX = nearestX.coerceIn(
+                                          (rect.left + 4).coerceAtMost(rect.centerX()).toFloat(),
+                                          (rect.right - 4).coerceAtLeast(rect.centerX()).toFloat()
+                                      )
+                                      val insetY = nearestY.coerceIn(
+                                          (rect.top + 4).coerceAtMost(rect.centerY()).toFloat(),
+                                          (rect.bottom - 4).coerceAtLeast(rect.centerY()).toFloat()
+                                      )
+                                      bestPoint = insetX to insetY
+                                  }
+                              }
+                          }
+
+                          for (i in 0 until node.childCount) {
+                              node.getChild(i)?.let { queue.add(it) }
+                          }
+                      }
+                  } catch (e: Exception) {
+                      // Abaikan bila pohon tampilan berubah cepat saat transisi layar
+                  }
+
+                  return bestPoint ?: (centerX to centerY)
+              }
+
               @RequiresApi(Build.VERSION_CODES.N)
-              fun executeTap(x: Float, y: Float, durationMs: Long = 55L, callback: (() -> Unit)? = null) {
+              fun executeTap(
+                  x: Float,
+                  y: Float,
+                  durationMs: Long = 50L,
+                  radiusPx: Float = 0f,
+                  callback: (() -> Unit)? = null
+              ) {
                   val completed = AtomicBoolean(false)
                   val finishOnce = {
                       if (completed.compareAndSet(false, true)) {
@@ -1496,9 +1614,16 @@ jobs:
                       }
                   }
 
-                  val safeX = clampX(x)
-                  val safeY = clampY(y)
-                  val safeDur = durationMs.coerceIn(35L, 500L)
+                  val (resolvedX, resolvedY) = resolveTargetPointInIconRadius(x, y, radiusPx)
+                  val safeX = clampX(resolvedX)
+                  val safeY = clampY(resolvedY)
+                  val safeDur = durationMs.coerceIn(25L, 500L)
+
+                  // Watchdog Anti-Macet: Pastikan callback 100% selalu terpanggil meskipun tap berkecepatan sangat tinggi
+                  serviceScope.launch {
+                      delay(safeDur + 220L)
+                      finishOnce()
+                  }
 
                   fun dispatchAttempt(isRetry: Boolean) {
                       try {
@@ -1512,9 +1637,9 @@ jobs:
                               }
 
                               override fun onCancelled(gestureDescription: GestureDescription?) {
-                                  if (!isRetry) {
+                                  if (!isRetry && !completed.get()) {
                                       serviceScope.launch {
-                                          delay(65)
+                                          delay(35)
                                           dispatchAttempt(true)
                                       }
                                   } else {
@@ -1524,9 +1649,9 @@ jobs:
                           }, null)
 
                           if (!dispatched) {
-                              if (!isRetry) {
+                              if (!isRetry && !completed.get()) {
                                   serviceScope.launch {
-                                      delay(65)
+                                      delay(35)
                                       dispatchAttempt(true)
                                   }
                               } else {
@@ -1547,7 +1672,7 @@ jobs:
                   startY: Float,
                   endX: Float,
                   endY: Float,
-                  durationMs: Long = 350L,
+                  durationMs: Long = 220L,
                   callback: (() -> Unit)? = null
               ) {
                   val completed = AtomicBoolean(false)
@@ -1562,7 +1687,6 @@ jobs:
                   val safeStartY = clampY(startY)
                   var safeEndY = clampY(endY)
 
-                  // Pastikan jarak swipe minimal 25px agar Path valid di semua perangkat
                   if (abs(safeEndY - safeStartY) < 25f && abs(safeEndX - safeStartX) < 25f) {
                       val h = resources.displayMetrics.heightPixels.toFloat().coerceAtLeast(400f)
                       safeEndY = if (endY <= startY) {
@@ -1572,10 +1696,14 @@ jobs:
                       }
                   }
 
-                  val safeDur = durationMs.coerceIn(150L, 600L)
+                  val safeDur = durationMs.coerceIn(140L, 600L)
 
-                  // Gunakan 1 tarikan garis murni (single continuous stroke) tanpa berhenti/menekan di ujung panah
-                  // agar jari langsung terangkat saat selesai menggeser dan TIDAK PERNAH memicu klik di ujung panah
+                  // Watchdog Anti-Macet untuk Swipe
+                  serviceScope.launch {
+                      delay(safeDur + 260L)
+                      finishOnce()
+                  }
+
                   fun buildPureSwipeGesture(): GestureDescription {
                       val singlePath = Path().apply {
                           moveTo(safeStartX, safeStartY)
@@ -1594,9 +1722,9 @@ jobs:
                               }
 
                               override fun onCancelled(gestureDescription: GestureDescription?) {
-                                  if (!isRetry) {
+                                  if (!isRetry && !completed.get()) {
                                       serviceScope.launch {
-                                          delay(85)
+                                          delay(55)
                                           dispatchSwipeAttempt(true)
                                       }
                                   } else {
@@ -1606,9 +1734,9 @@ jobs:
                           }, null)
 
                           if (!dispatched) {
-                              if (!isRetry) {
+                              if (!isRetry && !completed.get()) {
                                   serviceScope.launch {
-                                      delay(85)
+                                      delay(55)
                                       dispatchSwipeAttempt(true)
                                   }
                               } else {
@@ -1616,35 +1744,33 @@ jobs:
                               }
                           }
                       } catch (e: Exception) {
-                          if (!isRetry) {
-                              serviceScope.launch {
-                                  delay(85)
-                                  dispatchSwipeAttempt(true)
-                              }
-                          } else {
-                              finishOnce()
-                          }
+                          finishOnce()
                       }
                   }
 
                   dispatchSwipeAttempt(false)
               }
 
-              private fun findEditableNode(root: AccessibilityNodeInfo?, targetX: Int, targetY: Int): AccessibilityNodeInfo? {
+              private fun findEditableNodeInRadius(
+                  root: AccessibilityNodeInfo?,
+                  targetX: Int,
+                  targetY: Int,
+                  radiusPx: Float
+              ): AccessibilityNodeInfo? {
                   if (root == null) return null
 
-                  // 1. Cek node yang sedang memiliki fokus input aktif
                   val focused = root.findFocus(AccessibilityNodeInfo.FOCUS_INPUT)
                   if (focused != null && (focused.isEditable || focused.className?.contains("EditText", true) == true)) {
                       return focused
                   }
 
-                  // 2. Jika di Chrome/WebView fokus belum terdeteksi, cari node editable yang mencakup koordinat (targetX, targetY)
-                  val rect = android.graphics.Rect()
+                  val rect = Rect()
                   val queue = ArrayDeque<AccessibilityNodeInfo>()
                   queue.add(root)
 
                   var bestMatch: AccessibilityNodeInfo? = null
+                  var bestDist = Float.MAX_VALUE
+
                   while (queue.isNotEmpty()) {
                       val current = queue.removeFirst()
                       current.getBoundsInScreen(rect)
@@ -1652,9 +1778,17 @@ jobs:
                           current.className?.contains("EditText", true) == true ||
                           current.className?.contains("Input", true) == true
 
-                      if (isInput && rect.contains(targetX, targetY)) {
-                          bestMatch = current
-                          break
+                      if (isInput) {
+                          if (rect.contains(targetX, targetY)) {
+                              return current
+                          }
+                          val nearestX = targetX.toFloat().coerceIn(rect.left.toFloat(), rect.right.toFloat())
+                          val nearestY = targetY.toFloat().coerceIn(rect.top.toFloat(), rect.bottom.toFloat())
+                          val dist = hypot((targetX - nearestX).toDouble(), (targetY - nearestY).toDouble()).toFloat()
+                          if (dist <= radiusPx.coerceAtLeast(16f) && dist < bestDist) {
+                              bestDist = dist
+                              bestMatch = current
+                          }
                       }
 
                       for (i in 0 until current.childCount) {
@@ -1670,6 +1804,7 @@ jobs:
                   y: Float,
                   textToPaste: String,
                   autoTapToFocus: Boolean = true,
+                  radiusPx: Float = 0f,
                   callback: (() -> Unit)? = null
               ) {
                   val completed = AtomicBoolean(false)
@@ -1687,12 +1822,12 @@ jobs:
                               clipboard.setPrimaryClip(clip)
 
                               val rootNode = rootInActiveWindow
-                              val targetNode = findEditableNode(rootNode, x.toInt(), y.toInt())
+                              val targetNode = findEditableNodeInRadius(rootNode, x.toInt(), y.toInt(), radiusPx)
 
                               if (targetNode != null) {
                                   targetNode.performAction(AccessibilityNodeInfo.ACTION_FOCUS)
                                   targetNode.performAction(AccessibilityNodeInfo.ACTION_CLICK)
-                                  delay(80)
+                                  delay(70)
 
                                   val pasted = targetNode.performAction(AccessibilityNodeInfo.ACTION_PASTE)
                                   if (!pasted) {
@@ -1712,7 +1847,6 @@ jobs:
                                   targetNode.performAction(AccessibilityNodeInfo.ACTION_SET_SELECTION, selArgs)
                               }
                           } catch (e: Exception) {
-                              // Abaikan jika node sudah tertutup
                           } finally {
                               finishOnce()
                           }
@@ -1720,9 +1854,9 @@ jobs:
                   }
 
                   if (autoTapToFocus) {
-                      executeTap(x, y, 65L) {
+                      executeTap(x, y, 55L, radiusPx) {
                           serviceScope.launch {
-                              delay(300)
+                              delay(260)
                               performTypeAndSuggest()
                           }
                       }
@@ -1738,6 +1872,7 @@ jobs:
                   keyX: Float,
                   keyY: Float,
                   keyDelayMs: Long = 400L,
+                  radiusPx: Float = 0f,
                   callback: (() -> Unit)? = null
               ) {
                   val completed = AtomicBoolean(false)
@@ -1747,13 +1882,10 @@ jobs:
                       }
                   }
 
-                  // Tahap 1: Ketuk Kotak Form (Titik Utama) untuk mengaktifkan kursor & memunculkan Keyboard HP
-                  executeTap(formX, formY, 60L) {
+                  executeTap(formX, formY, 55L, radiusPx) {
                       serviceScope.launch {
-                          // Tahap 2: Tunggu hingga Keyboard HP naik sepenuhnya (default 400ms)
-                          delay(keyDelayMs.coerceAtLeast(150L))
-                          // Tahap 3: Ketuk Pin Huruf Keyboard (⌨️) secara fisik agar Popup Sugesti keluar
-                          executeTap(keyX, keyY, 60L) {
+                          delay(keyDelayMs.coerceAtLeast(120L))
+                          executeTap(keyX, keyY, 55L, radiusPx * 0.6f) {
                               finishOnce()
                           }
                       }
@@ -1830,7 +1962,9 @@ jobs:
                   var cachedKeyScreenY: Float = -1f,
                   // Counter runtime saat Play berjalan (siklus Multi-Paste & hitungan Sub-Loop)
                   var currentPasteIndex: Int = 0,
-                  var currentJumpCount: Int = 0
+                  var currentJumpCount: Int = 0,
+                  // Ukuran ikon mandiri per titik (0% = 20dp, 100% = 80dp)
+                  var sizePercent: Int = 25
               )
 
               private lateinit var windowManager: WindowManager
@@ -1847,7 +1981,7 @@ jobs:
               private var currentDialogView: View? = null
               private var currentDialogParams: WindowManager.LayoutParams? = null
 
-              // Dialog Ukuran (0 - 100% / 20dp - 40dp)
+              // Dialog Ukuran (0 - 100% / 20dp - 80dp)
               private var currentSizeDialogView: View? = null
               private var currentSizeDialogParams: WindowManager.LayoutParams? = null
 
@@ -1862,8 +1996,8 @@ jobs:
               private var lastKnownInsetX = 0
               private var lastKnownInsetY = 0
 
-              // Ukuran Titik Persentase (0% = 20dp, 100% = 40dp)
-              private var currentSizePercent = 50 // default 50% = 30dp
+              // Ukuran Titik Persentase Default (0% = 20dp, 100% = 80dp)
+              private var currentSizePercent = 25 // default 25% = 35dp
 
               private var isPlaying = false
               private val serviceScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
@@ -1898,18 +2032,26 @@ jobs:
 
               private fun loadSavedSizePercent() {
                   val prefs = getSharedPreferences("autoklik_saved_config", Context.MODE_PRIVATE)
-                  currentSizePercent = prefs.getInt("size_percent", 50)
+                  currentSizePercent = prefs.getInt("size_percent", 25).coerceIn(0, 100)
               }
 
-              private fun getTargetSizeDp(): Int {
-                  // Linear: 0% = 20dp, 100% = 40dp
-                  return 20 + (currentSizePercent * (40 - 20) / 100)
+              private fun getSizeDpForPercent(percent: Int): Int {
+                  // Linear: 0% = 20dp, 100% = 80dp
+                  return 20 + (percent.coerceIn(0, 100) * (80 - 20) / 100)
               }
 
-              private fun getTargetSizePx(): Int {
+              private fun getSizePxForPercent(percent: Int): Int {
                   val density = resources.displayMetrics.density
-                  return (getTargetSizeDp() * density).toInt()
+                  return (getSizeDpForPercent(percent) * density).toInt()
               }
+
+              private fun getTargetSizeDp(): Int = getSizeDpForPercent(currentSizePercent)
+
+              private fun getTargetSizePx(): Int = getSizePxForPercent(currentSizePercent)
+
+              private fun getPointSizeDp(point: TargetPoint): Int = getSizeDpForPercent(point.sizePercent)
+
+              private fun getPointSizePx(point: TargetPoint): Int = getSizePxForPercent(point.sizePercent)
 
               private fun startForegroundNotification() {
                   val channelId = "autoklik_overlay_channel"
@@ -2318,6 +2460,7 @@ jobs:
                               put("keyDelayMs", p.keyDelayMs)
                               put("keyX", p.keyParams?.x ?: p.savedKeyX)
                               put("keyY", p.keyParams?.y ?: p.savedKeyY)
+                              put("sizePercent", p.sizePercent)
                           }
                           pointsArray.put(obj)
                       }
@@ -2644,7 +2787,10 @@ jobs:
                   fun applySize(percent: Int) {
                       currentSizePercent = percent.coerceIn(0, 100)
                       sbPercent.progress = currentSizePercent
-                      tvTitle.text = "Ukuran Titik: $currentSizePercent% (${getTargetSizeDp()}dp)"
+                      tvTitle.text = "Ukuran Semua Titik: $currentSizePercent% (${getTargetSizeDp()}dp)"
+                      for (p in targetPoints) {
+                          p.sizePercent = currentSizePercent
+                      }
                       updateAllPointsVisuals()
 
                       val prefs = getSharedPreferences("autoklik_saved_config", Context.MODE_PRIVATE).edit()
@@ -2689,7 +2835,8 @@ jobs:
               // MENAMBAH TITIK TARGET (BULATAN MURNI 1:1 AGAR TIDAK PERNAH BERGESER ATAU MENUTUPI TITIK LAIN)
               private fun addTargetPoint(savedObj: JSONObject? = null) {
                   val nextOrder = targetPoints.size + 1
-                  val sizePx = getTargetSizePx()
+                  val pointSizePercent = (savedObj?.optInt("sizePercent", currentSizePercent) ?: currentSizePercent).coerceIn(0, 100)
+                  val sizePx = getSizePxForPercent(pointSizePercent)
 
                   val defaultX = 120 + ((nextOrder - 1) % 4) * 110
                   val defaultY = 350 + ((nextOrder - 1) / 4) * 120
@@ -2750,7 +2897,8 @@ jobs:
                       autoTapPaste = savedObj?.optBoolean("autoTapPaste", true) ?: true,
                       keyDelayMs = savedObj?.optLong("keyDelayMs", 400L) ?: 400L,
                       savedKeyX = savedObj?.optInt("keyX", -1) ?: -1,
-                      savedKeyY = savedObj?.optInt("keyY", -1) ?: -1
+                      savedKeyY = savedObj?.optInt("keyY", -1) ?: -1,
+                      sizePercent = pointSizePercent
                   )
 
                   // Sentuh & Seret Bulatan Nomor (pointRoot) untuk memindahkan posisi titik atau ketuk untuk buka Dialog
@@ -2857,15 +3005,15 @@ jobs:
               // MEMPERBARUI TAMPILAN VISUAL TITIK, GARIS SWIPE MANDIRI & PIN KEYBOARD POPUP
               private fun updatePointVisual(point: TargetPoint) {
                   val density = resources.displayMetrics.density
-                  val sizeDp = getTargetSizeDp()
-                  val sizePx = (sizeDp * density).toInt()
+                  val sizeDp = getPointSizeDp(point)
+                  val sizePx = getPointSizePx(point)
 
                   val pointRoot = point.view.findViewById<View>(R.id.pointRoot)
                   val tvNumber = point.view.findViewById<TextView>(R.id.tvTargetNumber)
                   val tvType = point.view.findViewById<TextView>(R.id.tvTargetType)
                   val viewCenterDot = point.view.findViewById<View>(R.id.viewCenterDot)
 
-                  // Jaga titik tengah (center X, Y) tetap 100% di koordinat yang sama saat ukuran ikon diubah (0% - 100%)
+                  // Jaga titik tengah (center X, Y) tetap 100% di koordinat yang sama saat ukuran ikon diubah (0% - 100% / 20dp - 80dp)
                   val oldW = if (point.params.width > 0) point.params.width else sizePx
                   val oldH = if (point.params.height > 0) point.params.height else sizePx
                   if (oldW != sizePx || oldH != sizePx) {
@@ -2883,7 +3031,7 @@ jobs:
                   point.params.width = sizePx
                   point.params.height = sizePx
 
-                  val dotSizePx = (sizeDp * 0.10f * density).toInt().coerceIn(4, 12)
+                  val dotSizePx = (sizeDp * 0.10f * density).toInt().coerceIn(4, 14)
                   if (viewCenterDot != null) {
                       viewCenterDot.layoutParams.width = dotSizePx
                       viewCenterDot.layoutParams.height = dotSizePx
@@ -2891,8 +3039,8 @@ jobs:
                   }
 
                   tvNumber.text = point.order.toString()
-                  tvNumber.textSize = (sizeDp * 0.42f).coerceIn(8.5f, 16.5f)
-                  tvType?.textSize = (sizeDp * 0.25f).coerceIn(5.5f, 10f)
+                  tvNumber.textSize = (sizeDp * 0.40f).coerceIn(8.5f, 24f)
+                  tvType?.textSize = (sizeDp * 0.24f).coerceIn(5.5f, 13f)
 
                   val minPx = (50f * density).toInt()
                   val maxPx = (resources.displayMetrics.heightPixels * 0.78f).toInt().coerceAtLeast(300)
@@ -2945,7 +3093,7 @@ jobs:
                   }
 
                   val density = resources.displayMetrics.density
-                  val sizePx = getTargetSizePx()
+                  val sizePx = getPointSizePx(point)
                   val screenH = resources.displayMetrics.heightPixels
                   val screenW = resources.displayMetrics.widthPixels
 
@@ -3153,8 +3301,8 @@ jobs:
                   }
 
                   val density = resources.displayMetrics.density
-                  val sizeDp = getTargetSizeDp()
-                  val sizePx = (sizeDp * density).toInt()
+                  val sizeDp = getPointSizeDp(point)
+                  val sizePx = getPointSizePx(point)
 
                   if (point.keyView == null) {
                       val defaultKeyX = if (point.savedKeyX >= 0) point.savedKeyX else (70 + ((point.order - 1) % 5) * 90)
@@ -3371,10 +3519,28 @@ jobs:
                   val layoutPopup = dialogView.findViewById<LinearLayout>(R.id.layoutDialogPopupFields)
                   val etPopupKeyDelay = dialogView.findViewById<EditText>(R.id.etPopupKeyDelay)
 
+                  val tvPointSizeLabel = dialogView.findViewById<TextView>(R.id.tvPointSizeLabel)
+                  val sbPointSizePercent = dialogView.findViewById<SeekBar>(R.id.sbPointSizePercent)
+
                   val btnSave = dialogView.findViewById<Button>(R.id.btnDialogSave)
                   val btnClose = dialogView.findViewById<Button>(R.id.btnDialogClose)
 
                   tvTitle.text = "Titik #${point.order} (${getPointTypeSymbol(point)})"
+
+                  // Pengaturan Ukuran Ikon Mandiri Titik Ini (0% - 100% = 20dp - 80dp)
+                  sbPointSizePercent?.progress = point.sizePercent.coerceIn(0, 100)
+                  tvPointSizeLabel?.text = "📐 Ikon: ${point.sizePercent}% (${getPointSizeDp(point)}dp)"
+                  sbPointSizePercent?.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+                      override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                          if (fromUser) {
+                              point.sizePercent = progress.coerceIn(0, 100)
+                              tvPointSizeLabel?.text = "📐 Ikon: ${point.sizePercent}% (${getPointSizeDp(point)}dp)"
+                              updatePointVisual(point)
+                          }
+                      }
+                      override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+                      override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+                  })
 
                   var selectedType = point.type
                   val pasteEditTexts = mutableListOf<EditText>()
@@ -3515,12 +3681,15 @@ jobs:
                   // Helper untuk menyimpan isi form dialog saat ini ke objek point (dipakai saat klik Simpan maupun saat pindah titik)
                   fun saveCurrentDialogFieldsToPoint() {
                       point.type = selectedType
+                      sbPointSizePercent?.let {
+                          point.sizePercent = it.progress.coerceIn(0, 100)
+                      }
 
                       val isSec = rgDelayUnit.checkedRadioButtonId == R.id.rbUnitSec
                       val delayInputVal = etDelay.text.toString().toDoubleOrNull() ?: if (isSec) 1.0 else 1000.0
                       point.delayValue = delayInputVal
                       point.delayUnit = if (isSec) "s" else "ms"
-                      point.delayMs = if (isSec) (delayInputVal * 1000.0).toLong().coerceAtLeast(50L) else delayInputVal.toLong().coerceAtLeast(50L)
+                      point.delayMs = if (isSec) (delayInputVal * 1000.0).toLong().coerceAtLeast(15L) else delayInputVal.toLong().coerceAtLeast(15L)
 
                       point.swipeDistancePx = etSwipeDistance.text.toString().toFloatOrNull() ?: point.swipeDistancePx
 
@@ -3858,10 +4027,10 @@ jobs:
                   refreshAllStackBadges()
               }
 
-              // Ambil koordinat presisi titik tengah ikon sesuai ukuran ikon saat ini (20dp - 40dp)
+              // Ambil koordinat presisi titik tengah ikon sesuai ukuran mandiri ikon titik tersebut (20dp - 80dp)
               // Tetap akurat 100% baik saat ikon terlihat (👁️), bertumpuk, maupun sedang disembunyikan (🙈)
               private fun getExactPointCenter(point: TargetPoint): Pair<Float, Float> {
-                  val sizePx = getTargetSizePx()
+                  val sizePx = getPointSizePx(point)
                   val exactRadius = sizePx / 2f
 
                   if (arePointsVisible && point.view.visibility == View.VISIBLE) {
@@ -3881,7 +4050,7 @@ jobs:
               }
 
               private fun getExactKeyPinCenter(point: TargetPoint): Pair<Float, Float> {
-                  val sizePx = getTargetSizePx()
+                  val sizePx = getPointSizePx(point)
                   val exactRadius = sizePx / 2f
                   val kParams = point.keyParams
 
@@ -3932,7 +4101,9 @@ jobs:
                   }
               }
 
-              // EKSEKUSI BERURUTAN SESUAI NO. URUT (1 -> 2 -> 3 ... -> N) UNTUK SEMUA FITUR (TAP, 2+ SWIPE, MULTI-PASTE SIKLUS, POPUP & SUB-LOOP BERBATAS)
+              // EKSEKUSI BERURUTAN SESUAI NO. URUT (1 -> 2 -> 3 ... -> N) UNTUK SEMUA FITUR
+              // - Akurasi Area Klik Sesuai Besarnya Bulatan Ikon (20dp - 80dp)
+              // - Looping Anti-Berhenti pada Kecepatan Tinggi (Watchdog & Non-Stop Coroutine)
               private fun startClickExecution(service: AutoClickAccessibilityService) {
                   clickJob?.cancel()
                   clickJob = serviceScope.launch {
@@ -3947,7 +4118,7 @@ jobs:
                       }
 
                       // Pastikan seluruh overlay titik sudah disembunyikan dari layar sebelum gestur pertama dimulai
-                      delay(140)
+                      delay(120)
 
                       Toast.makeText(applicationContext, "AutoKlik Berjalan (Urutan #1 s/d #${targetPoints.size})!", Toast.LENGTH_SHORT).show()
 
@@ -3955,108 +4126,114 @@ jobs:
                       var cycle = 1
 
                       while (isActive && isPlaying && targetPoints.isNotEmpty()) {
-                          val totalPoints = targetPoints.size
-                          if (currentOrder < 1 || currentOrder > totalPoints) {
-                              currentOrder = 1
-                          }
-
-                          val point = targetPoints.find { it.order == currentOrder } ?: targetPoints.getOrNull(currentOrder - 1)
-                          if (point != null) {
-                              // Tampilkan status No. Urut aktif pada Mini Toolbar
-                              tvMiniStatus?.text = "⚡ #${point.order}/$totalPoints ${getPointTypeSymbol(point)}"
-
-                              val (fallbackX, fallbackY) = getExactPointCenter(point)
-                              val tapX = if (point.cachedScreenX > 0f) point.cachedScreenX else fallbackX
-                              val tapY = if (point.cachedScreenY > 0f) point.cachedScreenY else fallbackY
-                              val screenH = resources.displayMetrics.heightPixels.toFloat()
-
-                              // 1. EKSEKUSI AKSI TITIK SAAT INI TERLEBIH DAHULU (Termasuk titik yang disetting Sub-Loop)
-                              withTimeoutOrNull(4000L) {
-                                  suspendCancellableCoroutine<Unit> { cont ->
-                                      val done = {
-                                          if (cont.isActive) cont.resume(Unit)
-                                      }
-                                      when (point.type) {
-                                          "swipe_up" -> {
-                                              val endY = (tapY - point.swipeDistancePx).coerceAtLeast(15f)
-                                              service.executeSwipe(tapX, tapY, tapX, endY, 220L, done)
-                                          }
-                                          "swipe_down" -> {
-                                              val maxScreenY = (screenH - 15f).coerceAtLeast(200f)
-                                              val endY = (tapY + point.swipeDistancePx).coerceAtMost(maxScreenY)
-                                              service.executeSwipe(tapX, tapY, tapX, endY, 220L, done)
-                                          }
-                                          "paste" -> {
-                                              // Multi-Paste Mengikuti Siklus: Teks #1 -> #2 -> #3 -> kembali mengulang ke #1
-                                              val validList = point.pasteTexts.map { it.trim() }.filter { it.isNotEmpty() }
-                                              val textToPaste = if (validList.isNotEmpty()) {
-                                                  val idx = point.currentPasteIndex % validList.size
-                                                  point.currentPasteIndex = (point.currentPasteIndex + 1) % validList.size
-                                                  validList[idx]
-                                              } else if (point.pasteText.isNotBlank()) {
-                                                  point.pasteText
-                                              } else {
-                                                  defaultPaste
-                                              }
-                                              service.executePaste(tapX, tapY, textToPaste, point.autoTapPaste, done)
-                                          }
-                                          "popup" -> {
-                                              if (point.keyView != null || point.savedKeyX >= 0) {
-                                                  val (fkX, fkY) = getExactKeyPinCenter(point)
-                                                  val keyTapX = if (point.cachedKeyScreenX > 0f) point.cachedKeyScreenX else fkX
-                                                  val keyTapY = if (point.cachedKeyScreenY > 0f) point.cachedKeyScreenY else fkY
-                                                  service.executePopup(tapX, tapY, keyTapX, keyTapY, point.keyDelayMs, done)
-                                              } else {
-                                                  service.executeTap(tapX, tapY, point.durationMs, done)
-                                              }
-                                          }
-                                          else -> {
-                                              service.executeTap(tapX, tapY, point.durationMs, done)
-                                          }
-                                      }
-                                  }
-                              }
-
-                              // 2. JEDA SETELAH TITIK INI SELESAI MELAKUKAN AKSI (ms atau detik)
-                              var waitTime = point.delayMs.coerceAtLeast(50L)
-                              if (jitterEnabled) {
-                                  val maxJitter = (waitTime * 0.10f).toLong().coerceAtMost(120L)
-                                  if (maxJitter > 5L) {
-                                      val delta = Random.nextLong(-maxJitter, maxJitter + 1)
-                                      waitTime = (waitTime + delta).coerceAtLeast(50L)
-                                  }
-                              }
-                              delay(waitTime)
-
-                              // 3. PENENTUAN URUTAN BERIKUTNYA (SUB-LOOP BERBATAS LALU LANJUT KE TITIK SELANJUTNYA)
-                              if (point.jumpEnabled && point.jumpToPoint in 1..totalPoints) {
-                                  val maxLoops = point.jumpAfterCycle // 0 = Tanpa Batas (∞), >0 = Batas jumlah lompatan Sub-Loop
-                                  if (maxLoops <= 0 || point.currentJumpCount < maxLoops) {
-                                      // Selama belum mencapai batas loop (misal < 8x), lompat balik ke titik target (misal #2)
-                                      point.currentJumpCount++
-                                      currentOrder = point.jumpToPoint
-                                  } else {
-                                      // Setelah batas loop selesai (misal sudah 8x), titik ini SUDAH melakukan aksinya di atas,
-                                      // sekarang reset counter Sub-Loop titik ini dan lanjutkan ke urutan berikutnya (#8 -> #9 -> #10)
-                                      point.currentJumpCount = 0
-                                      if (currentOrder >= totalPoints) {
-                                          currentOrder = 1
-                                          cycle++
-                                      } else {
-                                          currentOrder++
-                                      }
-                                  }
-                              } else if (currentOrder >= totalPoints) {
+                          try {
+                              val totalPoints = targetPoints.size
+                              if (currentOrder < 1 || currentOrder > totalPoints) {
                                   currentOrder = 1
-                                  cycle++
-                                  for (p in targetPoints) {
-                                      p.currentJumpCount = 0
+                              }
+
+                              val point = targetPoints.find { it.order == currentOrder } ?: targetPoints.getOrNull(currentOrder - 1)
+                              if (point != null) {
+                                  // Tampilkan status No. Urut aktif pada Mini Toolbar
+                                  tvMiniStatus?.text = "⚡ #${point.order}/$totalPoints ${getPointTypeSymbol(point)}"
+
+                                  val (fallbackX, fallbackY) = getExactPointCenter(point)
+                                  val tapX = if (point.cachedScreenX > 0f) point.cachedScreenX else fallbackX
+                                  val tapY = if (point.cachedScreenY > 0f) point.cachedScreenY else fallbackY
+                                  val radiusPx = (getPointSizePx(point) / 2f).coerceAtLeast(18f)
+                                  val screenH = resources.displayMetrics.heightPixels.toFloat()
+
+                                  // 1. EKSEKUSI AKSI TITIK SAAT INI TERLEBIH DAHULU (Termasuk titik yang disetting Sub-Loop)
+                                  withTimeoutOrNull(2500L) {
+                                      suspendCancellableCoroutine<Unit> { cont ->
+                                          val done = {
+                                              if (cont.isActive) cont.resume(Unit)
+                                          }
+                                          when (point.type) {
+                                              "swipe_up" -> {
+                                                  val endY = (tapY - point.swipeDistancePx).coerceAtLeast(15f)
+                                                  service.executeSwipe(tapX, tapY, tapX, endY, 220L, done)
+                                              }
+                                              "swipe_down" -> {
+                                                  val maxScreenY = (screenH - 15f).coerceAtLeast(200f)
+                                                  val endY = (tapY + point.swipeDistancePx).coerceAtMost(maxScreenY)
+                                                  service.executeSwipe(tapX, tapY, tapX, endY, 220L, done)
+                                              }
+                                              "paste" -> {
+                                                  // Multi-Paste Mengikuti Siklus: Teks #1 -> #2 -> #3 -> kembali mengulang ke #1
+                                                  val validList = point.pasteTexts.map { it.trim() }.filter { it.isNotEmpty() }
+                                                  val textToPaste = if (validList.isNotEmpty()) {
+                                                      val idx = point.currentPasteIndex % validList.size
+                                                      point.currentPasteIndex = (point.currentPasteIndex + 1) % validList.size
+                                                      validList[idx]
+                                                  } else if (point.pasteText.isNotBlank()) {
+                                                      point.pasteText
+                                                  } else {
+                                                      defaultPaste
+                                                  }
+                                                  service.executePaste(tapX, tapY, textToPaste, point.autoTapPaste, radiusPx, done)
+                                              }
+                                              "popup" -> {
+                                                  if (point.keyView != null || point.savedKeyX >= 0) {
+                                                      val (fkX, fkY) = getExactKeyPinCenter(point)
+                                                      val keyTapX = if (point.cachedKeyScreenX > 0f) point.cachedKeyScreenX else fkX
+                                                      val keyTapY = if (point.cachedKeyScreenY > 0f) point.cachedKeyScreenY else fkY
+                                                      service.executePopup(tapX, tapY, keyTapX, keyTapY, point.keyDelayMs, radiusPx, done)
+                                                  } else {
+                                                      service.executeTap(tapX, tapY, point.durationMs, radiusPx, done)
+                                                  }
+                                              }
+                                              else -> {
+                                                  service.executeTap(tapX, tapY, point.durationMs, radiusPx, done)
+                                              }
+                                          }
+                                      }
+                                  }
+
+                                  // 2. JEDA SETELAH TITIK INI SELESAI MELAKUKAN AKSI (ms atau detik)
+                                  var waitTime = point.delayMs.coerceAtLeast(15L)
+                                  if (jitterEnabled && waitTime >= 80L) {
+                                      val maxJitter = (waitTime * 0.10f).toLong().coerceAtMost(120L)
+                                      if (maxJitter > 5L) {
+                                          val delta = Random.nextLong(-maxJitter, maxJitter + 1)
+                                          waitTime = (waitTime + delta).coerceAtLeast(15L)
+                                      }
+                                  }
+                                  delay(waitTime)
+
+                                  // 3. PENENTUAN URUTAN BERIKUTNYA (SUB-LOOP BERBATAS LALU LANJUT KE TITIK SELANJUTNYA)
+                                  if (point.jumpEnabled && point.jumpToPoint in 1..totalPoints) {
+                                      val maxLoops = point.jumpAfterCycle // 0 = Tanpa Batas (∞), >0 = Batas jumlah lompatan Sub-Loop
+                                      if (maxLoops <= 0 || point.currentJumpCount < maxLoops) {
+                                          point.currentJumpCount++
+                                          currentOrder = point.jumpToPoint
+                                      } else {
+                                          point.currentJumpCount = 0
+                                          if (currentOrder >= totalPoints) {
+                                              currentOrder = 1
+                                              cycle++
+                                          } else {
+                                              currentOrder++
+                                          }
+                                      }
+                                  } else if (currentOrder >= totalPoints) {
+                                      currentOrder = 1
+                                      cycle++
+                                      for (p in targetPoints) {
+                                          p.currentJumpCount = 0
+                                      }
+                                  } else {
+                                      currentOrder++
                                   }
                               } else {
-                                  currentOrder++
+                                  currentOrder = 1
+                                  delay(20L)
                               }
-                          } else {
-                              currentOrder = 1
+                          } catch (ce: CancellationException) {
+                              throw ce
+                          } catch (t: Throwable) {
+                              // Jaminan Looping Anti-Berhenti pada Kecepatan Tinggi: bila terjadi error di satu ketukan, lanjut ke ketukan berikutnya
+                              delay(20L)
                           }
                       }
                   }
@@ -4311,11 +4488,12 @@ jobs:
                           put("jumpAfterCycle", 1)
                           put("pasteText", "a")
                           put("autoTapPaste", true)
+                          put("sizePercent", 25)
                       })
                   }
                   val profileObj = JSONObject().apply {
                       put("name", profileName)
-                      put("size_percent", 50)
+                      put("size_percent", 25)
                       put("points", defaultPoints)
                       put("saved_at", System.currentTimeMillis())
                   }
