@@ -1624,15 +1624,26 @@ jobs:
                           val rawText = (node.text ?: node.contentDescription)?.toString() ?: ""
                           if (rawText.isNotEmpty()) {
                               val lower = rawText.lowercase()
-                              if (lower.contains("trip.ferizy.com/order") && !lower.contains("/order/verification")) {
+                              if ((lower.contains("trip.ferizy.com/order") || lower.contains("/order")) &&
+                                  !lower.contains("/order/verification")
+                              ) {
                                   sawOrderSlide.set(true)
                               }
+                              // 1. Deteksi instan URL /order/verification atau /payment (termasuk teks halaman verifikasi bila address bar tertutup scroll)
                               if (lower.contains("trip.ferizy.com/order/verification") ||
-                                  (sawOrderSlide.get() && lower.contains("/order/verification"))
+                                  lower.contains("/order/verification") ||
+                                  lower.contains("trip.ferizy.com/payment") ||
+                                  (sawOrderSlide.get() && (
+                                      lower.contains("verifikasi pesanan") ||
+                                      lower.contains("lanjutkan pembayaran") ||
+                                      lower.contains("pilih metode pembayaran") ||
+                                      lower.contains("batas waktu pembayaran")
+                                  ))
                               ) {
                                   return "🔔 Pindah Slide ke /order/verification!"
                               }
 
+                              // 2. Deteksi perubahan Kuota : 0 -> Kuota > 0 (misal Kuota : 1, 2, 4, 10, dst.)
                               val match = quotaRegex.find(rawText)
                               if (match != null) {
                                   val quotaNum = match.groupValues.getOrNull(1)?.toIntOrNull() ?: 0
@@ -4187,6 +4198,22 @@ jobs:
                       val defaultPaste = prefs.getString("paste_text", "AutoKlik Trans") ?: ""
                       val sawOrderSlide = AtomicBoolean(false)
 
+                      // Watcher Real-Time 40ms Anti-Double-Order:
+                      // Memantau layar setiap 40 milidetik (bahkan saat sedang masa tunggu delay antar titik)
+                      // agar begitu pindah ke /order/verification atau Kuota > 0, langsung STOP instan sebelum klik berikutnya sempat keluar!
+                      val realtimeWatcher = launch {
+                          while (isActive && isPlaying && ferizyAlarmEnabled) {
+                              val instantTrigger = service.checkFerizyQuotaOrVerificationTrigger(sawOrderSlide)
+                              if (instantTrigger != null) {
+                                  playFerizySuccessAlarm()
+                                  Toast.makeText(applicationContext, "$instantTrigger AutoKlik Dihentikan Instan (Anti-Double-Order)!", Toast.LENGTH_LONG).show()
+                                  stopClickExecution()
+                                  break
+                              }
+                              delay(40L)
+                          }
+                      }
+
                       // Reset counter Multi-Paste & Sub-Loop saat sesi Play baru dimulai
                       for (p in targetPoints) {
                           p.currentPasteIndex = 0
@@ -4207,6 +4234,7 @@ jobs:
                               if (ferizyAlarmEnabled) {
                                   val triggerMsg = service.checkFerizyQuotaOrVerificationTrigger(sawOrderSlide)
                                   if (triggerMsg != null) {
+                                      realtimeWatcher.cancel()
                                       playFerizySuccessAlarm()
                                       Toast.makeText(applicationContext, "$triggerMsg AutoKlik Dihentikan Otomatis!", Toast.LENGTH_LONG).show()
                                       stopClickExecution()
