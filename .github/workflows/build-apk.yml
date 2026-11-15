@@ -619,7 +619,7 @@ jobs:
                               android:background="#1E293B"
                               android:button="@null"
                               android:gravity="center"
-                              android:text="📋 Paste Teks"
+                              android:text="📝 Input Ketik"
                               android:textColor="#F8FAFC"
                               android:textSize="11sp"
                               android:textStyle="bold" />
@@ -1643,12 +1643,17 @@ jobs:
                                   return "🔔 Pindah Slide ke /order/verification!"
                               }
 
-                              // 2. Deteksi perubahan Kuota : 0 -> Kuota > 0 (misal Kuota : 1, 2, 4, 10, dst.)
-                              val match = quotaRegex.find(rawText)
-                              if (match != null) {
-                                  val quotaNum = match.groupValues.getOrNull(1)?.toIntOrNull() ?: 0
-                                  if (quotaNum > 0) {
-                                      return "🔔 Kuota Ferizy Terbuka (Kuota : $quotaNum)!"
+                              // 2. Auto-Tutup Popup Error / Kuota Habis agar tidak menghalangi klik Pesan Sekarang berikutnya
+                              if ((lower.contains("kuota habis") || lower.contains("kuota tidak") || lower.contains("gagal") || lower.contains("penuh") || lower.contains("tidak tersedia")) &&
+                                  !lower.contains("setuju") && !lower.contains("lanjutkan pembayaran")
+                              ) {
+                                  for (i in 0 until node.childCount) {
+                                      val child = node.getChild(i)
+                                      val cTxt = (child?.text ?: child?.contentDescription)?.toString()?.trim()?.lowercase() ?: ""
+                                      if (child != null && child.isClickable && (cTxt == "ok" || cTxt == "oke" || cTxt == "tutup" || cTxt == "mengerti")) {
+                                          child.performAction(AccessibilityNodeInfo.ACTION_CLICK)
+                                          break
+                                      }
                                   }
                               }
                           }
@@ -1683,7 +1688,7 @@ jobs:
                   val microJitterY = (kotlin.random.Random.nextFloat() * 8f) - 4f
                   val safeX = clampX(resolvedX + microJitterX)
                   val safeY = clampY(resolvedY + microJitterY)
-                  val safeDur = durationMs.coerceIn(25L, 500L)
+                  val safeDur = durationMs.coerceIn(12L, 500L)
 
                   // Watchdog Anti-Macet: Pastikan callback 100% selalu terpanggil meskipun tap berkecepatan sangat tinggi
                   serviceScope.launch {
@@ -1738,7 +1743,7 @@ jobs:
                   startY: Float,
                   endX: Float,
                   endY: Float,
-                  durationMs: Long = 220L,
+                  durationMs: Long = 260L,
                   callback: (() -> Unit)? = null
               ) {
                   val completed = AtomicBoolean(false)
@@ -1748,50 +1753,90 @@ jobs:
                       }
                   }
 
+                  val density = resources.displayMetrics.density.coerceAtLeast(1f)
+                  val screenH = resources.displayMetrics.heightPixels.toFloat().coerceAtLeast(600f)
+                  val topMargin = (32f * density).coerceAtLeast(40f)
+                  val bottomMargin = (screenH - 42f * density).coerceAtLeast(240f)
+                  val maxSingleStrokeSpan = (bottomMargin - topMargin).coerceAtLeast(200f)
+
                   val safeStartX = clampX(startX)
                   val safeEndX = clampX(endX)
-                  val safeStartY = clampY(startY)
-                  var safeEndY = clampY(endY)
 
-                  if (abs(safeEndY - safeStartY) < 25f && abs(safeEndX - safeStartX) < 25f) {
-                      val h = resources.displayMetrics.heightPixels.toFloat().coerceAtLeast(400f)
-                      safeEndY = if (endY <= startY) {
-                          (safeStartY - 120f).coerceAtLeast(25f)
-                      } else {
-                          (safeStartY + 120f).coerceAtMost(h - 25f)
+                  val isUp = endY <= startY
+                  // Tambahkan kompensasi Touch-Slop Android (+32dp) & Pengali Skala (1.35x) agar gerakan layar sesuai panjang garis!
+                  val rawRequestedDist = abs(endY - startY).coerceAtLeast(80f * density)
+                  val effectiveTotalDist = (rawRequestedDist * 1.35f) + (32f * density)
+
+                  // Hitung berapa segmen geseran jika pengguna meminta jarak swipe > 1 layar penuh (misal 2000px - 5000px)
+                  val strokeCount = kotlin.math.ceil(effectiveTotalDist / maxSingleStrokeSpan).toInt().coerceIn(1, 4)
+                  val perStrokeDist = (effectiveTotalDist / strokeCount).coerceIn(90f * density, maxSingleStrokeSpan)
+
+                  // Jika titik awal terlalu dekat dengan batas atas/bawah sehingga memotong garis, otomatis geser titik pangkal agar jarak swipe tetap penuh!
+                  var strokeStartY = clampY(startY)
+                  var strokeEndY: Float
+
+                  if (isUp) {
+                      if (strokeStartY - perStrokeDist < topMargin) {
+                          strokeStartY = (topMargin + perStrokeDist).coerceIn(topMargin, bottomMargin)
                       }
+                      strokeEndY = (strokeStartY - perStrokeDist).coerceIn(topMargin, bottomMargin)
+                  } else {
+                      if (strokeStartY + perStrokeDist > bottomMargin) {
+                          strokeStartY = (bottomMargin - perStrokeDist).coerceIn(topMargin, bottomMargin)
+                      }
+                      strokeEndY = (strokeStartY + perStrokeDist).coerceIn(topMargin, bottomMargin)
                   }
 
-                  val safeDur = durationMs.coerceIn(140L, 600L)
+                  val singleDur = durationMs.coerceIn(150L, 420L)
 
                   // Watchdog Anti-Macet untuk Swipe
                   serviceScope.launch {
-                      delay(safeDur + 260L)
+                      delay((singleDur + 120L) * strokeCount + 220L)
                       finishOnce()
                   }
 
-                  fun buildPureSwipeGesture(): GestureDescription {
-                      val singlePath = Path().apply {
-                          moveTo(safeStartX, safeStartY)
-                          lineTo(safeEndX, safeEndY)
+                  // Gunakan kurva 2-segmen (90% gerak utama + 10% pengereman halus 2px di ujung)
+                  // agar layar berhenti presisi di titik akhir dan TIDAK berubah-ubah saat disusul tugas klik berikutnya!
+                  fun buildStabilizedSwipeGesture(): GestureDescription {
+                      val brakeY = if (isUp) {
+                          (strokeEndY + 4f).coerceIn(topMargin, bottomMargin)
+                      } else {
+                          (strokeEndY - 4f).coerceIn(topMargin, bottomMargin)
                       }
-                      val stroke = GestureDescription.StrokeDescription(singlePath, 0L, safeDur)
+                      val singlePath = Path().apply {
+                          moveTo(safeStartX, strokeStartY)
+                          lineTo(safeEndX, brakeY)
+                          lineTo(safeEndX, strokeEndY)
+                      }
+                      val stroke = GestureDescription.StrokeDescription(singlePath, 0L, singleDur)
                       return GestureDescription.Builder().addStroke(stroke).build()
                   }
 
-                  fun dispatchSwipeAttempt(isRetry: Boolean) {
+                  fun runStrokeStep(stepIndex: Int, isRetry: Boolean) {
+                      if (completed.get()) return
                       try {
-                          val gesture = buildPureSwipeGesture()
+                          val gesture = buildStabilizedSwipeGesture()
                           val dispatched = dispatchGesture(gesture, object : GestureResultCallback() {
                               override fun onCompleted(gestureDescription: GestureDescription?) {
-                                  finishOnce()
+                                  if (stepIndex + 1 < strokeCount) {
+                                      serviceScope.launch {
+                                          delay(45L)
+                                          runStrokeStep(stepIndex + 1, false)
+                                      }
+                                  } else {
+                                      serviceScope.launch {
+                                          // Jeda stabilisasi 40ms setelah swipe selesai agar posisi layar terkunci sebelum tugas berikutnya jalan
+                                          delay(40L)
+                                          finishOnce()
+                                      }
+                                  }
                               }
 
                               override fun onCancelled(gestureDescription: GestureDescription?) {
                                   if (!isRetry && !completed.get()) {
                                       serviceScope.launch {
-                                          delay(55)
-                                          dispatchSwipeAttempt(true)
+                                          delay(50L)
+                                          runStrokeStep(stepIndex, true)
                                       }
                                   } else {
                                       finishOnce()
@@ -1802,8 +1847,8 @@ jobs:
                           if (!dispatched) {
                               if (!isRetry && !completed.get()) {
                                   serviceScope.launch {
-                                      delay(55)
-                                      dispatchSwipeAttempt(true)
+                                      delay(50L)
+                                      runStrokeStep(stepIndex, true)
                                   }
                               } else {
                                   finishOnce()
@@ -1814,7 +1859,7 @@ jobs:
                       }
                   }
 
-                  dispatchSwipeAttempt(false)
+                  runStrokeStep(0, false)
               }
 
               private fun findEditableNodeInRadius(
@@ -1893,10 +1938,32 @@ jobs:
                               if (targetNode != null) {
                                   targetNode.performAction(AccessibilityNodeInfo.ACTION_FOCUS)
                                   targetNode.performAction(AccessibilityNodeInfo.ACTION_CLICK)
-                                  delay(70)
+                                  delay(55)
 
-                                  val pasted = targetNode.performAction(AccessibilityNodeInfo.ACTION_PASTE)
-                                  if (!pasted) {
+                                  val curLen = targetNode.text?.length ?: 0
+                                  if (curLen > 0) {
+                                      val selAllArgs = Bundle().apply {
+                                          putInt(AccessibilityNodeInfo.ACTION_ARGUMENT_SELECTION_START_INT, 0)
+                                          putInt(AccessibilityNodeInfo.ACTION_ARGUMENT_SELECTION_END_INT, curLen)
+                                      }
+                                      targetNode.performAction(AccessibilityNodeInfo.ACTION_SET_SELECTION, selAllArgs)
+                                      delay(20)
+                                  }
+
+                                  val clearArgs = Bundle().apply {
+                                      putCharSequence(
+                                          AccessibilityNodeInfo.ACTION_ARGUMENT_SET_TEXT_CHARSEQUENCE,
+                                          ""
+                                      )
+                                  }
+                                  targetNode.performAction(AccessibilityNodeInfo.ACTION_SET_TEXT, clearArgs)
+                                  delay(35)
+
+                                  targetNode.performAction(AccessibilityNodeInfo.ACTION_PASTE)
+                                  delay(45)
+                                  targetNode.refresh()
+                                  val nowText = targetNode.text?.toString() ?: ""
+                                  if (nowText != textToPaste) {
                                       val setArgs = Bundle().apply {
                                           putCharSequence(
                                               AccessibilityNodeInfo.ACTION_ARGUMENT_SET_TEXT_CHARSEQUENCE,
@@ -1904,6 +1971,7 @@ jobs:
                                           )
                                       }
                                       targetNode.performAction(AccessibilityNodeInfo.ACTION_SET_TEXT, setArgs)
+                                      delay(35)
                                   }
 
                                   val selArgs = Bundle().apply {
@@ -1920,9 +1988,9 @@ jobs:
                   }
 
                   if (autoTapToFocus) {
-                      executeTap(x, y, 55L, radiusPx) {
+                      executeTap(x, y, 25L, radiusPx) {
                           serviceScope.launch {
-                              delay(260)
+                              delay(120)
                               performTypeAndSuggest()
                           }
                       }
@@ -2331,7 +2399,7 @@ jobs:
               }
 
               // Hapus semua companion view milik satu titik
-              private fun r9yMnTm4NSzvG9rrwjM2ec8xZgh1cafXH8(point: TargetPoint) {
+              private fun removePointViewsFromWindow(point: TargetPoint) {
                   try {
                       windowManager.removeView(point.view)
                   } catch (e: Exception) {}
@@ -2794,7 +2862,7 @@ jobs:
 
                       // Hapus semua titik lama beserta Garis Swipe & Pin Keyboard dari layar
                       for (point in targetPoints) {
-                          r9yMnTm4NSzvG9rrwjM2ec8xZgh1cafXH8(point)
+                          removePointViewsFromWindow(point)
                       }
                       targetPoints.clear()
 
@@ -3308,7 +3376,9 @@ jobs:
                                       } else {
                                           event.rawY - initialTouchY
                                       }
-                                      point.swipeDistancePx = (initialDistPx + delta).coerceIn(minPx, maxPx)
+                                      // Saat ditarik mendekati ujung layar, otomatis perbesar skala jarak swipe (1.5x)
+                                      val boostedDelta = if (abs(delta) > screenH * 0.45f) delta * 1.5f else delta
+                                      point.swipeDistancePx = (initialDistPx + boostedDelta).coerceIn(minPx, 5000f * density)
                                       syncSwipeOverlay(point)
                                       return true
                                   }
@@ -3758,7 +3828,7 @@ jobs:
                       val delayInputVal = etDelay.text.toString().toDoubleOrNull() ?: if (isSec) 1.0 else 1000.0
                       point.delayValue = delayInputVal
                       point.delayUnit = if (isSec) "s" else "ms"
-                      point.delayMs = if (isSec) (delayInputVal * 1000.0).toLong().coerceAtLeast(15L) else delayInputVal.toLong().coerceAtLeast(15L)
+                      point.delayMs = if (isSec) (delayInputVal * 1000.0).toLong().coerceAtLeast(0L) else delayInputVal.toLong().coerceAtLeast(0L)
 
                       point.swipeDistancePx = etSwipeDistance.text.toString().toFloatOrNull() ?: point.swipeDistancePx
 
@@ -3965,7 +4035,7 @@ jobs:
                   if (targetPoints.isNotEmpty()) {
                       reindexTargetPoints()
                       val last = targetPoints.removeAt(targetPoints.size - 1)
-                      r9yMnTm4NSzvG9rrwjM2ec8xZgh1cafXH8(last)
+                      removePointViewsFromWindow(last)
                       reindexTargetPoints()
                       Toast.makeText(this, "Titik #${last.order} dihapus", Toast.LENGTH_SHORT).show()
                   } else {
@@ -4220,8 +4290,8 @@ jobs:
                           p.currentJumpCount = 0
                       }
 
-                      // Pastikan seluruh overlay titik sudah disembunyikan dari layar sebelum gestur pertama dimulai
-                      delay(120)
+                      // Pastikan seluruh overlay titik sudah disembunyikan dari layar sebelum gestur pertama dimulai (0-lag start)
+                      delay(25)
 
                       Toast.makeText(applicationContext, "AutoKlik Berjalan (Urutan #1 s/d #${targetPoints.size})!", Toast.LENGTH_SHORT).show()
 
@@ -4266,16 +4336,15 @@ jobs:
                                           }
                                           when (point.type) {
                                               "swipe_up" -> {
-                                                  val endY = (tapY - point.swipeDistancePx).coerceAtLeast(15f)
-                                                  service.executeSwipe(tapX, tapY, tapX, endY, 220L, done)
+                                                  val endY = tapY - point.swipeDistancePx
+                                                  service.executeSwipe(tapX, tapY, tapX, endY, 260L, done)
                                               }
                                               "swipe_down" -> {
-                                                  val maxScreenY = (screenH - 15f).coerceAtLeast(200f)
-                                                  val endY = (tapY + point.swipeDistancePx).coerceAtMost(maxScreenY)
-                                                  service.executeSwipe(tapX, tapY, tapX, endY, 220L, done)
+                                                  val endY = tapY + point.swipeDistancePx
+                                                  service.executeSwipe(tapX, tapY, tapX, endY, 260L, done)
                                               }
-                                              "paste" -> {
-                                                  // Multi-Paste Mengikuti Siklus: Teks #1 -> #2 -> #3 -> kembali mengulang ke #1
+                                              "paste", "input" -> {
+                                                  // Multi-Paste / Input Ketik Mengikuti Siklus: Teks #1 -> #2 -> #3 -> kembali mengulang ke #1
                                                   val validList = point.pasteTexts.map { it.trim() }.filter { it.isNotEmpty() }
                                                   val textToPaste = if (validList.isNotEmpty()) {
                                                       val idx = point.currentPasteIndex % validList.size
@@ -4316,14 +4385,18 @@ jobs:
                                       }
                                   }
 
-                                  // 2. JEDA SETELAH TITIK INI SELESAI MELAKUKAN AKSI + FITUR #1: ANTI-BAN HUMAN JITTER (±12%)
-                                  var waitTime = point.delayMs.coerceAtLeast(15L)
-                                  if (jitterEnabled && waitTime >= 45L) {
+                                  // 2. JEDA SETELAH TITIK INI SELESAI MELAKUKAN AKSI + FITUR #1: ANTI-BAN HUMAN JITTER CERDAS
+                                  var waitTime = point.delayMs.coerceAtLeast(0L)
+                                  if (jitterEnabled && waitTime > 150L) {
                                       val maxJitter = (waitTime * 0.12f).toLong().coerceIn(5L, 220L)
                                       val delta = Random.nextLong(-maxJitter, maxJitter + 1)
-                                      waitTime = (waitTime + delta).coerceAtLeast(15L)
+                                      waitTime = (waitTime + delta).coerceAtLeast(0L)
+                                  } else if (jitterEnabled && waitTime >= 40L) {
+                                      val maxFastJitter = (waitTime * 0.05f).toLong().coerceAtLeast(2L)
+                                      val delta = Random.nextLong(-maxFastJitter, 1L)
+                                      waitTime = (waitTime + delta).coerceAtLeast(0L)
                                   }
-                                  delay(waitTime)
+                                  if (waitTime > 0L) delay(waitTime)
 
                                   // 3. PENENTUAN URUTAN BERIKUTNYA (SUB-LOOP BERBATAS LALU LANJUT KE TITIK SELANJUTNYA)
                                   if (point.jumpEnabled && point.jumpToPoint in 1..totalPoints) {
@@ -4392,7 +4465,7 @@ jobs:
                   closeConfigDialog()
 
                   for (point in targetPoints) {
-                      r9yMnTm4NSzvG9rrwjM2ec8xZgh1cafXH8(point)
+                      removePointViewsFromWindow(point)
                   }
                   targetPoints.clear()
 
