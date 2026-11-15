@@ -175,7 +175,7 @@ jobs:
           <accessibility-service xmlns:android="http://schemas.android.com/apk/res/android"
               android:accessibilityEventTypes="typeAllMask"
               android:accessibilityFeedbackType="feedbackGeneric"
-              android:accessibilityFlags="flagDefault|flagRetrieveInteractiveWindows"
+              android:accessibilityFlags="flagDefault|flagRetrieveInteractiveWindows|flagInputMethodEditor"
               android:canPerformGestures="true"
               android:canRetrieveWindowContent="true"
               android:description="@string/accessibility_desc"
@@ -603,7 +603,7 @@ jobs:
                               android:textStyle="bold" />
                       </LinearLayout>
 
-                      <!-- Baris Grid 2: Paste (Multi-Teks) | Popup Keyboard -->
+                      <!-- Baris Grid 2: Input Ketik (+ Pemicu Autofill Terpadu) -->
                       <LinearLayout
                           android:layout_width="match_parent"
                           android:layout_height="wrap_content"
@@ -612,14 +612,12 @@ jobs:
 
                           <RadioButton
                               android:id="@+id/rbTypePaste"
-                              android:layout_width="0dp"
-                              android:layout_height="32dp"
-                              android:layout_marginEnd="3dp"
-                              android:layout_weight="1"
+                              android:layout_width="match_parent"
+                              android:layout_height="34dp"
                               android:background="#1E293B"
                               android:button="@null"
                               android:gravity="center"
-                              android:text="📝 Input Ketik"
+                              android:text="📝 Input Ketik (+ Pemicu Autofill)"
                               android:textColor="#F8FAFC"
                               android:textSize="11sp"
                               android:textStyle="bold" />
@@ -627,15 +625,8 @@ jobs:
                           <RadioButton
                               android:id="@+id/rbTypePopup"
                               android:layout_width="0dp"
-                              android:layout_height="32dp"
-                              android:layout_weight="1"
-                              android:background="#1E293B"
-                              android:button="@null"
-                              android:gravity="center"
-                              android:text="⌨️ Popup Key"
-                              android:textColor="#C084FC"
-                              android:textSize="11sp"
-                              android:textStyle="bold" />
+                              android:layout_height="0dp"
+                              android:visibility="gone" />
                       </LinearLayout>
                   </RadioGroup>
 
@@ -736,58 +727,160 @@ jobs:
                           android:layout_height="28dp"
                           android:layout_marginTop="2dp"
                           android:checked="true"
-                          android:text="Tap form dulu sebelum Paste"
+                          android:text="Tap kolom form dulu sebelum ketik"
                           android:textColor="#CBD5E1"
                           android:textSize="10.5sp" />
-                  </LinearLayout>
 
-                  <!-- PANEL KONTEKSTUAL 3: POPUP KEYBOARD (1 BARIS RINGKAS) -->
-                  <LinearLayout
-                      android:id="@+id/layoutDialogPopupFields"
-                      android:layout_width="match_parent"
-                      android:layout_height="wrap_content"
-                      android:layout_marginTop="5dp"
-                      android:background="#1E1B4B"
-                      android:orientation="vertical"
-                      android:padding="7dp"
-                      android:visibility="gone">
+                      <!-- BAGIAN TERPADU: PEMICU AUTOFILL + PIN SARAN + HIDE KEYBOARD ANDROID 13+ -->
+                      <View
+                          android:layout_width="match_parent"
+                          android:layout_height="1dp"
+                          android:layout_marginTop="4dp"
+                          android:layout_marginBottom="4dp"
+                          android:background="#334155" />
+
+                      <CheckBox
+                          android:id="@+id/cbInputTriggerEnabled"
+                          android:layout_width="wrap_content"
+                          android:layout_height="30dp"
+                          android:checked="false"
+                          android:text="⚡ Aktifkan Pemicu + Pin Saran Autofill"
+                          android:textColor="#C084FC"
+                          android:textSize="11sp"
+                          android:textStyle="bold" />
 
                       <LinearLayout
+                          android:id="@+id/layoutInputTriggerOptions"
                           android:layout_width="match_parent"
                           android:layout_height="wrap_content"
-                          android:gravity="center_vertical"
-                          android:orientation="horizontal">
+                          android:layout_marginTop="3dp"
+                          android:background="#1E1B4B"
+                          android:orientation="vertical"
+                          android:padding="7dp"
+                          android:visibility="gone">
+
+                          <LinearLayout
+                              android:layout_width="match_parent"
+                              android:layout_height="wrap_content"
+                              android:gravity="center_vertical"
+                              android:orientation="horizontal">
+
+                              <TextView
+                                  android:layout_width="0dp"
+                                  android:layout_height="wrap_content"
+                                  android:layout_weight="1"
+                                  android:text="🔤 Pemicu (kosong=huruf awal):"
+                                  android:textColor="#E9D5FF"
+                                  android:textSize="10.5sp"
+                                  android:textStyle="bold" />
+
+                              <EditText
+                                  android:id="@+id/etInputTriggerOverride"
+                                  android:layout_width="68dp"
+                                  android:layout_height="30dp"
+                                  android:background="#0F172A"
+                                  android:gravity="center"
+                                  android:hint="Auto"
+                                  android:singleLine="true"
+                                  android:text=""
+                                  android:textColor="#FACC15"
+                                  android:textColorHint="#64748B"
+                                  android:textSize="12sp"
+                                  android:textStyle="bold" />
+                          </LinearLayout>
+
+                          <LinearLayout
+                              android:layout_width="match_parent"
+                              android:layout_height="wrap_content"
+                              android:layout_marginTop="4dp"
+                              android:gravity="center_vertical"
+                              android:orientation="horizontal">
+
+                              <TextView
+                                  android:layout_width="0dp"
+                                  android:layout_height="wrap_content"
+                                  android:layout_weight="1"
+                                  android:text="⏳ Jeda Saran Autofill (ms):"
+                                  android:textColor="#C084FC"
+                                  android:textSize="10.5sp"
+                                  android:textStyle="bold" />
+
+                              <EditText
+                                  android:id="@+id/etPopupKeyDelay"
+                                  android:layout_width="68dp"
+                                  android:layout_height="30dp"
+                                  android:background="#0F172A"
+                                  android:gravity="center"
+                                  android:inputType="number"
+                                  android:text="450"
+                                  android:textColor="#FACC15"
+                                  android:textSize="12sp"
+                                  android:textStyle="bold" />
+                          </LinearLayout>
+
+                          <LinearLayout
+                              android:layout_width="match_parent"
+                              android:layout_height="wrap_content"
+                              android:layout_marginTop="4dp"
+                              android:gravity="center_vertical"
+                              android:orientation="horizontal">
+
+                              <TextView
+                                  android:layout_width="0dp"
+                                  android:layout_height="wrap_content"
+                                  android:layout_weight="1"
+                                  android:text="⏳ Jeda Isi Kolom Lain (ms):"
+                                  android:textColor="#C084FC"
+                                  android:textSize="10.5sp"
+                                  android:textStyle="bold" />
+
+                              <EditText
+                                  android:id="@+id/etAutofillFillDelay"
+                                  android:layout_width="68dp"
+                                  android:layout_height="30dp"
+                                  android:background="#0F172A"
+                                  android:gravity="center"
+                                  android:inputType="number"
+                                  android:text="300"
+                                  android:textColor="#38BDF8"
+                                  android:textSize="12sp"
+                                  android:textStyle="bold" />
+                          </LinearLayout>
 
                           <TextView
-                              android:layout_width="0dp"
+                              android:layout_width="match_parent"
                               android:layout_height="wrap_content"
-                              android:layout_weight="1"
-                              android:text="⌨️ Jeda Tunggu Keyboard (ms):"
-                              android:textColor="#C084FC"
-                              android:textSize="11sp"
-                              android:textStyle="bold" />
-
-                          <EditText
-                              android:id="@+id/etPopupKeyDelay"
-                              android:layout_width="70dp"
-                              android:layout_height="32dp"
-                              android:background="#0F172A"
-                              android:gravity="center"
-                              android:inputType="number"
-                              android:text="400"
-                              android:textColor="#FACC15"
-                              android:textSize="12.5sp"
-                              android:textStyle="bold" />
+                              android:layout_marginTop="4dp"
+                              android:text="💡 Alur: Klik Kolom ➔ Ketik Pemicu ➔ Klik Pin Ungu (✨ AUTO) ➔ Hapus Pemicu ➔ Ketik Kata Lengkap."
+                              android:textColor="#CBD5E1"
+                              android:textSize="9.5sp" />
                       </LinearLayout>
+
+                      <CheckBox
+                          android:id="@+id/cbHideKeyboard"
+                          android:layout_width="wrap_content"
+                          android:layout_height="28dp"
+                          android:layout_marginTop="4dp"
+                          android:checked="false"
+                          android:text="🙈 Sembunyikan Keyboard (Android 13+)"
+                          android:textColor="#34D399"
+                          android:textSize="10.5sp"
+                          android:textStyle="bold" />
 
                       <TextView
                           android:layout_width="match_parent"
                           android:layout_height="wrap_content"
-                          android:layout_marginTop="2dp"
-                          android:text="💡 Geser Pin Ungu (⌨️ KEY) ke atas huruf di Keyboard HP Anda."
-                          android:textColor="#CBD5E1"
-                          android:textSize="9.5sp" />
+                          android:text="ℹ️ Pengetikan otomatis via sinyal keyboard asli Android 13+ (tanpa titik A–Z). Matikan sembunyikan keyboard jika saran autofill Brave butuh bar keyboard."
+                          android:textColor="#94A3B8"
+                          android:textSize="9sp" />
                   </LinearLayout>
+
+                  <!-- Placeholder tersembunyi untuk kompatibilitas ID lama -->
+                  <LinearLayout
+                      android:id="@+id/layoutDialogPopupFields"
+                      android:layout_width="0dp"
+                      android:layout_height="0dp"
+                      android:visibility="gone" />
 
                   <!-- BARIS 4: JEDA SETELAH TITIK INI (1 BARIS SEJAJAR, DEFAULT 1 DETIK) -->
                   <LinearLayout
@@ -1468,7 +1561,9 @@ jobs:
           package com.autoklik.android.service
 
           import android.accessibilityservice.AccessibilityService
+          import android.accessibilityservice.AccessibilityServiceInfo
           import android.accessibilityservice.GestureDescription
+          import android.accessibilityservice.InputMethod
           import android.content.ClipData
           import android.content.ClipboardManager
           import android.content.Context
@@ -1476,11 +1571,15 @@ jobs:
           import android.graphics.Rect
           import android.os.Build
           import android.os.Bundle
+          import android.os.SystemClock
+          import android.view.KeyCharacterMap
+          import android.view.KeyEvent
           import android.view.accessibility.AccessibilityEvent
           import android.view.accessibility.AccessibilityNodeInfo
           import androidx.annotation.RequiresApi
           import kotlinx.coroutines.*
           import java.util.concurrent.atomic.AtomicBoolean
+          import kotlin.coroutines.resume
           import kotlin.math.abs
           import kotlin.math.hypot
 
@@ -1496,15 +1595,42 @@ jobs:
               override fun onServiceConnected() {
                   super.onServiceConnected()
                   instance = this
+                  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                      try {
+                          val info = serviceInfo
+                          if (info != null && (info.flags and AccessibilityServiceInfo.FLAG_INPUT_METHOD_EDITOR) == 0) {
+                              info.flags = info.flags or AccessibilityServiceInfo.FLAG_INPUT_METHOD_EDITOR
+                              serviceInfo = info
+                          }
+                      } catch (e: Exception) {}
+                  }
+              }
+
+              @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+              override fun onCreateInputMethod(): InputMethod {
+                  return super.onCreateInputMethod()
+              }
+
+              fun setKeyboardHiddenForTyping(hidden: Boolean) {
+                  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                      try {
+                          val mode = if (hidden) SHOW_MODE_HIDDEN else SHOW_MODE_AUTO
+                          if (softKeyboardController.showMode != mode) {
+                              softKeyboardController.setShowMode(mode)
+                          }
+                      } catch (e: Exception) {}
+                  }
               }
 
               override fun onAccessibilityEvent(event: AccessibilityEvent?) {}
 
               override fun onInterrupt() {
+                  setKeyboardHiddenForTyping(false)
                   instance = null
               }
 
               override fun onDestroy() {
+                  setKeyboardHiddenForTyping(false)
                   super.onDestroy()
                   instance = null
                   serviceScope.cancel()
@@ -1909,12 +2035,269 @@ jobs:
                   return bestMatch ?: focused
               }
 
+              // RAW TAP PRESISI (Tanpa radius scan elemen DOM belakang & tanpa acak koordinat mikro)
+              // Khusus untuk mengetuk Pin Saran Autofill (✨ AUTO) maupun fokus tepat ke kolom input
               @RequiresApi(Build.VERSION_CODES.N)
-              fun executePaste(
+              fun executeRawTap(
                   x: Float,
                   y: Float,
-                  textToPaste: String,
+                  durationMs: Long = 45L,
+                  callback: (() -> Unit)? = null
+              ) {
+                  val completed = AtomicBoolean(false)
+                  val finishOnce = {
+                      if (completed.compareAndSet(false, true)) {
+                          callback?.invoke()
+                      }
+                  }
+
+                  val safeX = clampX(x)
+                  val safeY = clampY(y)
+                  val safeDur = durationMs.coerceIn(15L, 450L)
+
+                  serviceScope.launch {
+                      delay(safeDur + 220L)
+                      finishOnce()
+                  }
+
+                  fun dispatchAttempt(isRetry: Boolean) {
+                      try {
+                          val path = Path().apply { moveTo(safeX, safeY) }
+                          val stroke = GestureDescription.StrokeDescription(path, 0L, safeDur)
+                          val gesture = GestureDescription.Builder().addStroke(stroke).build()
+
+                          val dispatched = dispatchGesture(gesture, object : GestureResultCallback() {
+                              override fun onCompleted(gestureDescription: GestureDescription?) {
+                                  finishOnce()
+                              }
+
+                              override fun onCancelled(gestureDescription: GestureDescription?) {
+                                  if (!isRetry && !completed.get()) {
+                                      serviceScope.launch {
+                                          delay(35)
+                                          dispatchAttempt(true)
+                                      }
+                                  } else {
+                                      finishOnce()
+                                  }
+                              }
+                          }, null)
+
+                          if (!dispatched) {
+                              if (!isRetry && !completed.get()) {
+                                  serviceScope.launch {
+                                      delay(35)
+                                      dispatchAttempt(true)
+                                  }
+                              } else {
+                                  finishOnce()
+                              }
+                          }
+                      } catch (e: Exception) {
+                          finishOnce()
+                      }
+                  }
+
+                  dispatchAttempt(false)
+              }
+
+              @RequiresApi(Build.VERSION_CODES.N)
+              private suspend fun awaitRawTap(x: Float, y: Float, durationMs: Long = 45L) {
+                  suspendCancellableCoroutine<Unit> { cont ->
+                      executeRawTap(x, y, durationMs) {
+                          if (cont.isActive) cont.resume(Unit)
+                      }
+                  }
+              }
+
+              @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+              private suspend fun awaitAccessibilityInputConnection(maxWaitMs: Long = 320L): InputMethod.AccessibilityInputConnection? {
+                  var elapsed = 0L
+                  while (elapsed <= maxWaitMs) {
+                      val ic = try {
+                          inputMethod?.currentInputConnection
+                      } catch (e: Exception) {
+                          null
+                      }
+                      if (ic != null) return ic
+                      delay(25L)
+                      elapsed += 25L
+                  }
+                  return null
+              }
+
+              @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+              private fun sendSingleKeyCode(ic: InputMethod.AccessibilityInputConnection, keyCode: Int) {
+                  val now = SystemClock.uptimeMillis()
+                  ic.sendKeyEvent(KeyEvent(now, now, KeyEvent.ACTION_DOWN, keyCode, 0))
+                  ic.sendKeyEvent(KeyEvent(now, now + 4L, KeyEvent.ACTION_UP, keyCode, 0))
+              }
+
+              private fun readNodeOrInputText(node: AccessibilityNodeInfo?): String {
+                  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                      try {
+                          val ic = inputMethod?.currentInputConnection
+                          val sur = ic?.getSurroundingText(256, 256, 0)
+                          val surTxt = sur?.text?.toString()
+                          if (surTxt != null) return surTxt
+                      } catch (e: Exception) {}
+                  }
+                  return try {
+                      node?.refresh()
+                      node?.text?.toString() ?: ""
+                  } catch (e: Exception) {
+                      ""
+                  }
+              }
+
+              private suspend fun clearInputViaKeyboardOrNode(targetNode: AccessibilityNodeInfo?) {
+                  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                      val ic = awaitAccessibilityInputConnection(180L)
+                      if (ic != null) {
+                          try {
+                              // 1. Select All + Backspace asli (memicu keydown/input/change React/Chromium)
+                              ic.performContextMenuAction(android.R.id.selectAll)
+                              delay(18L)
+                              sendSingleKeyCode(ic, KeyEvent.KEYCODE_DEL)
+                              delay(25L)
+
+                              var remaining = readNodeOrInputText(targetNode)
+                              if (remaining.isNotEmpty()) {
+                                  ic.deleteSurroundingText(256, 256)
+                                  delay(20L)
+                                  remaining = readNodeOrInputText(targetNode)
+                              }
+                              if (remaining.isNotEmpty()) {
+                                  sendSingleKeyCode(ic, KeyEvent.KEYCODE_MOVE_END)
+                                  delay(10L)
+                                  val maxBackspaces = (remaining.length + 2).coerceIn(1, 64)
+                                  repeat(maxBackspaces) {
+                                      sendSingleKeyCode(ic, KeyEvent.KEYCODE_DEL)
+                                      delay(8L)
+                                  }
+                              }
+                              return
+                          } catch (e: Exception) {}
+                      }
+                  }
+
+                  // Fallback Android <= 12 atau bila InputConnection belum terhubung (TANPA ACTION_CLICK ganda agar tidak memicu Autofill ulang!)
+                  if (targetNode != null) {
+                      try {
+                          targetNode.refresh()
+                          val curLen = targetNode.text?.length ?: 0
+                          if (curLen > 0) {
+                              val selAllArgs = Bundle().apply {
+                                  putInt(AccessibilityNodeInfo.ACTION_ARGUMENT_SELECTION_START_INT, 0)
+                                  putInt(AccessibilityNodeInfo.ACTION_ARGUMENT_SELECTION_END_INT, curLen)
+                              }
+                              targetNode.performAction(AccessibilityNodeInfo.ACTION_SET_SELECTION, selAllArgs)
+                              delay(20L)
+                              val cutOk = targetNode.performAction(AccessibilityNodeInfo.ACTION_CUT)
+                              delay(20L)
+                              targetNode.refresh()
+                              if (!cutOk || !targetNode.text.isNullOrEmpty()) {
+                                  val clearArgs = Bundle().apply {
+                                      putCharSequence(AccessibilityNodeInfo.ACTION_ARGUMENT_SET_TEXT_CHARSEQUENCE, "")
+                                  }
+                                  targetNode.performAction(AccessibilityNodeInfo.ACTION_SET_TEXT, clearArgs)
+                                  delay(25L)
+                              }
+                          }
+                      } catch (e: Exception) {}
+                  }
+              }
+
+              private suspend fun typeTextViaKeyboardOrNode(
+                  text: String,
+                  targetNode: AccessibilityNodeInfo?,
+                  charDelayMs: Long = 16L
+              ) {
+                  if (text.isEmpty()) return
+
+                  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                      val ic = awaitAccessibilityInputConnection(250L)
+                      if (ic != null) {
+                          try {
+                              val kcm = KeyCharacterMap.load(KeyCharacterMap.VIRTUAL_KEYBOARD)
+                              for (idx in text.indices) {
+                                  val ch = text[idx]
+                                  val events = kcm.getEvents(charArrayOf(ch))
+                                  if (events != null && events.isNotEmpty()) {
+                                      val now = SystemClock.uptimeMillis()
+                                      for (ev in events) {
+                                          val stamped = KeyEvent(
+                                              now,
+                                              now,
+                                              ev.action,
+                                              ev.keyCode,
+                                              ev.repeatCount,
+                                              ev.metaState
+                                          )
+                                          ic.sendKeyEvent(stamped)
+                                      }
+                                  } else {
+                                      ic.commitText(ch.toString(), 1, null)
+                                  }
+                                  if (charDelayMs > 0L && idx < text.length - 1) {
+                                      delay(charDelayMs)
+                                  }
+                              }
+                              return
+                          } catch (e: Exception) {}
+                      }
+                  }
+
+                  // Fallback Android <= 12: Paste via Clipboard (tanpa ACTION_CLICK ganda)
+                  try {
+                      val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                      val clip = ClipData.newPlainText("AutoKlikInput", text)
+                      clipboard.setPrimaryClip(clip)
+
+                      val node = targetNode ?: findEditableNodeInRadius(rootInActiveWindow, 0, 0, 80f)
+                      if (node != null) {
+                          node.performAction(AccessibilityNodeInfo.ACTION_FOCUS)
+                          delay(25L)
+                          node.performAction(AccessibilityNodeInfo.ACTION_PASTE)
+                          delay(45L)
+                          node.refresh()
+                          val nowText = node.text?.toString() ?: ""
+                          if (nowText != text) {
+                              val setArgs = Bundle().apply {
+                                  putCharSequence(AccessibilityNodeInfo.ACTION_ARGUMENT_SET_TEXT_CHARSEQUENCE, text)
+                              }
+                              node.performAction(AccessibilityNodeInfo.ACTION_SET_TEXT, setArgs)
+                              delay(30L)
+                          }
+                          val selArgs = Bundle().apply {
+                              putInt(AccessibilityNodeInfo.ACTION_ARGUMENT_SELECTION_START_INT, text.length)
+                              putInt(AccessibilityNodeInfo.ACTION_ARGUMENT_SELECTION_END_INT, text.length)
+                          }
+                          node.performAction(AccessibilityNodeInfo.ACTION_SET_SELECTION, selArgs)
+                      }
+                  } catch (e: Exception) {}
+              }
+
+              // FITUR TERPADU: INPUT KETIK + PEMICU AUTOFILL (TANPA TITIK KEYBOARD A-Z + SUPPORT HIDE KEYBOARD ANDROID 13+)
+              // Alur:
+              // 1. Klik Kolom Form (bila autoTapToFocus)
+              // 2. [Bila Pemicu Aktif] Bersihkan isi lama -> Ketik Huruf/Angka Awal (atau pemicu khusus) via KeyEvent asli
+              // 3. [Bila Pemicu Aktif] Tunggu saran Autofill muncul -> Raw Tap tepat ke Pin Ungu (✨ AUTO)
+              // 4. Tunggu autofill isi kolom lain -> Hapus teks pemicu sampai bersih
+              // 5. Ketik Kata Lengkap via KeyEvent asli + Verifikasi Anti-Revert
+              @RequiresApi(Build.VERSION_CODES.N)
+              fun executeInputWithTrigger(
+                  formX: Float,
+                  formY: Float,
+                  textToType: String,
                   autoTapToFocus: Boolean = true,
+                  triggerEnabled: Boolean = false,
+                  triggerOverride: String = "",
+                  pinX: Float = -1f,
+                  pinY: Float = -1f,
+                  triggerWaitMs: Long = 450L,
+                  autofillWaitMs: Long = 300L,
+                  hideKeyboard: Boolean = false,
                   radiusPx: Float = 0f,
                   callback: (() -> Unit)? = null
               ) {
@@ -1925,78 +2308,95 @@ jobs:
                       }
                   }
 
-                  val performTypeAndSuggest = {
-                      serviceScope.launch {
-                          try {
-                              val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-                              val clip = ClipData.newPlainText("AutoKlikPaste", textToPaste)
-                              clipboard.setPrimaryClip(clip)
+                  serviceScope.launch {
+                      try {
+                          setKeyboardHiddenForTyping(hideKeyboard)
 
-                              val rootNode = rootInActiveWindow
-                              val targetNode = findEditableNodeInRadius(rootNode, x.toInt(), y.toInt(), radiusPx)
+                          // Langkah 1: Klik Kolom Form agar fokus & InputConnection aktif
+                          if (autoTapToFocus) {
+                              awaitRawTap(formX, formY, 40L)
+                              delay(if (hideKeyboard) 140L else 240L)
+                          }
 
-                              if (targetNode != null) {
-                                  targetNode.performAction(AccessibilityNodeInfo.ACTION_FOCUS)
-                                  targetNode.performAction(AccessibilityNodeInfo.ACTION_CLICK)
-                                  delay(55)
+                          var targetNode = findEditableNodeInRadius(rootInActiveWindow, formX.toInt(), formY.toInt(), radiusPx)
+                          if (targetNode != null && !targetNode.isFocused) {
+                              targetNode.performAction(AccessibilityNodeInfo.ACTION_FOCUS)
+                              delay(40L)
+                          }
 
-                                  val curLen = targetNode.text?.length ?: 0
-                                  if (curLen > 0) {
-                                      val selAllArgs = Bundle().apply {
-                                          putInt(AccessibilityNodeInfo.ACTION_ARGUMENT_SELECTION_START_INT, 0)
-                                          putInt(AccessibilityNodeInfo.ACTION_ARGUMENT_SELECTION_END_INT, curLen)
-                                      }
-                                      targetNode.performAction(AccessibilityNodeInfo.ACTION_SET_SELECTION, selAllArgs)
-                                      delay(20)
-                                  }
-
-                                  val clearArgs = Bundle().apply {
-                                      putCharSequence(
-                                          AccessibilityNodeInfo.ACTION_ARGUMENT_SET_TEXT_CHARSEQUENCE,
-                                          ""
-                                      )
-                                  }
-                                  targetNode.performAction(AccessibilityNodeInfo.ACTION_SET_TEXT, clearArgs)
-                                  delay(35)
-
-                                  targetNode.performAction(AccessibilityNodeInfo.ACTION_PASTE)
-                                  delay(45)
-                                  targetNode.refresh()
-                                  val nowText = targetNode.text?.toString() ?: ""
-                                  if (nowText != textToPaste) {
-                                      val setArgs = Bundle().apply {
-                                          putCharSequence(
-                                              AccessibilityNodeInfo.ACTION_ARGUMENT_SET_TEXT_CHARSEQUENCE,
-                                              textToPaste
-                                          )
-                                      }
-                                      targetNode.performAction(AccessibilityNodeInfo.ACTION_SET_TEXT, setArgs)
-                                      delay(35)
-                                  }
-
-                                  val selArgs = Bundle().apply {
-                                      putInt(AccessibilityNodeInfo.ACTION_ARGUMENT_SELECTION_START_INT, textToPaste.length)
-                                      putInt(AccessibilityNodeInfo.ACTION_ARGUMENT_SELECTION_END_INT, textToPaste.length)
-                                  }
-                                  targetNode.performAction(AccessibilityNodeInfo.ACTION_SET_SELECTION, selArgs)
+                          // Langkah 2 & 3: Pemicu Autofill + Klik Saran Autofill (Pin Ungu ✨ AUTO)
+                          if (triggerEnabled) {
+                              val effectiveTrigger = triggerOverride.trim().ifEmpty {
+                                  textToType.firstOrNull()?.toString() ?: ""
                               }
-                          } catch (e: Exception) {
-                          } finally {
-                              finishOnce()
-                          }
-                      }
-                  }
+                              if (effectiveTrigger.isNotEmpty()) {
+                                  clearInputViaKeyboardOrNode(targetNode)
+                                  delay(25L)
+                                  typeTextViaKeyboardOrNode(effectiveTrigger, targetNode, 18L)
+                                  delay(triggerWaitMs.coerceIn(100L, 5000L))
 
-                  if (autoTapToFocus) {
-                      executeTap(x, y, 25L, radiusPx) {
-                          serviceScope.launch {
-                              delay(120)
-                              performTypeAndSuggest()
+                                  if (pinX >= 0f && pinY >= 0f) {
+                                      awaitRawTap(pinX, pinY, 45L)
+                                      delay(autofillWaitMs.coerceIn(80L, 5000L))
+
+                                      // Pastikan kolom form masih terfokus agar penghapusan & pengetikan akhir 100% masuk
+                                      targetNode = findEditableNodeInRadius(rootInActiveWindow, formX.toInt(), formY.toInt(), radiusPx)
+                                      val hasIc = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                          try { inputMethod?.currentInputConnection != null } catch (e: Exception) { false }
+                                      } else {
+                                          targetNode?.isFocused == true
+                                      }
+                                      if (!hasIc) {
+                                          awaitRawTap(formX, formY, 30L)
+                                          delay(120L)
+                                          targetNode = findEditableNodeInRadius(rootInActiveWindow, formX.toInt(), formY.toInt(), radiusPx)
+                                      }
+                                  }
+                              }
                           }
+
+                          // Langkah 4: Hapus Teks Lama / Nama Pemicu
+                          clearInputViaKeyboardOrNode(targetNode)
+                          delay(45L)
+
+                          // Langkah 5: Ketik Kata Lengkap via Keyboard Event Asli + Anti-Revert Verification
+                          if (textToType.isNotEmpty()) {
+                              typeTextViaKeyboardOrNode(textToType, targetNode, 16L)
+                              delay(80L)
+
+                              val actualAfter = readNodeOrInputText(targetNode).trim()
+                              if (actualAfter != textToType.trim()) {
+                                  clearInputViaKeyboardOrNode(targetNode)
+                                  delay(35L)
+                                  typeTextViaKeyboardOrNode(textToType, targetNode, 16L)
+                                  delay(50L)
+                              }
+                          }
+                      } catch (e: Exception) {
+                      } finally {
+                          finishOnce()
                       }
-                  } else {
-                      performTypeAndSuggest()
                   }
+              }
+
+              @RequiresApi(Build.VERSION_CODES.N)
+              fun executePaste(
+                  x: Float,
+                  y: Float,
+                  textToPaste: String,
+                  autoTapToFocus: Boolean = true,
+                  radiusPx: Float = 0f,
+                  callback: (() -> Unit)? = null
+              ) {
+                  executeInputWithTrigger(
+                      formX = x,
+                      formY = y,
+                      textToType = textToPaste,
+                      autoTapToFocus = autoTapToFocus,
+                      triggerEnabled = false,
+                      radiusPx = radiusPx,
+                      callback = callback
+                  )
               }
 
               @RequiresApi(Build.VERSION_CODES.N)
@@ -2009,18 +2409,11 @@ jobs:
                   radiusPx: Float = 0f,
                   callback: (() -> Unit)? = null
               ) {
-                  val completed = AtomicBoolean(false)
-                  val finishOnce = {
-                      if (completed.compareAndSet(false, true)) {
-                          callback?.invoke()
-                      }
-                  }
-
-                  executeTap(formX, formY, 55L, radiusPx) {
+                  executeRawTap(formX, formY, 55L) {
                       serviceScope.launch {
                           delay(keyDelayMs.coerceAtLeast(120L))
-                          executeTap(keyX, keyY, 55L, radiusPx * 0.6f) {
-                              finishOnce()
+                          executeRawTap(keyX, keyY, 55L) {
+                              callback?.invoke()
                           }
                       }
                   }
@@ -2086,10 +2479,15 @@ jobs:
                   var swipeLineParams: WindowManager.LayoutParams? = null,
                   var swipeHandleView: View? = null,
                   var swipeHandleParams: WindowManager.LayoutParams? = null,
-                  // Companion Overlay Mandiri untuk Fitur "Popup" (Pin Huruf Keyboard ⌨️)
+                  // Fitur Terpadu Input Ketik + Pemicu Autofill + Sembunyikan Keyboard (Android 13+)
+                  var triggerEnabled: Boolean = false,
+                  var triggerCharOverride: String = "",
+                  var autofillFillDelayMs: Long = 300L,
+                  var hideKeyboard: Boolean = false,
+                  // Companion Overlay Mandiri Pin Saran Autofill (✨ AUTO)
                   var keyView: View? = null,
                   var keyParams: WindowManager.LayoutParams? = null,
-                  var keyDelayMs: Long = 400L,
+                  var keyDelayMs: Long = 450L,
                   var savedKeyX: Int = -1,
                   var savedKeyY: Int = -1,
                   // Koordinat layar fisik yang dikunci tepat sebelum Play dimulai (agar 100% akurat saat titik disembunyikan selama Play)
@@ -2594,6 +2992,10 @@ jobs:
                               }
                               put("pasteTexts", pasteArr)
                               put("autoTapPaste", p.autoTapPaste)
+                              put("triggerEnabled", p.triggerEnabled)
+                              put("triggerCharOverride", p.triggerCharOverride)
+                              put("autofillFillDelayMs", p.autofillFillDelayMs)
+                              put("hideKeyboard", p.hideKeyboard)
                               put("keyDelayMs", p.keyDelayMs)
                               put("keyX", p.keyParams?.x ?: p.savedKeyX)
                               put("keyY", p.keyParams?.y ?: p.savedKeyY)
@@ -3016,11 +3418,18 @@ jobs:
                       loadedPasteTexts.add(singleSavedPaste)
                   }
 
+                  val rawLoadedType = savedObj?.optString("type", "tap") ?: "tap"
+                  val normalizedType = when (rawLoadedType) {
+                      "popup", "input" -> "paste"
+                      else -> rawLoadedType
+                  }
+                  val loadedTriggerEnabled = savedObj?.optBoolean("triggerEnabled", rawLoadedType == "popup") ?: (rawLoadedType == "popup")
+
                   val targetPoint = TargetPoint(
                       order = nextOrder,
                       view = pointView,
                       params = pointParams,
-                      type = savedObj?.optString("type", "tap") ?: "tap",
+                      type = normalizedType,
                       delayValue = savedObj?.optDouble("delayValue", 1.0) ?: 1.0,
                       delayUnit = savedObj?.optString("delayUnit", "s") ?: "s",
                       delayMs = savedObj?.optLong("delayMs", 1000L) ?: 1000L,
@@ -3032,7 +3441,11 @@ jobs:
                       pasteText = loadedPasteTexts.firstOrNull() ?: singleSavedPaste,
                       pasteTexts = loadedPasteTexts,
                       autoTapPaste = savedObj?.optBoolean("autoTapPaste", true) ?: true,
-                      keyDelayMs = savedObj?.optLong("keyDelayMs", 400L) ?: 400L,
+                      triggerEnabled = loadedTriggerEnabled,
+                      triggerCharOverride = savedObj?.optString("triggerCharOverride", "") ?: "",
+                      autofillFillDelayMs = savedObj?.optLong("autofillFillDelayMs", 300L) ?: 300L,
+                      hideKeyboard = savedObj?.optBoolean("hideKeyboard", false) ?: false,
+                      keyDelayMs = savedObj?.optLong("keyDelayMs", 450L) ?: 450L,
                       savedKeyX = savedObj?.optInt("keyX", -1) ?: -1,
                       savedKeyY = savedObj?.optInt("keyY", -1) ?: -1,
                       sizePercent = pointSizePercent
@@ -3107,8 +3520,8 @@ jobs:
                   val base = when (point.type) {
                       "swipe_up" -> "▲"
                       "swipe_down" -> "▼"
-                      "paste" -> "📋"
-                      "popup" -> "⌨️"
+                      "paste", "input" -> if (point.triggerEnabled) "📝⚡" else "📝"
+                      "popup" -> "📝⚡"
                       else -> "🎯"
                   }
                   return if (point.jumpEnabled) "$base🔁" else base
@@ -3426,9 +3839,10 @@ jobs:
                   }
               }
 
-              // MEMBUAT / MEMPERBARUI / MENGHAPUS PIN HURUF KEYBOARD (⌨️) KHUSUS FITUR "POPUP"
+              // MEMBUAT / MEMPERBARUI / MENGHAPUS PIN SARAN AUTOFILL (✨ AUTO) UNTUK INPUT KETIK + PEMICU
               private fun syncPopupKeyPin(point: TargetPoint) {
-                  if (point.type != "popup") {
+                  val needsAutofillPin = ((point.type == "paste" || point.type == "input") && point.triggerEnabled) || point.type == "popup"
+                  if (!needsAutofillPin) {
                       if (point.keyView != null) {
                           try {
                               windowManager.removeView(point.keyView)
@@ -3444,8 +3858,10 @@ jobs:
                   val sizePx = getPointSizePx(point)
 
                   if (point.keyView == null) {
-                      val defaultKeyX = if (point.savedKeyX >= 0) point.savedKeyX else (70 + ((point.order - 1) % 5) * 90)
-                      val defaultKeyY = if (point.savedKeyY >= 0) point.savedKeyY else (resources.displayMetrics.heightPixels * 0.73f).toInt()
+                      val screenW = resources.displayMetrics.widthPixels
+                      val screenH = resources.displayMetrics.heightPixels
+                      val defaultKeyX = if (point.savedKeyX >= 0) point.savedKeyX else point.params.x.coerceIn(20, (screenW - sizePx - 20).coerceAtLeast(30))
+                      val defaultKeyY = if (point.savedKeyY >= 0) point.savedKeyY else (point.params.y + sizePx + (42 * density).toInt()).coerceIn(60, (screenH - sizePx - 40).coerceAtLeast(100))
 
                       val kParams = WindowManager.LayoutParams(
                           sizePx,
@@ -3471,7 +3887,7 @@ jobs:
 
                       val tvKeyNum = TextView(this).apply {
                           tag = "tvKeyNum"
-                          text = "⌨️${point.order}"
+                          text = "✨${point.order}"
                           setTextColor(Color.WHITE)
                           textSize = (sizeDp * 0.34f).coerceIn(8f, 13f)
                           setTypeface(typeface, android.graphics.Typeface.BOLD)
@@ -3480,7 +3896,7 @@ jobs:
 
                       val tvKeySub = TextView(this).apply {
                           tag = "tvKeySub"
-                          text = "KEY"
+                          text = "AUTO"
                           setTextColor(Color.parseColor("#FACC15"))
                           textSize = (sizeDp * 0.24f).coerceIn(6f, 9f)
                           setTypeface(typeface, android.graphics.Typeface.BOLD)
@@ -3527,7 +3943,7 @@ jobs:
                                       if (event.action == MotionEvent.ACTION_UP && !moved && diff < 350) {
                                           Toast.makeText(
                                               this@FloatingOverlayService,
-                                              "⌨️ Pin Keyboard Titik #${point.order}: Geser pin ini tepat ke atas huruf pada Keyboard HP Anda!",
+                                              "✨ Pin Saran Autofill Titik #${point.order}: Geser tepat ke atas pilihan Saran Autofill Brave!",
                                               Toast.LENGTH_SHORT
                                           ).show()
                                       }
@@ -3565,7 +3981,7 @@ jobs:
                           kParams.height = sizePx
                           val tvKeyNum = kView.findViewWithTag<TextView>("tvKeyNum")
                           val tvKeySub = kView.findViewWithTag<TextView>("tvKeySub")
-                          tvKeyNum?.text = "⌨️${point.order}"
+                          tvKeyNum?.text = "✨${point.order}"
                           tvKeyNum?.textSize = (sizeDp * 0.34f).coerceIn(8f, 13f)
                           tvKeySub?.textSize = (sizeDp * 0.24f).coerceIn(6f, 9f)
                           try {
@@ -3654,6 +4070,12 @@ jobs:
                   val btnAddPasteText = dialogView.findViewById<Button>(R.id.btnAddPasteText)
                   val layoutPasteTextsContainer = dialogView.findViewById<LinearLayout>(R.id.layoutPasteTextsContainer)
                   val cbAutoTap = dialogView.findViewById<CheckBox>(R.id.cbDialogAutoTap)
+
+                  val cbInputTriggerEnabled = dialogView.findViewById<CheckBox>(R.id.cbInputTriggerEnabled)
+                  val layoutInputTriggerOptions = dialogView.findViewById<LinearLayout>(R.id.layoutInputTriggerOptions)
+                  val etInputTriggerOverride = dialogView.findViewById<EditText>(R.id.etInputTriggerOverride)
+                  val etAutofillFillDelay = dialogView.findViewById<EditText>(R.id.etAutofillFillDelay)
+                  val cbHideKeyboard = dialogView.findViewById<CheckBox>(R.id.cbHideKeyboard)
 
                   val layoutPopup = dialogView.findViewById<LinearLayout>(R.id.layoutDialogPopupFields)
                   val etPopupKeyDelay = dialogView.findViewById<EditText>(R.id.etPopupKeyDelay)
@@ -3791,7 +4213,8 @@ jobs:
                       "popup" to rbPopup
                   )
 
-                  fun selectTypeUI(type: String) {
+                  fun selectTypeUI(rawType: String) {
+                      val type = if (rawType == "popup" || rawType == "input") "paste" else rawType
                       selectedType = type
                       for ((key, btn) in typeButtons) {
                           val active = key == type
@@ -3808,7 +4231,7 @@ jobs:
                       }
                       layoutSwipe.visibility = if (type == "swipe_up" || type == "swipe_down") View.VISIBLE else View.GONE
                       layoutPaste.visibility = if (type == "paste") View.VISIBLE else View.GONE
-                      layoutPopup.visibility = if (type == "popup") View.VISIBLE else View.GONE
+                      layoutPopup.visibility = View.GONE
                   }
 
                   for ((key, btn) in typeButtons) {
@@ -3843,7 +4266,11 @@ jobs:
                       point.currentJumpCount = 0
 
                       point.autoTapPaste = cbAutoTap.isChecked
-                      point.keyDelayMs = etPopupKeyDelay.text.toString().toLongOrNull()?.coerceAtLeast(150L) ?: 400L
+                      point.triggerEnabled = cbInputTriggerEnabled?.isChecked ?: point.triggerEnabled
+                      point.triggerCharOverride = etInputTriggerOverride?.text?.toString()?.trim() ?: ""
+                      point.keyDelayMs = etPopupKeyDelay.text.toString().toLongOrNull()?.coerceAtLeast(100L) ?: 450L
+                      point.autofillFillDelayMs = etAutofillFillDelay?.text?.toString()?.toLongOrNull()?.coerceAtLeast(80L) ?: 300L
+                      point.hideKeyboard = cbHideKeyboard?.isChecked ?: false
 
                       updatePointVisual(point)
                       syncAllSwipeOverlays()
@@ -3989,9 +4416,17 @@ jobs:
                       layoutSubLoop.visibility = if (isChecked) View.VISIBLE else View.GONE
                   }
 
-                  // Paste & Popup state
+                  // Input Ketik + Pemicu Autofill + Hide Keyboard state
                   cbAutoTap.isChecked = point.autoTapPaste
+                  cbInputTriggerEnabled?.isChecked = point.triggerEnabled || point.type == "popup"
+                  layoutInputTriggerOptions?.visibility = if (cbInputTriggerEnabled?.isChecked == true) View.VISIBLE else View.GONE
+                  cbInputTriggerEnabled?.setOnCheckedChangeListener { _, isChecked ->
+                      layoutInputTriggerOptions?.visibility = if (isChecked) View.VISIBLE else View.GONE
+                  }
+                  etInputTriggerOverride?.setText(point.triggerCharOverride)
                   etPopupKeyDelay.setText(point.keyDelayMs.toString())
+                  etAutofillFillDelay?.setText(point.autofillFillDelayMs.toString())
+                  cbHideKeyboard?.isChecked = point.hideKeyboard
 
                   // Terapkan pilihan Tipe Aksi awal
                   selectTypeUI(point.type)
@@ -4001,12 +4436,12 @@ jobs:
                       closePointSettingsDialog()
                       val isSec = point.delayUnit == "s"
                       val unitLabel = if (isSec) "${point.delayValue} dtk" else "${point.delayMs} ms"
-                      if (point.type == "popup") {
-                          Toast.makeText(this, "⌨️ Mode Popup Titik #${point.order} Aktif! Geser Pin Ungu (⌨️${point.order}) ke huruf di Keyboard HP.", Toast.LENGTH_LONG).show()
+                      if (point.type == "paste" && point.triggerEnabled) {
+                          Toast.makeText(this, "📝⚡ Input + Pemicu Autofill Titik #${point.order} Aktif! Geser Pin Ungu (✨${point.order}) ke saran Autofill Brave.", Toast.LENGTH_LONG).show()
                       } else if (point.type == "swipe_up" || point.type == "swipe_down") {
                           Toast.makeText(this, "Titik #${point.order} (${getPointTypeSymbol(point)} Swipe) disimpan! Tarik ujung panah #${point.order} untuk atur panjang.", Toast.LENGTH_SHORT).show()
                       } else if (point.type == "paste" && point.pasteTexts.size > 1) {
-                          Toast.makeText(this, "📋 Titik #${point.order} Multi-Paste (${point.pasteTexts.size} teks berputar mengikuti siklus) disimpan!", Toast.LENGTH_SHORT).show()
+                          Toast.makeText(this, "📝 Titik #${point.order} Multi-Input (${point.pasteTexts.size} teks berputar mengikuti siklus) disimpan!", Toast.LENGTH_SHORT).show()
                       } else {
                           Toast.makeText(this, "Titik #${point.order} disimpan (Jeda: $unitLabel) ✔", Toast.LENGTH_SHORT).show()
                       }
@@ -4168,6 +4603,12 @@ jobs:
 
               // Ambil koordinat presisi titik tengah ikon sesuai ukuran mandiri ikon titik tersebut (20dp - 80dp)
               // Tetap akurat 100% baik saat ikon terlihat (👁️), bertumpuk, maupun sedang disembunyikan (🙈)
+              private fun getEffectiveInsetY(): Int {
+                  if (lastKnownInsetY > 0) return lastKnownInsetY
+                  val resId = resources.getIdentifier("status_bar_height", "dimen", "android")
+                  return if (resId > 0) resources.getDimensionPixelSize(resId) else 0
+              }
+
               private fun getExactPointCenter(point: TargetPoint): Pair<Float, Float> {
                   val sizePx = getPointSizePx(point)
                   val exactRadius = sizePx / 2f
@@ -4184,7 +4625,7 @@ jobs:
                   }
 
                   val fallbackX = point.params.x + lastKnownInsetX + exactRadius
-                  val fallbackY = point.params.y + lastKnownInsetY + exactRadius
+                  val fallbackY = point.params.y + getEffectiveInsetY() + exactRadius
                   return fallbackX to fallbackY
               }
 
@@ -4208,7 +4649,7 @@ jobs:
 
                   val baseX = kParams?.x ?: point.savedKeyX.coerceAtLeast(100)
                   val baseY = kParams?.y ?: point.savedKeyY.coerceAtLeast(500)
-                  return (baseX + lastKnownInsetX + exactRadius) to (baseY + lastKnownInsetY + exactRadius)
+                  return (baseX + lastKnownInsetX + exactRadius) to (baseY + getEffectiveInsetY() + exactRadius)
               }
 
               // Kunci koordinat layar fisik presisi setiap titik sebelum Play, lalu sembunyikan sementara semua overlay titik & panah
@@ -4328,8 +4769,28 @@ jobs:
                                   val radiusPx = (getPointSizePx(point) / 2f).coerceAtLeast(18f)
                                   val screenH = resources.displayMetrics.heightPixels.toFloat()
 
+                                  val isInputAction = point.type == "paste" || point.type == "input" || point.type == "popup"
+                                  val textForInput = if (isInputAction) {
+                                      val validList = point.pasteTexts.map { it.trim() }.filter { it.isNotEmpty() }
+                                      if (validList.isNotEmpty()) {
+                                          val idx = point.currentPasteIndex % validList.size
+                                          point.currentPasteIndex = (point.currentPasteIndex + 1) % validList.size
+                                          validList[idx]
+                                      } else if (point.pasteText.isNotBlank()) {
+                                          point.pasteText.trim()
+                                      } else {
+                                          defaultPaste.trim()
+                                      }
+                                  } else ""
+
+                                  val actionTimeoutMs = if (isInputAction) {
+                                      (3500L + point.keyDelayMs + point.autofillFillDelayMs + (textForInput.length * 45L)).coerceAtLeast(3500L)
+                                  } else {
+                                      2500L
+                                  }
+
                                   // 1. EKSEKUSI AKSI TITIK SAAT INI TERLEBIH DAHULU (Termasuk titik yang disetting Sub-Loop)
-                                  withTimeoutOrNull(2500L) {
+                                  withTimeoutOrNull(actionTimeoutMs) {
                                       suspendCancellableCoroutine<Unit> { cont ->
                                           val done = {
                                               if (cont.isActive) cont.resume(Unit)
@@ -4343,29 +4804,32 @@ jobs:
                                                   val endY = tapY + point.swipeDistancePx
                                                   service.executeSwipe(tapX, tapY, tapX, endY, 260L, done)
                                               }
-                                              "paste", "input" -> {
-                                                  // Multi-Paste / Input Ketik Mengikuti Siklus: Teks #1 -> #2 -> #3 -> kembali mengulang ke #1
-                                                  val validList = point.pasteTexts.map { it.trim() }.filter { it.isNotEmpty() }
-                                                  val textToPaste = if (validList.isNotEmpty()) {
-                                                      val idx = point.currentPasteIndex % validList.size
-                                                      point.currentPasteIndex = (point.currentPasteIndex + 1) % validList.size
-                                                      validList[idx]
-                                                  } else if (point.pasteText.isNotBlank()) {
-                                                      point.pasteText.trim()
-                                                  } else {
-                                                      defaultPaste.trim()
-                                                  }
-                                                  service.executePaste(tapX, tapY, textToPaste, point.autoTapPaste, radiusPx, done)
-                                              }
-                                              "popup" -> {
-                                                  if (point.keyView != null || point.savedKeyX >= 0) {
+                                              "paste", "input", "popup" -> {
+                                                  val useTrigger = point.triggerEnabled || point.type == "popup"
+                                                  val hasPin = useTrigger && (point.keyView != null || point.savedKeyX >= 0)
+                                                  val (pinTapX, pinTapY) = if (hasPin) {
                                                       val (fkX, fkY) = getExactKeyPinCenter(point)
-                                                      val keyTapX = if (point.cachedKeyScreenX > 0f) point.cachedKeyScreenX else fkX
-                                                      val keyTapY = if (point.cachedKeyScreenY > 0f) point.cachedKeyScreenY else fkY
-                                                      service.executePopup(tapX, tapY, keyTapX, keyTapY, point.keyDelayMs, radiusPx, done)
+                                                      val kx = if (point.cachedKeyScreenX > 0f) point.cachedKeyScreenX else fkX
+                                                      val ky = if (point.cachedKeyScreenY > 0f) point.cachedKeyScreenY else fkY
+                                                      kx to ky
                                                   } else {
-                                                      service.executeTap(tapX, tapY, point.durationMs, radiusPx, done)
+                                                      -1f to -1f
                                                   }
+                                                  service.executeInputWithTrigger(
+                                                      formX = tapX,
+                                                      formY = tapY,
+                                                      textToType = textForInput,
+                                                      autoTapToFocus = point.autoTapPaste,
+                                                      triggerEnabled = useTrigger,
+                                                      triggerOverride = point.triggerCharOverride,
+                                                      pinX = pinTapX,
+                                                      pinY = pinTapY,
+                                                      triggerWaitMs = point.keyDelayMs,
+                                                      autofillWaitMs = point.autofillFillDelayMs,
+                                                      hideKeyboard = point.hideKeyboard,
+                                                      radiusPx = radiusPx,
+                                                      callback = done
+                                                  )
                                               }
                                               else -> {
                                                   service.executeTap(tapX, tapY, point.durationMs, radiusPx, done)
@@ -4440,6 +4904,7 @@ jobs:
                   isPlaying = false
                   clickJob?.cancel()
                   clickJob = null
+                  AutoClickAccessibilityService.instance?.setKeyboardHiddenForTyping(false)
 
                   resetAllPointHighlights()
                   lockCoordinatesAndSetPlayVisibility(hideForPlay = false)
