@@ -1579,6 +1579,7 @@ jobs:
           import androidx.annotation.RequiresApi
           import kotlinx.coroutines.*
           import java.util.concurrent.atomic.AtomicBoolean
+          import java.util.concurrent.atomic.AtomicLong
           import kotlin.coroutines.resume
           import kotlin.math.abs
           import kotlin.math.hypot
@@ -1586,10 +1587,27 @@ jobs:
           class AutoClickAccessibilityService : AccessibilityService() {
 
               private val serviceScope = CoroutineScope(Dispatchers.Default + SupervisorJob())
+              private val activeSessionId = AtomicLong(0L)
+              private var activeInputJob: Job? = null
+              @Volatile
+              private var lastPopupDismissAtMs: Long = 0L
 
               companion object {
                   var instance: AutoClickAccessibilityService? = null
                       private set
+              }
+
+              fun beginNewExecutionSession(): Long {
+                  activeInputJob?.cancel()
+                  activeInputJob = null
+                  return activeSessionId.incrementAndGet()
+              }
+
+              fun cancelAllRunningActions() {
+                  activeSessionId.incrementAndGet()
+                  activeInputJob?.cancel()
+                  activeInputJob = null
+                  setKeyboardHiddenForTyping(false)
               }
 
               override fun onServiceConnected() {
@@ -1625,12 +1643,12 @@ jobs:
               override fun onAccessibilityEvent(event: AccessibilityEvent?) {}
 
               override fun onInterrupt() {
-                  setKeyboardHiddenForTyping(false)
+                  cancelAllRunningActions()
                   instance = null
               }
 
               override fun onDestroy() {
-                  setKeyboardHiddenForTyping(false)
+                  cancelAllRunningActions()
                   super.onDestroy()
                   instance = null
                   serviceScope.cancel()
@@ -1769,14 +1787,19 @@ jobs:
                                   return "🔔 Pindah Slide ke /order/verification!"
                               }
 
-                              // 2. Auto-Tutup Popup Error / Kuota Habis agar tidak menghalangi klik Pesan Sekarang berikutnya
-                              if ((lower.contains("kuota habis") || lower.contains("kuota tidak") || lower.contains("gagal") || lower.contains("penuh") || lower.contains("tidak tersedia")) &&
+                              // 2. Auto-Tutup Popup Error / Kuota Habis KHUSUS Ferizy dengan filter ketat & jeda 1000ms agar tidak memicu klik liar
+                              val nowMs = SystemClock.uptimeMillis()
+                              if (sawOrderSlide.get() &&
+                                  rawText.length in 6..220 &&
+                                  (nowMs - lastPopupDismissAtMs) > 1000L &&
+                                  (lower.contains("kuota habis") || lower.contains("kuota tidak mencukupi") || lower.contains("kuota tidak tersedia") || lower.contains("kuota penuh") || lower.contains("pemesanan gagal")) &&
                                   !lower.contains("setuju") && !lower.contains("lanjutkan pembayaran")
                               ) {
                                   for (i in 0 until node.childCount) {
                                       val child = node.getChild(i)
                                       val cTxt = (child?.text ?: child?.contentDescription)?.toString()?.trim()?.lowercase() ?: ""
                                       if (child != null && child.isClickable && (cTxt == "ok" || cTxt == "oke" || cTxt == "tutup" || cTxt == "mengerti")) {
+                                          lastPopupDismissAtMs = nowMs
                                           child.performAction(AccessibilityNodeInfo.ACTION_CLICK)
                                           break
                                       }
@@ -1801,28 +1824,34 @@ jobs:
                   radiusPx: Float = 0f,
                   callback: (() -> Unit)? = null
               ) {
+                  val session = activeSessionId.get()
                   val completed = AtomicBoolean(false)
+                  var watchdogJob: Job? = null
                   val finishOnce = {
                       if (completed.compareAndSet(false, true)) {
+                          watchdogJob?.cancel()
                           callback?.invoke()
                       }
                   }
 
-                  val (resolvedX, resolvedY) = resolveTargetPointInIconRadius(x, y, radiusPx)
-                  // FITUR #2: Acak Koordinat Mikro (±4px di dalam bulatan ikon) agar tidak pernah mengetuk 1 piksel kaku terus-menerus
-                  val microJitterX = (kotlin.random.Random.nextFloat() * 8f) - 4f
-                  val microJitterY = (kotlin.random.Random.nextFloat() * 8f) - 4f
-                  val safeX = clampX(resolvedX + microJitterX)
-                  val safeY = clampY(resolvedY + microJitterY)
-                  val safeDur = durationMs.coerceIn(12L, 500L)
+                  // KETUKAN PRESISI TEPAT DI TITIK BIDIK TENGAH (Tanpa melenceng ke tombol lain di sekitar radius & mikro-jitter aman ±1px)
+                  val microJitterX = (kotlin.random.Random.nextFloat() * 2f) - 1f
+                  val microJitterY = (kotlin.random.Random.nextFloat() * 2f) - 1f
+                  val safeX = clampX(x + microJitterX)
+                  val safeY = clampY(y + microJitterY)
+                  val safeDur = durationMs.coerceIn(15L, 500L)
 
-                  // Watchdog Anti-Macet: Pastikan callback 100% selalu terpanggil meskipun tap berkecepatan sangat tinggi
-                  serviceScope.launch {
-                      delay(safeDur + 220L)
+                  // Watchdog aman (cukup longgar agar gesture asli selesai dulu sebelum fallback, mencegah klik beruntun bertabrakan)
+                  watchdogJob = serviceScope.launch {
+                      delay(safeDur + 850L)
                       finishOnce()
                   }
 
                   fun dispatchAttempt(isRetry: Boolean) {
+                      if (completed.get() || activeSessionId.get() != session) {
+                          finishOnce()
+                          return
+                      }
                       try {
                           val path = Path().apply { moveTo(safeX, safeY) }
                           val stroke = GestureDescription.StrokeDescription(path, 0L, safeDur)
@@ -1834,9 +1863,9 @@ jobs:
                               }
 
                               override fun onCancelled(gestureDescription: GestureDescription?) {
-                                  if (!isRetry && !completed.get()) {
+                                  if (!isRetry && !completed.get() && activeSessionId.get() == session) {
                                       serviceScope.launch {
-                                          delay(35)
+                                          delay(45)
                                           dispatchAttempt(true)
                                       }
                                   } else {
@@ -1846,9 +1875,9 @@ jobs:
                           }, null)
 
                           if (!dispatched) {
-                              if (!isRetry && !completed.get()) {
+                              if (!isRetry && !completed.get() && activeSessionId.get() == session) {
                                   serviceScope.launch {
-                                      delay(35)
+                                      delay(45)
                                       dispatchAttempt(true)
                                   }
                               } else {
@@ -1872,9 +1901,12 @@ jobs:
                   durationMs: Long = 260L,
                   callback: (() -> Unit)? = null
               ) {
+                  val session = activeSessionId.get()
                   val completed = AtomicBoolean(false)
+                  var watchdogJob: Job? = null
                   val finishOnce = {
                       if (completed.compareAndSet(false, true)) {
+                          watchdogJob?.cancel()
                           callback?.invoke()
                       }
                   }
@@ -1915,9 +1947,9 @@ jobs:
 
                   val singleDur = durationMs.coerceIn(150L, 420L)
 
-                  // Watchdog Anti-Macet untuk Swipe
-                  serviceScope.launch {
-                      delay((singleDur + 120L) * strokeCount + 220L)
+                  // Watchdog Anti-Macet untuk Swipe (dibatalkan otomatis saat swipe selesai)
+                  watchdogJob = serviceScope.launch {
+                      delay((singleDur + 160L) * strokeCount + 850L)
                       finishOnce()
                   }
 
@@ -1939,7 +1971,10 @@ jobs:
                   }
 
                   fun runStrokeStep(stepIndex: Int, isRetry: Boolean) {
-                      if (completed.get()) return
+                      if (completed.get() || activeSessionId.get() != session) {
+                          finishOnce()
+                          return
+                      }
                       try {
                           val gesture = buildStabilizedSwipeGesture()
                           val dispatched = dispatchGesture(gesture, object : GestureResultCallback() {
@@ -1959,7 +1994,7 @@ jobs:
                               }
 
                               override fun onCancelled(gestureDescription: GestureDescription?) {
-                                  if (!isRetry && !completed.get()) {
+                                  if (!isRetry && !completed.get() && activeSessionId.get() == session) {
                                       serviceScope.launch {
                                           delay(50L)
                                           runStrokeStep(stepIndex, true)
@@ -1971,7 +2006,7 @@ jobs:
                           }, null)
 
                           if (!dispatched) {
-                              if (!isRetry && !completed.get()) {
+                              if (!isRetry && !completed.get() && activeSessionId.get() == session) {
                                   serviceScope.launch {
                                       delay(50L)
                                       runStrokeStep(stepIndex, true)
@@ -2044,9 +2079,12 @@ jobs:
                   durationMs: Long = 45L,
                   callback: (() -> Unit)? = null
               ) {
+                  val session = activeSessionId.get()
                   val completed = AtomicBoolean(false)
+                  var watchdogJob: Job? = null
                   val finishOnce = {
                       if (completed.compareAndSet(false, true)) {
+                          watchdogJob?.cancel()
                           callback?.invoke()
                       }
                   }
@@ -2055,12 +2093,16 @@ jobs:
                   val safeY = clampY(y)
                   val safeDur = durationMs.coerceIn(15L, 450L)
 
-                  serviceScope.launch {
-                      delay(safeDur + 220L)
+                  watchdogJob = serviceScope.launch {
+                      delay(safeDur + 850L)
                       finishOnce()
                   }
 
                   fun dispatchAttempt(isRetry: Boolean) {
+                      if (completed.get() || activeSessionId.get() != session) {
+                          finishOnce()
+                          return
+                      }
                       try {
                           val path = Path().apply { moveTo(safeX, safeY) }
                           val stroke = GestureDescription.StrokeDescription(path, 0L, safeDur)
@@ -2072,9 +2114,9 @@ jobs:
                               }
 
                               override fun onCancelled(gestureDescription: GestureDescription?) {
-                                  if (!isRetry && !completed.get()) {
+                                  if (!isRetry && !completed.get() && activeSessionId.get() == session) {
                                       serviceScope.launch {
-                                          delay(35)
+                                          delay(45)
                                           dispatchAttempt(true)
                                       }
                                   } else {
@@ -2084,9 +2126,9 @@ jobs:
                           }, null)
 
                           if (!dispatched) {
-                              if (!isRetry && !completed.get()) {
+                              if (!isRetry && !completed.get() && activeSessionId.get() == session) {
                                   serviceScope.launch {
-                                      delay(35)
+                                      delay(45)
                                       dispatchAttempt(true)
                                   }
                               } else {
@@ -2301,6 +2343,7 @@ jobs:
                   radiusPx: Float = 0f,
                   callback: (() -> Unit)? = null
               ) {
+                  val session = activeSessionId.get()
                   val completed = AtomicBoolean(false)
                   val finishOnce = {
                       if (completed.compareAndSet(false, true)) {
@@ -2308,8 +2351,10 @@ jobs:
                       }
                   }
 
-                  serviceScope.launch {
+                  activeInputJob?.cancel()
+                  activeInputJob = serviceScope.launch {
                       try {
+                          if (activeSessionId.get() != session) return@launch
                           setKeyboardHiddenForTyping(hideKeyboard)
 
                           // Langkah 1: Klik Kolom Form agar fokus & InputConnection aktif
@@ -2329,13 +2374,13 @@ jobs:
                               val effectiveTrigger = triggerOverride.trim().ifEmpty {
                                   textToType.firstOrNull()?.toString() ?: ""
                               }
-                              if (effectiveTrigger.isNotEmpty()) {
+                              if (effectiveTrigger.isNotEmpty() && activeSessionId.get() == session) {
                                   clearInputViaKeyboardOrNode(targetNode)
                                   delay(25L)
                                   typeTextViaKeyboardOrNode(effectiveTrigger, targetNode, 18L)
                                   delay(triggerWaitMs.coerceIn(100L, 5000L))
 
-                                  if (pinX >= 0f && pinY >= 0f) {
+                                  if (pinX >= 0f && pinY >= 0f && activeSessionId.get() == session) {
                                       awaitRawTap(pinX, pinY, 45L)
                                       delay(autofillWaitMs.coerceIn(80L, 5000L))
 
@@ -2355,9 +2400,13 @@ jobs:
                               }
                           }
 
+                          if (activeSessionId.get() != session) return@launch
+
                           // Langkah 4: Hapus Teks Lama / Nama Pemicu
                           clearInputViaKeyboardOrNode(targetNode)
                           delay(45L)
+
+                          if (activeSessionId.get() != session) return@launch
 
                           // Langkah 5: Ketik Kata Lengkap via Keyboard Event Asli + Anti-Revert Verification
                           if (textToType.isNotEmpty()) {
@@ -2710,6 +2759,7 @@ jobs:
 
                   // ▶ Mulai Eksekusi (Panel mengecil otomatis menjadi indikator No. Urut + tombol Stop)
                   btnPlay?.setOnClickListener {
+                      if (isPlaying) return@setOnClickListener
                       val a11y = AutoClickAccessibilityService.instance
                       if (a11y == null) {
                           Toast.makeText(this, "Layanan Aksesibilitas belum aktif!", Toast.LENGTH_SHORT).show()
@@ -4279,14 +4329,24 @@ jobs:
                   // Tombol Ubah No. Urut (Maju / Mundur) di Header
                   btnMoveOrderPrev.isEnabled = point.order > 1
                   btnMoveOrderPrev.alpha = if (point.order > 1) 1f else 0.4f
+                  fun swapOrderAndRemapLoops(p1: TargetPoint, p2: TargetPoint) {
+                      val o1 = p1.order
+                      val o2 = p2.order
+                      p1.order = o2
+                      p2.order = o1
+                      for (tp in targetPoints) {
+                          if (tp.jumpToPoint == o1) tp.jumpToPoint = o2
+                          else if (tp.jumpToPoint == o2) tp.jumpToPoint = o1
+                      }
+                      reindexTargetPoints()
+                  }
+
                   btnMoveOrderPrev.setOnClickListener {
                       if (point.order > 1) {
                           saveCurrentDialogFieldsToPoint()
                           val prevPoint = targetPoints.find { it.order == point.order - 1 }
                           if (prevPoint != null) {
-                              prevPoint.order += 1
-                              point.order -= 1
-                              reindexTargetPoints()
+                              swapOrderAndRemapLoops(point, prevPoint)
                               Toast.makeText(this, "🔢 Titik dipindah menjadi No. Urut #${point.order}", Toast.LENGTH_SHORT).show()
                               showPointSettingsDialog(point)
                           }
@@ -4300,9 +4360,7 @@ jobs:
                           saveCurrentDialogFieldsToPoint()
                           val nextPoint = targetPoints.find { it.order == point.order + 1 }
                           if (nextPoint != null) {
-                              nextPoint.order -= 1
-                              point.order += 1
-                              reindexTargetPoints()
+                              swapOrderAndRemapLoops(point, nextPoint)
                               Toast.makeText(this, "🔢 Titik dipindah menjadi No. Urut #${point.order}", Toast.LENGTH_SHORT).show()
                               showPointSettingsDialog(point)
                           }
@@ -4472,6 +4530,12 @@ jobs:
                       val last = targetPoints.removeAt(targetPoints.size - 1)
                       removePointViewsFromWindow(last)
                       reindexTargetPoints()
+                      val maxOrd = targetPoints.size.coerceAtLeast(1)
+                      for (tp in targetPoints) {
+                          if (tp.jumpToPoint > maxOrd) {
+                              tp.jumpToPoint = maxOrd
+                          }
+                      }
                       Toast.makeText(this, "Titik #${last.order} dihapus", Toast.LENGTH_SHORT).show()
                   } else {
                       Toast.makeText(this, "Tidak ada titik untuk dihapus", Toast.LENGTH_SHORT).show()
@@ -4702,6 +4766,7 @@ jobs:
               // - Looping Anti-Berhenti pada Kecepatan Tinggi (Watchdog & Non-Stop Coroutine)
               private fun startClickExecution(service: AutoClickAccessibilityService) {
                   clickJob?.cancel()
+                  service.beginNewExecutionSession()
                   clickJob = serviceScope.launch {
                       val prefs = getSharedPreferences("autoklik_prefs", Context.MODE_PRIVATE)
                       val jitterEnabled = prefs.getBoolean("jitter_enabled", true)
@@ -4753,12 +4818,14 @@ jobs:
                                   }
                               }
 
-                              val totalPoints = targetPoints.size
+                              val orderedPoints = targetPoints.sortedBy { it.order }
+                              val totalPoints = orderedPoints.size
+                              if (totalPoints == 0) break
                               if (currentOrder < 1 || currentOrder > totalPoints) {
                                   currentOrder = 1
                               }
 
-                              val point = targetPoints.find { it.order == currentOrder } ?: targetPoints.getOrNull(currentOrder - 1)
+                              val point = orderedPoints.getOrNull(currentOrder - 1)
                               if (point != null) {
                                   // Tampilkan status No. Urut aktif pada Mini Toolbar
                                   tvMiniStatus?.text = "⚡ #${point.order}/$totalPoints ${getPointTypeSymbol(point)}"
@@ -4860,7 +4927,10 @@ jobs:
                                       val delta = Random.nextLong(-maxFastJitter, 1L)
                                       waitTime = (waitTime + delta).coerceAtLeast(0L)
                                   }
-                                  if (waitTime > 0L) delay(waitTime)
+                                  // Jeda minimal 15ms bila jeda diisi 0ms agar Android tidak membatalkan atau mengacak urutan gesture berikutnya
+                                  val effectiveWait = if (waitTime > 0L) waitTime else 15L
+                                  delay(effectiveWait)
+                                  if (!isActive || !isPlaying) break
 
                                   // 3. PENENTUAN URUTAN BERIKUTNYA (SUB-LOOP BERBATAS LALU LANJUT KE TITIK SELANJUTNYA)
                                   if (point.jumpEnabled && point.jumpToPoint in 1..totalPoints) {
@@ -4873,6 +4943,9 @@ jobs:
                                           if (currentOrder >= totalPoints) {
                                               currentOrder = 1
                                               cycle++
+                                              for (p in orderedPoints) {
+                                                  p.currentJumpCount = 0
+                                              }
                                           } else {
                                               currentOrder++
                                           }
@@ -4880,7 +4953,7 @@ jobs:
                                   } else if (currentOrder >= totalPoints) {
                                       currentOrder = 1
                                       cycle++
-                                      for (p in targetPoints) {
+                                      for (p in orderedPoints) {
                                           p.currentJumpCount = 0
                                       }
                                   } else {
@@ -4904,7 +4977,7 @@ jobs:
                   isPlaying = false
                   clickJob?.cancel()
                   clickJob = null
-                  AutoClickAccessibilityService.instance?.setKeyboardHiddenForTyping(false)
+                  AutoClickAccessibilityService.instance?.cancelAllRunningActions()
 
                   resetAllPointHighlights()
                   lockCoordinatesAndSetPlayVisibility(hideForPlay = false)
