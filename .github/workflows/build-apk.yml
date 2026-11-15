@@ -76,8 +76,15 @@ jobs:
               }
 
               buildTypes {
-                  release { minifyEnabled false }
-                  debug { minifyEnabled false }
+                  release {
+                      minifyEnabled true
+                      shrinkResources true
+                      proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+                  }
+                  debug {
+                      minifyEnabled true
+                      proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+                  }
               }
               compileOptions {
                   sourceCompatibility JavaVersion.VERSION_17
@@ -99,6 +106,16 @@ jobs:
           }
           EOF
 
+          cat << 'EOF' > app/proguard-rules.pro
+          -keepattributes *Annotation*,Signature,InnerClasses,EnclosingMethod
+          -keep class com.autoklik.android.ui.MainActivity { *; }
+          -keep class com.autoklik.android.service.FloatingOverlayService { *; }
+          -keep class com.autoklik.android.service.AutoClickAccessibilityService { *; }
+          -dontwarn kotlinx.coroutines.**
+          -dontwarn androidx.**
+          -dontwarn com.google.android.material.**
+          EOF
+
           mkdir -p app/src/main
           cat << 'EOF' > app/src/main/AndroidManifest.xml
           <?xml version="1.0" encoding="utf-8"?>
@@ -111,10 +128,10 @@ jobs:
               <uses-permission android:name="android.permission.VIBRATE" />
 
               <application
-                  android:allowBackup="true"
-                  android:icon="@android:drawable/sym_def_app_icon"
+                  android:allowBackup="false"
+                  android:icon="@mipmap/ic_launcher"
                   android:label="@string/app_name"
-                  android:roundIcon="@android:drawable/sym_def_app_icon"
+                  android:roundIcon="@mipmap/ic_launcher_round"
                   android:supportsRtl="true"
                   android:theme="@style/Theme.Material3.DayNight.NoActionBar">
 
@@ -153,8 +170,8 @@ jobs:
           mkdir -p app/src/main/res/values
           cat << 'EOF' > app/src/main/res/values/strings.xml
           <resources>
-              <string name="app_name">AutoKlik Trans</string>
-              <string name="accessibility_desc">Layanan Aksesibilitas AutoKlik untuk simulasi sentuhan dan multi-gesture tanpa root.</string>
+              <string name="app_name">Trans Samudra</string>
+              <string name="accessibility_service_description">Layanan klik otomatis, geser layar, dan input teks otomatis untuk membantu navigasi.</string>
           </resources>
           EOF
 
@@ -182,18 +199,16 @@ jobs:
               android:notificationTimeout="100" />
           EOF
 
-          mkdir -p app/src/main/res/drawable
-          cat << 'EOF' > app/src/main/res/drawable/ic_launcher_foreground.xml
-          <vector xmlns:android="http://schemas.android.com/apk/res/android"
-              android:width="108dp"
-              android:height="108dp"
-              android:viewportWidth="108"
-              android:viewportHeight="108">
-              <path
-                  android:fillColor="#10B981"
-                  android:pathData="M30,30h48v48h-48z" />
-          </vector>
-          EOF
+          mkdir -p app/src/main/res/mipmap-xxxhdpi app/src/main/res/drawable
+          if [ -f "logo.png" ]; then
+            cp logo.png app/src/main/res/mipmap-xxxhdpi/ic_launcher.png
+            cp logo.png app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png
+            cp logo.png app/src/main/res/drawable/app_brand_logo.png
+          else
+            printf '%s' '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' | base64 -d > app/src/main/res/mipmap-xxxhdpi/ic_launcher.png
+            printf '%s' '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' | base64 -d > app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png
+            cp app/src/main/res/mipmap-xxxhdpi/ic_launcher.png app/src/main/res/drawable/app_brand_logo.png
+          fi
 
           mkdir -p app/src/main/res/drawable
           cat << 'EOF' > app/src/main/res/drawable/bg_target_point.xml
@@ -1322,22 +1337,159 @@ jobs:
                   android:layout_height="wrap_content"
                   android:orientation="vertical">
 
-                  <!-- Header -->
-                  <TextView
-                      android:layout_width="wrap_content"
+                  <!-- Header + Custom Brand Logo -->
+                  <LinearLayout
+                      android:layout_width="match_parent"
                       android:layout_height="wrap_content"
-                      android:text="AutoKlik Trans"
-                      android:textColor="#10B981"
-                      android:textSize="24sp"
-                      android:textStyle="bold" />
+                      android:gravity="center_vertical"
+                      android:orientation="horizontal">
 
-                  <TextView
-                      android:layout_width="wrap_content"
+                      <ImageView
+                          android:id="@+id/imgAppLogo"
+                          android:layout_width="54dp"
+                          android:layout_height="54dp"
+                          android:contentDescription="Logo Aplikasi"
+                          android:scaleType="centerCrop"
+                          android:src="@drawable/app_brand_logo" />
+
+                      <LinearLayout
+                          android:layout_width="0dp"
+                          android:layout_height="wrap_content"
+                          android:layout_marginStart="12dp"
+                          android:layout_weight="1"
+                          android:orientation="vertical">
+
+                          <TextView
+                              android:id="@+id/tvAppTitle"
+                              android:layout_width="wrap_content"
+                              android:layout_height="wrap_content"
+                              android:text="@string/app_name"
+                              android:textColor="#10B981"
+                              android:textSize="22sp"
+                              android:textStyle="bold" />
+
+                          <TextView
+                              android:layout_width="wrap_content"
+                              android:layout_height="wrap_content"
+                              android:layout_marginTop="2dp"
+                              android:text="Pengontrol Klik Otomatis &amp; Proteksi Perangkat"
+                              android:textColor="#94A3B8"
+                              android:textSize="12sp" />
+                      </LinearLayout>
+                  </LinearLayout>
+
+                  <!-- CARD LISENSI & KUNCI PERANGKAT (OPSI A) -->
+                  <LinearLayout
+                      android:id="@+id/layoutLicenseCard"
+                      android:layout_width="match_parent"
                       android:layout_height="wrap_content"
-                      android:layout_marginTop="2dp"
-                      android:text="Pengontrol Klik Otomatis &amp; Multi-Touch"
-                      android:textColor="#94A3B8"
-                      android:textSize="13sp" />
+                      android:layout_marginTop="14dp"
+                      android:background="#1E293B"
+                      android:orientation="vertical"
+                      android:padding="14dp">
+
+                      <TextView
+                          android:id="@+id/tvLicenseBadge"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:text="🔒 APLIKASI TERKUNCI — KHUSUS PEMILIK"
+                          android:textColor="#F87171"
+                          android:textSize="14sp"
+                          android:textStyle="bold" />
+
+                      <LinearLayout
+                          android:id="@+id/layoutActivationForm"
+                          android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:layout_marginTop="8dp"
+                          android:orientation="vertical">
+
+                          <TextView
+                              android:id="@+id/tvActivationPrompt"
+                              android:layout_width="wrap_content"
+                              android:layout_height="wrap_content"
+                              android:text="Masukkan Kode Pemilik untuk membuka aplikasi:"
+                              android:textColor="#CBD5E1"
+                              android:textSize="11sp" />
+
+                          <LinearLayout
+                              android:layout_width="match_parent"
+                              android:layout_height="wrap_content"
+                              android:layout_marginTop="6dp"
+                              android:orientation="horizontal">
+
+                              <EditText
+                                  android:id="@+id/etActivationCode"
+                                  android:layout_width="0dp"
+                                  android:layout_height="40dp"
+                                  android:layout_weight="1.7"
+                                  android:background="#0F172A"
+                                  android:fontFamily="monospace"
+                                  android:hint="Ketik Kode Rahasia Pemilik..."
+                                  android:inputType="textPassword"
+                                  android:padding="8dp"
+                                  android:singleLine="true"
+                                  android:textColor="#F8FAFC"
+                                  android:textColorHint="#64748B"
+                                  android:textSize="12sp" />
+
+                              <Button
+                                  android:id="@+id/btnToggleCodeMask"
+                                  android:layout_width="40dp"
+                                  android:layout_height="40dp"
+                                  android:layout_marginStart="4dp"
+                                  android:backgroundTint="#334155"
+                                  android:minWidth="0dp"
+                                  android:padding="0dp"
+                                  android:text="👁"
+                                  android:textColor="#F8FAFC"
+                                  android:textSize="13sp" />
+
+                              <Button
+                                  android:id="@+id/btnActivateLicense"
+                                  android:layout_width="0dp"
+                                  android:layout_height="40dp"
+                                  android:layout_marginStart="6dp"
+                                  android:layout_weight="1"
+                                  android:backgroundTint="#10B981"
+                                  android:text="🔓 BUKA"
+                                  android:textColor="#FFFFFF"
+                                  android:textSize="12sp"
+                                  android:textStyle="bold" />
+                          </LinearLayout>
+                      </LinearLayout>
+
+                      <LinearLayout
+                          android:id="@+id/layoutLicenseActiveInfo"
+                          android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:layout_marginTop="6dp"
+                          android:gravity="center_vertical"
+                          android:orientation="horizontal"
+                          android:visibility="gone">
+
+                          <TextView
+                              android:id="@+id/tvLicenseExpiryInfo"
+                              android:layout_width="0dp"
+                              android:layout_height="wrap_content"
+                              android:layout_weight="1"
+                              android:text="Status: Lisensi Permanen Aktif"
+                              android:textColor="#34D399"
+                              android:textSize="11.5sp"
+                              android:textStyle="bold" />
+
+                          <Button
+                              android:id="@+id/btnResetLicense"
+                              android:layout_width="wrap_content"
+                              android:layout_height="32dp"
+                              android:backgroundTint="#475569"
+                              android:minWidth="0dp"
+                              android:paddingHorizontal="8dp"
+                              android:text="🔑 Ganti Kunci"
+                              android:textColor="#E2E8F0"
+                              android:textSize="10sp" />
+                      </LinearLayout>
+                  </LinearLayout>
 
                   <!-- MANAJEMEN PROFIL SKRIP (FITUR 15) -->
                   <LinearLayout
@@ -1556,6 +1708,223 @@ jobs:
           </ScrollView>
           EOF
 
+          mkdir -p app/src/main/java/com/autoklik/android/security
+          cat << 'EOF' > app/src/main/java/com/autoklik/android/security/LicenseManager.kt
+          package com.autoklik.android.security
+
+          import android.content.Context
+          import android.provider.Settings
+          import java.security.MessageDigest
+          import java.text.SimpleDateFormat
+          import java.util.Date
+          import java.util.Locale
+          import kotlin.math.ceil
+
+          object LicenseManager {
+              const val LOCK_ENABLED = true
+              // SHA-256("AK_FIX_V1|DWI PRIO PURNOMO")
+              private const val FIXED_CODE_HASH = "d02b98f2823de769b1dbffd68bcb22524b09e8b98b5bb4fd510fa1472c0736ed"
+              const val FIXED_DURATION_DAYS = 30
+
+              private const val PREFS_NAME = "autoklik_license_prefs"
+              private const val KEY_DEVICE_BIND = "bound_device_id"
+              private const val KEY_LICENSE_TOKEN = "bound_license_code"
+              private const val KEY_FIXED_EXPIRES_AT = "fixed_expires_at_ms"
+              private const val KEY_LAST_SEEN_MS = "last_seen_epoch_ms"
+              private const val KEY_FAIL_COUNT = "failed_attempt_count"
+              private const val KEY_LOCKOUT_UNTIL = "failed_lockout_until_ms"
+              private const val KEY_FAIL_SIG = "failed_state_sig"
+
+              private const val MAX_FAILED_ATTEMPTS = 5
+              private const val LOCKOUT_DURATION_MS = 300_000L
+              private const val DAY_MS = 86_400_000L
+              private const val CLOCK_ROLLBACK_TOLERANCE_MS = 3_600_000L
+
+              private fun getInternalHardwareBind(context: Context): String {
+                  val androidId = try {
+                      Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID) ?: "UNKNOWN"
+                  } catch (e: Exception) {
+                      "UNKNOWN"
+                  }
+                  return sha256Hex("AK_HW_BIND_V1:$androidId").substring(0, 16).uppercase(Locale.ROOT)
+              }
+
+              private fun sha256Hex(input: String): String {
+                  val md = MessageDigest.getInstance("SHA-256")
+                  val bytes = md.digest(input.toByteArray(Charsets.UTF_8))
+                  val sb = StringBuilder(bytes.size * 2)
+                  for (b in bytes) {
+                      sb.append(String.format(Locale.ROOT, "%02x", b))
+                  }
+                  return sb.toString()
+              }
+
+              private fun computeFixedHash(normalizedCode: String): String {
+                  return sha256Hex("AK_FIX_V1|$normalizedCode")
+              }
+
+              private fun computeFixedBindSig(hwBind: String, expiresAt: Long): String {
+                  return sha256Hex("AK_FIX_BIND_V1|$FIXED_CODE_HASH|$hwBind|$expiresAt")
+              }
+
+              private fun computeFailSig(hwBind: String, count: Int, lockoutUntil: Long): String {
+                  return sha256Hex("AK_FAIL_V1|$FIXED_CODE_HASH|$hwBind|$count|$lockoutUntil")
+              }
+
+              private fun constantTimeEquals(a: String, b: String): Boolean {
+                  if (a.length != b.length) return false
+                  var diff = 0
+                  for (i in a.indices) {
+                      diff = diff or (a[i].code xor b[i].code)
+                  }
+                  return diff == 0
+              }
+
+              fun activate(context: Context, inputCode: String): Pair<Boolean, String> {
+                  if (!LOCK_ENABLED) return true to "Lisensi Terbuka"
+                  val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+                  val hwBind = getInternalHardwareBind(context)
+                  val now = System.currentTimeMillis()
+
+                  val savedFailCount = prefs.getInt(KEY_FAIL_COUNT, 0)
+                  val savedLockUntil = prefs.getLong(KEY_LOCKOUT_UNTIL, 0L)
+                  val savedFailSig = prefs.getString(KEY_FAIL_SIG, null) ?: ""
+                  val validFailState = constantTimeEquals(
+                      savedFailSig,
+                      computeFailSig(hwBind, savedFailCount, savedLockUntil)
+                  )
+                  val activeFailCount = if (validFailState) savedFailCount else 0
+                  val activeLockUntil = if (validFailState) savedLockUntil else 0L
+
+                  if (activeLockUntil > now) {
+                      val sisaDetik = ceil((activeLockUntil - now) / 1000.0).toInt().coerceAtLeast(1)
+                      return false to "Terlalu banyak salah kode! Coba lagi dalam $sisaDetik detik."
+                  }
+
+                  val normalizedExact = inputCode.trim().replace(Regex("\\s+"), " ")
+                  val normalizedUpper = normalizedExact.uppercase(Locale.ROOT)
+                  val isMatch = constantTimeEquals(computeFixedHash(normalizedExact), FIXED_CODE_HASH) ||
+                      constantTimeEquals(computeFixedHash(normalizedUpper), FIXED_CODE_HASH)
+
+                  if (!isMatch) {
+                      val nextCount = if (activeLockUntil in 1L..now) 1 else activeFailCount + 1
+                      return if (nextCount >= MAX_FAILED_ATTEMPTS) {
+                          val lockUntil = now + LOCKOUT_DURATION_MS
+                          val sig = computeFailSig(hwBind, 0, lockUntil)
+                          prefs.edit()
+                              .putInt(KEY_FAIL_COUNT, 0)
+                              .putLong(KEY_LOCKOUT_UNTIL, lockUntil)
+                              .putString(KEY_FAIL_SIG, sig)
+                              .apply()
+                          false to "Kode salah $MAX_FAILED_ATTEMPTS×! Input dikunci sementara 5 menit."
+                      } else {
+                          val sig = computeFailSig(hwBind, nextCount, 0L)
+                          prefs.edit()
+                              .putInt(KEY_FAIL_COUNT, nextCount)
+                              .putLong(KEY_LOCKOUT_UNTIL, 0L)
+                              .putString(KEY_FAIL_SIG, sig)
+                              .apply()
+                          val sisa = MAX_FAILED_ATTEMPTS - nextCount
+                          false to "Kode aktivasi salah! Sisa percobaan: ${sisa}×"
+                      }
+                  }
+
+                  val expiresAt = if (FIXED_DURATION_DAYS > 0) {
+                      now + FIXED_DURATION_DAYS.toLong() * DAY_MS
+                  } else {
+                      Long.MAX_VALUE
+                  }
+                  val bindSig = computeFixedBindSig(hwBind, expiresAt)
+                  prefs.edit()
+                      .putString(KEY_DEVICE_BIND, hwBind)
+                      .putString(KEY_LICENSE_TOKEN, "FIXED:$bindSig")
+                      .putLong(KEY_FIXED_EXPIRES_AT, expiresAt)
+                      .putLong(KEY_LAST_SEEN_MS, now)
+                      .remove(KEY_FAIL_COUNT)
+                      .remove(KEY_LOCKOUT_UNTIL)
+                      .remove(KEY_FAIL_SIG)
+                      .apply()
+                  return true to getLicenseStatusLabel(context)
+              }
+
+              fun isLicensed(context: Context): Boolean {
+                  if (!LOCK_ENABLED) return true
+                  val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+                  val savedHw = prefs.getString(KEY_DEVICE_BIND, null) ?: return false
+                  val savedToken = prefs.getString(KEY_LICENSE_TOKEN, null) ?: return false
+                  val currentHw = getInternalHardwareBind(context)
+                  if (savedHw != currentHw) return false
+
+                  val expiresAt = prefs.getLong(KEY_FIXED_EXPIRES_AT, 0L)
+                  if (expiresAt <= 0L) return false
+                  val expectedToken = "FIXED:${computeFixedBindSig(currentHw, expiresAt)}"
+                  if (!constantTimeEquals(savedToken, expectedToken)) return false
+
+                  val now = System.currentTimeMillis()
+                  val lastSeen = prefs.getLong(KEY_LAST_SEEN_MS, 0L)
+
+                  if (FIXED_DURATION_DAYS > 0) {
+                      if (lastSeen > 0L && now + CLOCK_ROLLBACK_TOLERANCE_MS < lastSeen) {
+                          return false
+                      }
+                      if (now >= expiresAt) {
+                          return false
+                      }
+                  }
+                  if (now > lastSeen + 60_000L) {
+                      prefs.edit().putLong(KEY_LAST_SEEN_MS, now).apply()
+                  }
+                  return true
+              }
+
+              fun getLockedReason(context: Context): String {
+                  if (!LOCK_ENABLED) return "Mode Bebas Kunci"
+                  val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+                  val savedHw = prefs.getString(KEY_DEVICE_BIND, null)
+                  val savedToken = prefs.getString(KEY_LICENSE_TOKEN, null) ?: ""
+                  val currentHw = getInternalHardwareBind(context)
+                  if (savedHw == currentHw && savedToken.startsWith("FIXED:")) {
+                      val expiresAt = prefs.getLong(KEY_FIXED_EXPIRES_AT, 0L)
+                      val lastSeen = prefs.getLong(KEY_LAST_SEEN_MS, 0L)
+                      val now = System.currentTimeMillis()
+                      if (FIXED_DURATION_DAYS > 0 && lastSeen > 0L && now + CLOCK_ROLLBACK_TOLERANCE_MS < lastSeen) {
+                          return "⚠️ Jam HP dimundurkan! Pemilik wajib input ulang kode aktivasi."
+                      }
+                      if (FIXED_DURATION_DAYS > 0 && expiresAt > 0L && now >= expiresAt) {
+                          return "⏰ Masa pakai $FIXED_DURATION_DAYS hari habis — pemilik silakan input kode yang sama lagi."
+                      }
+                  }
+                  return if (FIXED_DURATION_DAYS > 0) {
+                      "Masukkan Kode Aktivasi Pemilik (masa pakai $FIXED_DURATION_DAYS hari):"
+                  } else {
+                      "Masukkan Kode Aktivasi Pemilik untuk membuka aplikasi:"
+                  }
+              }
+
+              fun getLicenseStatusLabel(context: Context): String {
+                  if (!LOCK_ENABLED) return "Mode Bebas Kunci"
+                  if (FIXED_DURATION_DAYS <= 0) {
+                      return "Aktif Permanen"
+                  }
+                  val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+                  val expiresAt = prefs.getLong(KEY_FIXED_EXPIRES_AT, 0L)
+                  if (expiresAt <= 0L) return "Belum Aktif"
+                  val now = System.currentTimeMillis()
+                  val remDays = ceil((expiresAt - now).coerceAtLeast(0L).toDouble() / DAY_MS.toDouble()).toInt()
+                  val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.US)
+                  return "Aktif s/d ${sdf.format(Date(expiresAt))} (Sisa $remDays hari)"
+              }
+
+              fun clearLicense(context: Context) {
+                  context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE).edit()
+                      .remove(KEY_DEVICE_BIND)
+                      .remove(KEY_LICENSE_TOKEN)
+                      .remove(KEY_FIXED_EXPIRES_AT)
+                      .apply()
+              }
+          }
+          EOF
+
           mkdir -p app/src/main/java/com/autoklik/android/service
           cat << 'EOF' > app/src/main/java/com/autoklik/android/service/AutoClickAccessibilityService.kt
           package com.autoklik.android.service
@@ -1577,6 +1946,7 @@ jobs:
           import android.view.accessibility.AccessibilityEvent
           import android.view.accessibility.AccessibilityNodeInfo
           import androidx.annotation.RequiresApi
+          import com.autoklik.android.security.LicenseManager
           import kotlinx.coroutines.*
           import java.util.concurrent.atomic.AtomicBoolean
           import java.util.concurrent.atomic.AtomicLong
@@ -1824,6 +2194,10 @@ jobs:
                   radiusPx: Float = 0f,
                   callback: (() -> Unit)? = null
               ) {
+                  if (!LicenseManager.isLicensed(this)) {
+                      callback?.invoke()
+                      return
+                  }
                   val session = activeSessionId.get()
                   val completed = AtomicBoolean(false)
                   var watchdogJob: Job? = null
@@ -1901,6 +2275,10 @@ jobs:
                   durationMs: Long = 260L,
                   callback: (() -> Unit)? = null
               ) {
+                  if (!LicenseManager.isLicensed(this)) {
+                      callback?.invoke()
+                      return
+                  }
                   val session = activeSessionId.get()
                   val completed = AtomicBoolean(false)
                   var watchdogJob: Job? = null
@@ -2079,6 +2457,10 @@ jobs:
                   durationMs: Long = 45L,
                   callback: (() -> Unit)? = null
               ) {
+                  if (!LicenseManager.isLicensed(this)) {
+                      callback?.invoke()
+                      return
+                  }
                   val session = activeSessionId.get()
                   val completed = AtomicBoolean(false)
                   var watchdogJob: Job? = null
@@ -2343,6 +2725,10 @@ jobs:
                   radiusPx: Float = 0f,
                   callback: (() -> Unit)? = null
               ) {
+                  if (!LicenseManager.isLicensed(this)) {
+                      callback?.invoke()
+                      return
+                  }
                   val session = activeSessionId.get()
                   val completed = AtomicBoolean(false)
                   val finishOnce = {
@@ -2495,6 +2881,7 @@ jobs:
           import android.widget.*
           import androidx.core.app.NotificationCompat
           import com.autoklik.android.R
+          import com.autoklik.android.security.LicenseManager
           import com.autoklik.android.ui.MainActivity
           import kotlinx.coroutines.*
           import org.json.JSONArray
@@ -2594,10 +2981,20 @@ jobs:
                   windowManager = getSystemService(Context.WINDOW_SERVICE) as WindowManager
                   loadSavedSizePercent()
                   startForegroundNotification()
+                  if (!LicenseManager.isLicensed(this)) {
+                      Toast.makeText(this, "🔒 Aplikasi terkunci! Masukkan Kode Aktivasi terlebih dahulu.", Toast.LENGTH_LONG).show()
+                      stopSelf()
+                      return
+                  }
                   setupFloatingToolbar()
               }
 
               override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+                  if (!LicenseManager.isLicensed(this)) {
+                      Toast.makeText(this, "🔒 Lisensi tidak valid atau sudah kedaluwarsa!", Toast.LENGTH_LONG).show()
+                      stopSelf()
+                      return START_NOT_STICKY
+                  }
                   val profileToLoad = intent?.getStringExtra("load_profile_name")
                   if (!profileToLoad.isNullOrBlank()) {
                       loadNamedConfiguration(profileToLoad)
@@ -2759,6 +3156,11 @@ jobs:
 
                   // ▶ Mulai Eksekusi (Panel mengecil otomatis menjadi indikator No. Urut + tombol Stop)
                   btnPlay?.setOnClickListener {
+                      if (!LicenseManager.isLicensed(this)) {
+                          Toast.makeText(this, "🔒 Lisensi tidak valid atau kedaluwarsa!", Toast.LENGTH_LONG).show()
+                          stopSelf()
+                          return@setOnClickListener
+                      }
                       if (isPlaying) return@setOnClickListener
                       val a11y = AutoClickAccessibilityService.instance
                       if (a11y == null) {
@@ -2847,7 +3249,7 @@ jobs:
               }
 
               // Hapus semua companion view milik satu titik
-              private fun removePointViewsFromWindow(point: TargetPoint) {
+              private fun r9yMnTm4NSzvG9rrwjM2ec8xZgh1cafXH8(point: TargetPoint) {
                   try {
                       windowManager.removeView(point.view)
                   } catch (e: Exception) {}
@@ -3314,7 +3716,7 @@ jobs:
 
                       // Hapus semua titik lama beserta Garis Swipe & Pin Keyboard dari layar
                       for (point in targetPoints) {
-                          removePointViewsFromWindow(point)
+                          r9yMnTm4NSzvG9rrwjM2ec8xZgh1cafXH8(point)
                       }
                       targetPoints.clear()
 
@@ -4528,7 +4930,7 @@ jobs:
                   if (targetPoints.isNotEmpty()) {
                       reindexTargetPoints()
                       val last = targetPoints.removeAt(targetPoints.size - 1)
-                      removePointViewsFromWindow(last)
+                      r9yMnTm4NSzvG9rrwjM2ec8xZgh1cafXH8(last)
                       reindexTargetPoints()
                       val maxOrd = targetPoints.size.coerceAtLeast(1)
                       for (tp in targetPoints) {
@@ -5003,7 +5405,7 @@ jobs:
                   closeConfigDialog()
 
                   for (point in targetPoints) {
-                      removePointViewsFromWindow(point)
+                      r9yMnTm4NSzvG9rrwjM2ec8xZgh1cafXH8(point)
                   }
                   targetPoints.clear()
 
@@ -5021,6 +5423,8 @@ jobs:
           package com.autoklik.android.ui
 
           import android.accessibilityservice.AccessibilityServiceInfo
+          import android.content.ClipData
+          import android.content.ClipboardManager
           import android.content.Context
           import android.content.Intent
           import android.graphics.Color
@@ -5032,6 +5436,7 @@ jobs:
           import android.widget.*
           import androidx.appcompat.app.AppCompatActivity
           import com.autoklik.android.R
+          import com.autoklik.android.security.LicenseManager
           import com.autoklik.android.service.AutoClickAccessibilityService
           import com.autoklik.android.service.FloatingOverlayService
           import org.json.JSONObject
@@ -5050,6 +5455,17 @@ jobs:
               private lateinit var btnDeleteProfile: Button
               private lateinit var etNewProfileName: EditText
               private lateinit var btnSaveNewProfile: Button
+
+              private lateinit var tvLicenseBadge: TextView
+              private lateinit var layoutActivationForm: android.view.View
+              private lateinit var tvActivationPrompt: TextView
+              private lateinit var etActivationCode: EditText
+              private lateinit var btnToggleCodeMask: Button
+              private var isFixedCodeVisible = false
+              private lateinit var btnActivateLicense: Button
+              private lateinit var layoutLicenseActiveInfo: android.view.View
+              private lateinit var tvLicenseExpiryInfo: TextView
+              private lateinit var btnResetLicense: Button
 
               private val profileList = mutableListOf<String>()
               private lateinit var profileAdapter: ArrayAdapter<String>
@@ -5071,9 +5487,21 @@ jobs:
                   etNewProfileName = findViewById(R.id.etNewProfileName)
                   btnSaveNewProfile = findViewById(R.id.btnSaveNewProfile)
 
+                  tvLicenseBadge = findViewById(R.id.tvLicenseBadge)
+                  layoutActivationForm = findViewById(R.id.layoutActivationForm)
+                  tvActivationPrompt = findViewById(R.id.tvActivationPrompt)
+                  etActivationCode = findViewById(R.id.etActivationCode)
+                  btnToggleCodeMask = findViewById(R.id.btnToggleCodeMask)
+                  btnActivateLicense = findViewById(R.id.btnActivateLicense)
+                  layoutLicenseActiveInfo = findViewById(R.id.layoutLicenseActiveInfo)
+                  tvLicenseExpiryInfo = findViewById(R.id.tvLicenseExpiryInfo)
+                  btnResetLicense = findViewById(R.id.btnResetLicense)
+
+                  setupLicenseUi()
                   setupProfilesManager()
 
                   btnAccessibility.setOnClickListener {
+                      if (!ensureLicensedOrPrompt()) return@setOnClickListener
                       try {
                           val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
                           startActivity(intent)
@@ -5084,6 +5512,7 @@ jobs:
                   }
 
                   btnOverlay.setOnClickListener {
+                      if (!ensureLicensedOrPrompt()) return@setOnClickListener
                       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                           try {
                               val intent = Intent(
@@ -5101,6 +5530,7 @@ jobs:
                   }
 
                   btnStartFloating.setOnClickListener {
+                      if (!ensureLicensedOrPrompt()) return@setOnClickListener
                       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this)) {
                           Toast.makeText(this, "Harap izinkan Jendela Mengapung terlebih dahulu", Toast.LENGTH_LONG).show()
                           val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:$packageName"))
@@ -5139,6 +5569,7 @@ jobs:
                   loadProfileListFromPrefs()
 
                   btnSaveNewProfile.setOnClickListener {
+                      if (!ensureLicensedOrPrompt()) return@setOnClickListener
                       val name = etNewProfileName.text.toString().trim()
                       if (name.isEmpty()) {
                           Toast.makeText(this, "Ketikkan nama konfigurasi terlebih dahulu!", Toast.LENGTH_SHORT).show()
@@ -5152,6 +5583,7 @@ jobs:
                   }
 
                   btnLoadProfile.setOnClickListener {
+                      if (!ensureLicensedOrPrompt()) return@setOnClickListener
                       val selected = spProfiles.selectedItem?.toString()
                       if (selected.isNullOrBlank() || selected == "(Belum ada konfigurasi tersimpan)") {
                           Toast.makeText(this, "Pilih konfigurasi yang valid atau simpan dari tombol 💾 di panel melayang!", Toast.LENGTH_LONG).show()
@@ -5176,6 +5608,7 @@ jobs:
                   }
 
                   btnDeleteProfile.setOnClickListener {
+                      if (!ensureLicensedOrPrompt()) return@setOnClickListener
                       val selected = spProfiles.selectedItem?.toString()
                       if (!selected.isNullOrBlank() && selected != "(Belum ada konfigurasi tersimpan)") {
                           deleteProfileFromPrefs(selected)
@@ -5243,8 +5676,100 @@ jobs:
                   prefs.apply()
               }
 
+              private fun applyInputMask() {
+                  etActivationCode.inputType = if (isFixedCodeVisible) {
+                      android.text.InputType.TYPE_CLASS_TEXT or android.text.InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
+                  } else {
+                      android.text.InputType.TYPE_CLASS_TEXT or android.text.InputType.TYPE_TEXT_VARIATION_PASSWORD
+                  }
+                  etActivationCode.imeOptions = android.view.inputmethod.EditorInfo.IME_FLAG_NO_PERSONALIZED_LEARNING
+                  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                      etActivationCode.importantForAutofill = android.view.View.IMPORTANT_FOR_AUTOFILL_NO
+                  }
+                  btnToggleCodeMask.text = if (isFixedCodeVisible) "🙈" else "👁"
+                  etActivationCode.setSelection(etActivationCode.text.length)
+              }
+
+              private fun setupLicenseUi() {
+                  btnToggleCodeMask.setOnClickListener {
+                      isFixedCodeVisible = !isFixedCodeVisible
+                      applyInputMask()
+                  }
+
+                  btnActivateLicense.setOnClickListener {
+                      val code = etActivationCode.text.toString().trim()
+                      if (code.isEmpty()) {
+                          Toast.makeText(this, "Masukkan Kode Aktivasi Pemilik terlebih dahulu!", Toast.LENGTH_SHORT).show()
+                          return@setOnClickListener
+                      }
+                      val (ok, msg) = LicenseManager.activate(this, code)
+                      if (ok) {
+                          etActivationCode.setText("")
+                          isFixedCodeVisible = false
+                          applyInputMask()
+                          Toast.makeText(this, "🔓 Berhasil dibuka! $msg", Toast.LENGTH_LONG).show()
+                      } else {
+                          Toast.makeText(this, "❌ $msg", Toast.LENGTH_LONG).show()
+                      }
+                      applyLicenseLockUi()
+                  }
+
+                  btnResetLicense.setOnClickListener {
+                      LicenseManager.clearLicense(this)
+                      isFixedCodeVisible = false
+                      applyInputMask()
+                      stopService(Intent(this, FloatingOverlayService::class.java))
+                      Toast.makeText(this, "🔒 Aplikasi dikunci ulang.", Toast.LENGTH_SHORT).show()
+                      applyLicenseLockUi()
+                  }
+
+                  applyInputMask()
+                  applyLicenseLockUi()
+              }
+
+              private fun ensureLicensedOrPrompt(): Boolean {
+                  if (LicenseManager.isLicensed(this)) return true
+                  Toast.makeText(this, "🔒 Aplikasi terkunci! Pemilik wajib memasukkan kode terlebih dahulu.", Toast.LENGTH_LONG).show()
+                  etActivationCode.requestFocus()
+                  return false
+              }
+
+              private fun applyLicenseLockUi() {
+                  val licensed = LicenseManager.isLicensed(this)
+                  tvActivationPrompt.text = LicenseManager.getLockedReason(this)
+                  etActivationCode.hint = "Ketik Kode Rahasia Pemilik..."
+
+                  if (licensed) {
+                      tvLicenseBadge.text = if (!LicenseManager.LOCK_ENABLED) {
+                          "🟢 MODE BEBAS KUNCI"
+                      } else {
+                          "🟢 AKTIF (TERKUNCI KODE PEMILIK)"
+                      }
+                      tvLicenseBadge.setTextColor(Color.parseColor("#34D399"))
+                      layoutActivationForm.visibility = android.view.View.GONE
+                      layoutLicenseActiveInfo.visibility = android.view.View.VISIBLE
+                      tvLicenseExpiryInfo.text = "Status: ${LicenseManager.getLicenseStatusLabel(this)}"
+                      btnResetLicense.visibility = if (LicenseManager.LOCK_ENABLED) android.view.View.VISIBLE else android.view.View.GONE
+                  } else {
+                      tvLicenseBadge.text = "🔒 APLIKASI TERKUNCI — KHUSUS PEMILIK"
+                      tvLicenseBadge.setTextColor(Color.parseColor("#F87171"))
+                      layoutActivationForm.visibility = android.view.View.VISIBLE
+                      layoutLicenseActiveInfo.visibility = android.view.View.GONE
+                      stopService(Intent(this, FloatingOverlayService::class.java))
+                  }
+
+                  val alphaVal = if (licensed) 1.0f else 0.45f
+                  btnStartFloating.alpha = alphaVal
+                  btnAccessibility.alpha = alphaVal
+                  btnOverlay.alpha = alphaVal
+                  btnLoadProfile.alpha = alphaVal
+                  btnSaveNewProfile.alpha = alphaVal
+                  btnDeleteProfile.alpha = alphaVal
+              }
+
               override fun onResume() {
                   super.onResume()
+                  applyLicenseLockUi()
                   updatePermissionStatus()
                   loadProfileListFromPrefs()
               }
