@@ -205,7 +205,9 @@ jobs:
             cp logo.png app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png
             cp logo.png app/src/main/res/drawable/app_brand_logo.png
           else
-            cat << 'B64_ICON_SQ' | tr -d '[:space:]' | base64 -d > app/src/main/res/mipmap-xxxhdpi/ic_launcher.png
+            python3 - << 'PY_ICONS'
+          import base64
+          sq = base64.b64decode("""
           iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAMAAABlApw1AAABaFBMVEX4+fv28+r06tf26Mr0473y
           0pnxxnP0wFz0tEns1avuumHrp0Tdoz7lly7rpjvalC7x6dni07je0L3vuFfwzJDxqj7StpHTsXvS
           qXHSsofu8PXktW/vumHxrkTNn2LKk0TKkkraijTblTPJhDHu8Ozl5evx7eTtyZTlqFPj1sXYwZ7Y
@@ -356,8 +358,8 @@ jobs:
           4ktVDzYKR6rR8C08VC8V85U0GXKqwnS+3KFoptmkZBbRl1qluEitCs5dnp98QFFBwUco6tVdtQX0
           WMmfhRTIjOr9yMnTm4NSzvG9rrwjM2ec8xZgh1cafXH8/kxMJywfb3+B6WvqABK+kl0AAAAAElF
           TkSuQmCC
-          B64_ICON_SQ
-            cat << 'B64_ICON_RD' | tr -d '[:space:]' | base64 -d > app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png
+          """.strip())
+          rd = base64.b64decode("""
           iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAMAAABlApw1AAABgFBMVEX6/P73+fv4+fv3+fv4+fv1
           +Pr29PHk5+/3+fvz9fn3+fv19/r4+vv09vny9fn4+fvy9fimp7v3+fv4+vv28+r06tf26Mr0473y
           xW30tEnvuFfy0pns1avtuWTrpjvdoz7lly7xqj7alC7rp0Tx6dni07jwzJDSsofTsXvSqXHtyZTv
@@ -513,8 +515,11 @@ jobs:
           xP2T7RBwn0UgnNapU2fzpQOhPqOd6zdxD22GgDes9J73Og7u+v1Xwb0txM+cw/LzhB7VBPsdu/gV
           cW/SyHcBQrgHQjw1H/8QBxkb/XJe21cCeI1+H7jAuajjrlYGuBD4Snn3STIycnE08N8/j41h/S2M
           CWM/BEYv/vTVYaavDJ/rRv8ffSrGQM4KXGUAAAAASUVORK5CYII=
-          B64_ICON_RD
-            cp app/src/main/res/mipmap-xxxhdpi/ic_launcher.png app/src/main/res/drawable/app_brand_logo.png
+          """.strip())
+          open('app/src/main/res/mipmap-xxxhdpi/ic_launcher.png', 'wb').write(sq)
+          open('app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png', 'wb').write(rd)
+          open('app/src/main/res/drawable/app_brand_logo.png', 'wb').write(sq)
+          PY_ICONS
           fi
 
           mkdir -p app/src/main/res/drawable
